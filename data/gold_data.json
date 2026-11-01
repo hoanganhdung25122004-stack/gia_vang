@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "updated_at": "2026-10-31 16:10:14 GMT+7",
-    "updated_date_display": "31/10/2026 16:10",
-    "next_scheduled_update": "01/11/2026 08:30 GMT+7",
+    "updated_at": "2026-11-01 14:54:03 GMT+7",
+    "updated_date_display": "01/11/2026 14:54",
+    "next_scheduled_update": "02/11/2026 08:30 GMT+7",
     "update_frequency": "Tự động 1 lần/ngày (08:30 sáng GMT+7) hoặc cập nhật tức thì",
     "total_trading_days": 1258,
     "history_range": "2021-11-01 -> 2026-10-30",
@@ -14263,7 +14263,7 @@
         "high": 4038.2,
         "low": 3879.3,
         "close": 3898.9,
-        "volume": 142006,
+        "volume": 230038,
         "ma20": 4115.04,
         "ma50": 4294.8,
         "ma200": 4519.32
