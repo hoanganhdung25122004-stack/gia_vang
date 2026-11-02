@@ -178,3 +178,223 @@ body {
   background: #475569;
 }
 
+/* ==========================================================================
+   MARKET EVENTS & NEWS TIMELINE CARDS (UP = GREEN #10b981 | DOWN = RED #f43f5e)
+   ========================================================================== */
+
+.event-card {
+  position: relative;
+  border-radius: 0.85rem;
+  padding: 1rem 1.15rem;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Sự kiện làm giá vàng LÊN (Màu Xanh Lá Cây) */
+.event-card-up {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.13) 0%, rgba(15, 23, 42, 0.96) 55%);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-left: 5px solid #10b981;
+  box-shadow: 0 6px 20px -8px rgba(16, 185, 129, 0.25);
+}
+
+.event-card-up:hover {
+  border-color: #34d399;
+  box-shadow: 0 10px 25px -6px rgba(16, 185, 129, 0.38);
+}
+
+/* Sự kiện làm giá vàng XUỐNG (Màu Đỏ) */
+.event-card-down {
+  background: linear-gradient(135deg, rgba(244, 63, 94, 0.13) 0%, rgba(15, 23, 42, 0.96) 55%);
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  border-left: 5px solid #f43f5e;
+  box-shadow: 0 6px 20px -8px rgba(244, 63, 94, 0.25);
+}
+
+.event-card-down:hover {
+  border-color: #fb7185;
+  box-shadow: 0 10px 25px -6px rgba(244, 63, 94, 0.38);
+}
+
+.event-card-highlighted {
+  outline: 2px solid #fbbf24;
+  outline-offset: 2px;
+}
+
+/* Huy hiệu Mức độ ảnh hưởng (Lớn / Trung bình / Nhỏ) */
+.impact-badge-high {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fde68a;
+  border: 1px solid rgba(245, 158, 11, 0.55);
+  font-weight: 700;
+}
+
+.impact-badge-medium {
+  background: rgba(56, 189, 248, 0.16);
+  color: #bae6fd;
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  font-weight: 600;
+}
+
+.impact-badge-low {
+  background: rgba(148, 163, 184, 0.16);
+  color: #cbd5e1;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  font-weight: 500;
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin-anim {
+  display: inline-block;
+  animation: spin-slow 1s linear infinite;
+}
+
+/* ==========================================================================
+   OHLC & EVENT LEGEND CHỐNG GIẬT LAYOUT (ZERO JITTER & ZERO LAYOUT SHIFT)
+   ========================================================================== */
+
+#chart-ohlc-legend {
+  min-height: 72px;
+  max-height: 72px;
+  contain: layout size;
+  box-sizing: border-box;
+}
+
+#legend-ohlc-event {
+  height: 24px;
+  min-height: 24px;
+  max-height: 24px;
+  line-height: 24px;
+}
+
+/* ==========================================================================
+   MAIN DASHBOARD TAB NAVIGATION SYSTEM (6 INDEPENDENT VIEWS)
+   ========================================================================== */
+
+.main-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #94a3b8;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  user-select: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.main-tab-btn:hover {
+  color: #f8fafc;
+  background: rgba(30, 41, 59, 0.9);
+  border-color: rgba(245, 158, 11, 0.35);
+  transform: translateY(-1px);
+}
+
+.main-tab-btn.active {
+  color: #fbbf24;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(217, 119, 6, 0.12) 100%);
+  border-color: rgba(245, 158, 11, 0.55);
+  box-shadow: 0 0 16px -2px rgba(245, 158, 11, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  font-weight: 700;
+}
+
+.main-tab-btn.all-btn {
+  border-left: 1px dashed rgba(255, 255, 255, 0.2);
+  margin-left: 0.25rem;
+}
+
+.main-tab-btn.all-btn.active {
+  color: #38bdf8;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.2) 0%, rgba(14, 165, 233, 0.1) 100%);
+  border-color: rgba(56, 189, 248, 0.55);
+  box-shadow: 0 0 16px -2px rgba(56, 189, 248, 0.25);
+}
+
+.tab-icon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+/* Hide scrollbar for tab container */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Tab Pane Transitions */
+.tab-section.hidden {
+  display: none !important;
+}
+
+.tab-pane-active {
+  animation: fadeInTabPane 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInTabPane {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Bottom Quick Tab Nav (Previous / Next Tab Navigator) */
+.tab-footer-nav {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.tab-nav-arrow-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #94a3b8;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.15s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.tab-nav-arrow-btn:hover {
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.4);
+  background: rgba(30, 41, 59, 0.95);
+  transform: translateY(-1px);
+}
+
+
+
+

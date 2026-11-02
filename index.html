@@ -37,7 +37,7 @@
               AURUM QUANT <span class="text-amber-400">VIETNAM & GLOBAL</span>
             </h1>
             <span class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
-              <span class="pulse-dot"></span> Tự động cập nhật 1 lần/ngày
+              <span class="pulse-dot"></span> Tự động cập nhật Giá vàng & Tin tức
             </span>
           </div>
           <p class="text-xs text-slate-400">
@@ -63,19 +63,46 @@
       </div>
     </div>
 
-    <!-- Sub-Navigation Anchor Links -->
-    <div class="border-t border-white/5 bg-slate-950/60">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between overflow-x-auto gap-4 text-xs font-medium text-slate-300">
-        <div class="flex items-center gap-5 shrink-0">
-          <a href="#section-overview" class="hover:text-amber-400 transition">1. Bảng Giá Trực Tiếp</a>
-          <a href="#section-charts" class="hover:text-amber-400 transition">2. Đồ Thị Chứng Khoán Đa Khung (7D → 5Y)</a>
-          <a href="#section-factors" class="hover:text-amber-400 transition">3. Yếu Tố Ảnh Hưởng (Lớn → Nhỏ)</a>
-          <a href="#section-scenarios" class="hover:text-amber-400 transition">4. Kịch Bản & Xác Suất Dự Báo</a>
-          <a href="#section-calculator" class="hover:text-amber-400 transition">5. Công Cụ Tính Hòa Vốn & Lãi/Lỗ</a>
+    <!-- Main Dashboard Tab Navigation Bar (6 Independent Views) -->
+    <div class="border-t border-white/10 bg-[#090d16]/95 backdrop-blur-md">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between gap-3">
+        <!-- Tab Buttons Container (Horizontal scroll without ugly scrollbar) -->
+        <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-0.5" id="main-dashboard-tabs" role="tablist">
+          <button data-main-tab="section-overview" class="main-tab-btn active" role="tab" aria-selected="true" title="Xem tổng quan bảng giá trực tiếp (Phím tắt: 1)">
+            <span class="tab-icon">🏷️</span>
+            <span>1. Bảng Giá</span>
+          </button>
+          <button data-main-tab="section-charts" class="main-tab-btn" role="tab" aria-selected="false" title="Đồ thị nến & kỹ thuật TradingView (Phím tắt: 2)">
+            <span class="tab-icon">📈</span>
+            <span>2. Đồ Thị</span>
+          </button>
+          <button data-main-tab="section-events-timeline" class="main-tab-btn" role="tab" aria-selected="false" title="Tin tức & sự kiện đẩy giá Tăng / Giảm (Phím tắt: 3)">
+            <span class="tab-icon">📰</span>
+            <span>3. Tin Tức & Sự Kiện</span>
+          </button>
+          <button data-main-tab="section-factors" class="main-tab-btn" role="tab" aria-selected="false" title="Xếp hạng 6 yếu tố vĩ mô tác động giá vàng (Phím tắt: 4)">
+            <span class="tab-icon">⚖️</span>
+            <span>4. Yếu Tố Vĩ Mô</span>
+          </button>
+          <button data-main-tab="section-forecast" class="main-tab-btn" role="tab" aria-selected="false" title="Kịch bản dự báo 6 mốc & Kế hoạch lướt sóng Swing (Phím tắt: 5)">
+            <span class="tab-icon">🎯</span>
+            <span>5. Dự Báo & Lướt Sóng</span>
+          </button>
+          <button data-main-tab="section-calculator" class="main-tab-btn" role="tab" aria-selected="false" title="Bảng giá thương hiệu & Tính điểm hòa vốn (Phím tắt: 6)">
+            <span class="tab-icon">🧮</span>
+            <span>6. Tính Hòa Vốn</span>
+          </button>
+          <button data-main-tab="all" class="main-tab-btn all-btn" role="tab" aria-selected="false" title="Hiển thị tất cả 6 mục cùng lúc (Phím tắt: 0)">
+            <span class="tab-icon">👁️</span>
+            <span>Tất Cả</span>
+          </button>
         </div>
-        <span class="text-[11px] text-slate-400 shrink-0 hidden xl:inline">
-          💡 Chạy <code class="text-amber-300 font-mono-num">cap_nhat_gia_vang.bat</code> hoặc GitHub Actions để đồng bộ tức thì
-        </span>
+
+        <!-- Quick Shortcut Indicator -->
+        <div class="hidden xl:flex items-center gap-2 text-[11px] text-slate-400 shrink-0">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Phím tắt: <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-amber-300 font-mono text-[10px] border border-slate-700">1</kbd> - <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-amber-300 font-mono text-[10px] border border-slate-700">6</kbd> chuyển tab</span>
+        </div>
       </div>
     </div>
   </header>
@@ -88,7 +115,7 @@
     <!-- ======================================================================
          PHẦN 1: BẢNG GIÁ VÀNG TRỰC QUAN (XAU/USD, SJC, NHẪN 9999 & CHÊNH LỆCH)
          ====================================================================== -->
-    <section id="section-overview" class="space-y-4">
+    <section id="section-overview" class="space-y-4 tab-section">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
           <h2 class="text-lg font-bold text-white flex items-center gap-2">
@@ -198,12 +225,21 @@
           </div>
         </div>
       </div>
+
+      <!-- Bottom Quick Tab Navigator -->
+      <div class="tab-footer-nav">
+        <span class="text-xs text-slate-400">Đang xem: <strong class="text-amber-400">1. Bảng Giá Trực Tiếp</strong> (1/6)</span>
+        <button type="button" data-nav-target="section-charts" class="tab-nav-arrow-btn">
+          <span>Xem tiếp: 2. Đồ Thị Kỹ Thuật</span>
+          <span>➡️</span>
+        </button>
+      </div>
     </section>
 
     <!-- ======================================================================
          PHẦN 2: ĐỒ THỊ CHỨNG KHOÁN ĐA KHUNG THỜI GIAN (NGẮN HẠN -> DÀI HẠN)
          ====================================================================== -->
-    <section id="section-charts" class="terminal-card p-5 sm:p-6 space-y-5">
+    <section id="section-charts" class="terminal-card p-5 sm:p-6 space-y-5 tab-section">
       <!-- Chart Controls Header -->
       <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4 border-b border-slate-800 pb-4">
         <div>
@@ -252,13 +288,36 @@
             <button id="toggle-ma20" class="pill-btn active !py-1 !px-2.5 text-xs" title="Đường Trung bình động 20 ngày">MA20</button>
             <button id="toggle-ma50" class="pill-btn active !py-1 !px-2.5 text-xs" title="Đường Trung bình động 50 ngày">MA50</button>
             <button id="toggle-ma200" class="pill-btn !py-1 !px-2.5 text-xs" title="Đường Trung bình động 200 ngày (Dài hạn)">MA200</button>
+            <button id="toggle-chart-events" class="pill-btn active !py-1 !px-2.5 text-xs" title="Hiển thị các mốc sự kiện làm giá vàng Tăng (Xanh lá) / Giảm (Đỏ) ngay trên đồ thị">📌 Mốc Sự Kiện</button>
           </div>
         </div>
       </div>
 
-      <!-- OHLC Live Legend Bar -->
-      <div id="chart-ohlc-legend" class="px-3.5 py-2 rounded-lg bg-slate-900/80 border border-slate-800/90 flex flex-wrap items-center gap-4 text-xs font-mono-num">
-        Đang khởi tạo dữ liệu đồ thị...
+      <!-- OHLC Live Legend Bar (Fixed Height - Chống tuyệt đối Layout Shift gây giật chuột) -->
+      <div id="chart-ohlc-legend" class="p-3 rounded-xl bg-slate-900/90 border border-slate-800/90 flex flex-col justify-center gap-1.5 min-h-[72px] box-border select-none overflow-hidden">
+        <!-- Dòng 1: Thông số Nến OHLC & MA cố định 1 dòng -->
+        <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-xs font-mono-num">
+          <div class="flex flex-wrap items-center gap-x-3.5 gap-y-1">
+            <span class="text-slate-400">Ngày: <strong id="legend-ohlc-date" class="text-slate-200">—</strong></span>
+            <span class="text-slate-400">Mở: <strong id="legend-ohlc-open" class="text-slate-200">—</strong></span>
+            <span class="text-slate-400">Cao: <strong id="legend-ohlc-high" class="text-emerald-400">—</strong></span>
+            <span class="text-slate-400">Thấp: <strong id="legend-ohlc-low" class="text-rose-400">—</strong></span>
+            <span class="text-slate-400">Đóng: <strong id="legend-ohlc-close" class="text-slate-100 font-bold">—</strong></span>
+          </div>
+          <div class="flex items-center gap-3 text-[11px] font-mono-num">
+            <span id="legend-ohlc-ma20" class="text-sky-400 hidden">MA20: —</span>
+            <span id="legend-ohlc-ma50" class="text-purple-400 hidden">MA50: —</span>
+            <span id="legend-ohlc-ma200" class="text-orange-400 hidden">MA200: —</span>
+          </div>
+        </div>
+
+        <!-- Dòng 2: Khe Sự Kiện Cố Định (Fixed 24px - Tránh thay đổi chiều cao thanh Legend làm giật biểu đồ) -->
+        <div id="legend-ohlc-event" class="h-6 flex items-center overflow-hidden text-xs">
+          <span class="text-slate-500 flex items-center gap-1.5 text-[11px] truncate">
+            <span>💡</span>
+            <span>Rê chuột trên đồ thị để xem giá; rê qua nến có mũi tên để xem sự kiện tác động Lên (Xanh) / Xuống (Đỏ).</span>
+          </span>
+        </div>
       </div>
 
       <!-- TradingView Lightweight Chart Container -->
@@ -271,12 +330,94 @@
         </div>
         <div id="chart-perf-strip" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5"></div>
       </div>
+
+      <!-- Bottom Quick Tab Navigator -->
+      <div class="tab-footer-nav">
+        <button type="button" data-nav-target="section-overview" class="tab-nav-arrow-btn">
+          <span>⬅️</span>
+          <span>1. Bảng Giá</span>
+        </button>
+        <span class="text-xs text-slate-400 hidden sm:inline">Mục 2/6: <strong class="text-amber-400">Đồ Thị Kỹ Thuật</strong></span>
+        <button type="button" data-nav-target="section-events-timeline" class="tab-nav-arrow-btn">
+          <span>3. Tin Tức & Sự Kiện</span>
+          <span>➡️</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         PHẦN 3: BẢNG TIN TỨC & SỰ KIỆN TÁC ĐỘNG LÊN/XUỐNG GIÁ VÀNG THEO KHUNG ĐANG XEM
+         ==================================================================== -->
+    <section id="section-events-timeline" class="terminal-card p-5 sm:p-6 space-y-4 tab-section">
+      <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-3">
+        <div>
+          <div class="flex flex-wrap items-center gap-2.5">
+            <span class="w-2 h-5 rounded-full bg-emerald-400"></span>
+            <h3 id="events-timeframe-title" class="text-base sm:text-lg font-bold text-white">
+              Sự Kiện & Tin Tức Tiêu Biểu Tác Động Giá Vàng — Khung 1 Năm (1Y)
+            </h3>
+            <span id="events-timeframe-range-badge" class="px-2.5 py-0.5 rounded-full text-xs font-mono-num bg-amber-500/15 text-amber-300 border border-amber-500/30">
+              Đang lọc theo khung...
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 mt-1">
+            Chỉ hiển thị các <strong>sự kiện quan trọng tiêu biểu nằm trong khoảng thời gian bạn đang xem trên đồ thị</strong>.
+            Màu <strong class="text-emerald-400">Xanh lá cây (▲)</strong> = Sự kiện đẩy giá vàng <strong>Tăng</strong>;
+            Màu <strong class="text-rose-400">Đỏ (▼)</strong> = Sự kiện kéo giá vàng <strong>Giảm</strong>;
+            phân loại rõ mức độ ảnh hưởng (<strong>Lớn</strong>, <strong>Trung bình</strong>, <strong>Nhỏ</strong>) và thời điểm xảy ra.
+          </p>
+        </div>
+
+        <!-- Thống kê nhanh Tăng vs Giảm & Nút Làm mới Trực tiếp -->
+        <div class="flex flex-wrap items-center gap-2 shrink-0">
+          <div id="events-summary-badges" class="flex items-center gap-2 text-xs font-mono-num"></div>
+          <button id="btn-refresh-live-news" type="button" class="px-3 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/40 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer">
+            <span id="refresh-news-icon">🔄</span>
+            <span id="refresh-news-label">Cập nhật Tin mới nhất</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Bộ lọc Mức độ ảnh hưởng (Lớn / Trung bình / Nhỏ) & Chiều hướng (Lên: Xanh lá / Xuống: Đỏ) -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-3 rounded-xl bg-slate-900/75 border border-slate-800/90">
+        <div class="flex flex-wrap items-center gap-1.5">
+          <span class="text-xs text-slate-400 mr-1 font-medium">Mức độ ảnh hưởng:</span>
+          <button data-evt-impact="auto" class="pill-btn active !py-1 !px-2.5 text-xs">✨ Tiêu biểu theo khung</button>
+          <button data-evt-impact="high" class="pill-btn !py-1 !px-2.5 text-xs">🔥 Chỉ Ảnh hưởng Lớn</button>
+          <button data-evt-impact="medium" class="pill-btn !py-1 !px-2.5 text-xs">⚡ Ảnh hưởng Trung bình</button>
+          <button data-evt-impact="low" class="pill-btn !py-1 !px-2.5 text-xs">🔹 Ảnh hưởng Nhỏ</button>
+          <button data-evt-impact="all" class="pill-btn !py-1 !px-2.5 text-xs">Tất cả trong khung</button>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-1.5">
+          <span class="text-xs text-slate-400 mr-1 font-medium">Chiều tác động:</span>
+          <button data-evt-dir="all" class="pill-btn active !py-1 !px-2.5 text-xs">Tất cả</button>
+          <button data-evt-dir="up" class="pill-btn !py-1 !px-2.5 text-xs !border-emerald-500/40 !text-emerald-300">🟢 Giá Lên (Xanh lá)</button>
+          <button data-evt-dir="down" class="pill-btn !py-1 !px-2.5 text-xs !border-rose-500/40 !text-rose-300">🔴 Giá Xuống (Đỏ)</button>
+        </div>
+      </div>
+
+      <!-- Danh sách Thẻ Sự kiện đồng bộ theo khung thời gian -->
+      <div id="timeframe-events-list" class="grid grid-cols-1 md:grid-cols-2 gap-3.5 max-h-[580px] overflow-y-auto pr-1"></div>
+
+      <!-- Bottom Quick Tab Navigator -->
+      <div class="tab-footer-nav">
+        <button type="button" data-nav-target="section-charts" class="tab-nav-arrow-btn">
+          <span>⬅️</span>
+          <span>2. Đồ Thị</span>
+        </button>
+        <span class="text-xs text-slate-400 hidden sm:inline">Mục 3/6: <strong class="text-amber-400">Tin Tức & Sự Kiện</strong></span>
+        <button type="button" data-nav-target="section-factors" class="tab-nav-arrow-btn">
+          <span>4. Yếu Tố Vĩ Mô</span>
+          <span>➡️</span>
+        </button>
+      </div>
     </section>
 
     <!-- ======================================================================
-         PHẦN 3: LIỆT KÊ & XẾP HẠNG CÁC YẾU TỐ ẢNH HƯỞNG (TỪ LỚN ĐẾN NHỎ)
+         PHẦN 4: LIỆT KÊ & XẾP HẠNG CÁC YẾU TỐ ẢNH HƯỞNG (TỪ LỚN ĐẾN NHỎ)
          ====================================================================== -->
-    <section id="section-factors" class="space-y-4">
+    <section id="section-factors" class="space-y-4 tab-section">
       <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
         <div>
           <h2 class="text-lg font-bold text-white flex items-center gap-2">
@@ -307,12 +448,27 @@
 
       <!-- Danh sách 6 Yếu tố xếp hạng từ #1 (Lớn nhất) đến #6 (Nhỏ nhất) -->
       <div id="factors-ranked-list" class="grid grid-cols-1 gap-4"></div>
+
+      <!-- Bottom Quick Tab Navigator -->
+      <div class="tab-footer-nav">
+        <button type="button" data-nav-target="section-events-timeline" class="tab-nav-arrow-btn">
+          <span>⬅️</span>
+          <span>3. Tin Tức & Sự Kiện</span>
+        </button>
+        <span class="text-xs text-slate-400 hidden sm:inline">Mục 4/6: <strong class="text-amber-400">Yếu Tố Vĩ Mô</strong></span>
+        <button type="button" data-nav-target="section-forecast" class="tab-nav-arrow-btn">
+          <span>5. Dự Báo & Lướt Sóng</span>
+          <span>➡️</span>
+        </button>
+      </div>
     </section>
 
     <!-- ======================================================================
-         PHẦN 4: DỰ ĐOÁN CÁC KỊCH BẢN & TỶ LỆ % XẢY RA (NGẮN - TRUNG - DÀI HẠN)
+         PHẦN 5: DỰ BÁO KỊCH BẢN XÁC SUẤT & TRUNG TÂM LƯỚT SÓNG TRUNG HẠN
          ====================================================================== -->
-    <section id="section-scenarios" class="space-y-5">
+    <section id="section-forecast" class="space-y-8 tab-section">
+      <!-- 5A: Kịch Bản Dự Báo & Tỷ Lệ Xác Suất -->
+      <div id="section-scenarios" class="space-y-5">
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-3">
         <div>
           <h2 class="text-lg font-bold text-white flex items-center gap-2">
@@ -328,33 +484,60 @@
         </span>
       </div>
 
-      <!-- 3 Tabs chọn Chân trời thời gian: Ngắn hạn / Trung hạn / Dài hạn -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <button data-horizon-tab="short_term" class="horizon-tab active">
+      <!-- 6 Tabs chọn Mốc Thời Gian Dự Báo Cụ Thể (Từ 1 Tuần đến 3 - 5 Năm) -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+        <button data-horizon-tab="1_week" class="horizon-tab active">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Chân trời 1</span>
-            <span class="text-[11px] font-mono-num px-2 py-0.5 rounded bg-slate-800 text-slate-300">7 – 30 Ngày</span>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-amber-400">Mốc 1</span>
+            <span class="text-[10px] font-mono-num px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">7 Ngày</span>
           </div>
-          <div class="text-base font-bold text-white mt-1">Ngắn Hạn (1 – 4 Tuần)</div>
-          <p class="text-xs text-slate-400 mt-0.5">Phục vụ lướt sóng & chọn điểm mua/bán ngắn hạn</p>
+          <div class="text-sm sm:text-base font-bold text-white mt-1">1 Tuần</div>
+          <p class="text-[11px] text-slate-400 mt-0.5 truncate">Lướt sóng T+ theo tin</p>
         </button>
 
-        <button data-horizon-tab="mid_term" class="horizon-tab">
+        <button data-horizon-tab="1_month" class="horizon-tab">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold uppercase tracking-wider text-sky-400">Chân trời 2</span>
-            <span class="text-[11px] font-mono-num px-2 py-0.5 rounded bg-slate-800 text-slate-300">30 – 180 Ngày</span>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-amber-400">Mốc 2</span>
+            <span class="text-[10px] font-mono-num px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">30 Ngày</span>
           </div>
-          <div class="text-base font-bold text-white mt-1">Trung Hạn (1 – 6 Tháng)</div>
-          <p class="text-xs text-slate-400 mt-0.5">Nắm giữ theo chu kỳ vĩ mô quý & chính sách FED</p>
+          <div class="text-sm sm:text-base font-bold text-white mt-1">1 Tháng</div>
+          <p class="text-[11px] text-slate-400 mt-0.5 truncate">Bắt nhịp sóng tháng</p>
         </button>
 
-        <button data-horizon-tab="long_term" class="horizon-tab">
+        <button data-horizon-tab="3_months" class="horizon-tab">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Chân trời 3</span>
-            <span class="text-[11px] font-mono-num px-2 py-0.5 rounded bg-slate-800 text-slate-300">1 – 3 Năm</span>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-sky-400">Mốc 3</span>
+            <span class="text-[10px] font-mono-num px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">90 Ngày</span>
           </div>
-          <div class="text-base font-bold text-white mt-1">Dài Hạn (1 – 3 Năm)</div>
-          <p class="text-xs text-slate-400 mt-0.5">Tích sản bền vững & phòng vệ trượt giá tiền tệ</p>
+          <div class="text-sm sm:text-base font-bold text-white mt-1">3 Tháng</div>
+          <p class="text-[11px] text-slate-400 mt-0.5 truncate">Chu kỳ vĩ mô quý</p>
+        </button>
+
+        <button data-horizon-tab="6_months" class="horizon-tab">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-sky-400">Mốc 4</span>
+            <span class="text-[10px] font-mono-num px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">180 Ngày</span>
+          </div>
+          <div class="text-sm sm:text-base font-bold text-white mt-1">6 Tháng</div>
+          <p class="text-[11px] text-slate-400 mt-0.5 truncate">Sóng mùa vụ nửa năm</p>
+        </button>
+
+        <button data-horizon-tab="1_year" class="horizon-tab">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-400">Mốc 5</span>
+            <span class="text-[10px] font-mono-num px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">1 Năm</span>
+          </div>
+          <div class="text-sm sm:text-base font-bold text-white mt-1">1 Năm</div>
+          <p class="text-[11px] text-slate-400 mt-0.5 truncate">Tối ưu vượt tiết kiệm</p>
+        </button>
+
+        <button data-horizon-tab="3_5_years" class="horizon-tab">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-400">Mốc 6</span>
+            <span class="text-[10px] font-mono-num px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">3 - 5 Năm</span>
+          </div>
+          <div class="text-sm sm:text-base font-bold text-white mt-1">3 – 5 Năm</div>
+          <p class="text-[11px] text-slate-400 mt-0.5 truncate">Tích sản dài hạn</p>
         </button>
       </div>
 
@@ -378,14 +561,138 @@
 
       <!-- Grid 3 Thẻ Kịch Bản (Tích cực / Cơ sở / Thận trọng) -->
       <div id="scenarios-cards-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-5"></div>
+    </div>
+
+    <!-- 5B: TRUNG TÂM TÍN HIỆU & LẬP KẾ HOẠCH LƯỚT SÓNG (NGẮN HẠN T+ & TRUNG HẠN) -->
+    <div id="section-swing-trading" class="terminal-card p-5 sm:p-6 space-y-6">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
+        <div>
+          <div class="flex items-center gap-2.5">
+            <span class="w-2.5 h-5 rounded-full bg-emerald-400"></span>
+            <h2 id="swing-section-title" class="text-lg font-bold text-white">
+              Chiến Lược Lướt Sóng Ngắn Hạn & Trung Hạn
+            </h2>
+            <span id="swing-horizon-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 uppercase tracking-wider">
+              Swing & Scalp Engine
+            </span>
+          </div>
+          <p id="swing-section-subtitle" class="text-xs text-slate-400 mt-1">
+            Mô hình định lượng đa khung (MA5/MA10/MA20/MA50, RSI, MACD) và chi phí Spread thực tế để định vị điểm mua, cắt lỗ và chốt lời tối ưu tỷ lệ R:R.
+          </p>
+        </div>
+
+        <!-- Master Action Recommendation Badge -->
+        <div id="swing-action-badge-box" class="flex flex-col sm:flex-row sm:items-center gap-3 p-3 sm:px-4 sm:py-2.5 rounded-xl border shrink-0 bg-slate-900/90 border-slate-700/80">
+          <div class="flex items-center gap-2">
+            <span class="pulse-dot"></span>
+            <span id="swing-signal-label" class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Tín hiệu:</span>
+          </div>
+          <span id="swing-action-badge" class="px-3 py-1 rounded-lg text-xs font-extrabold font-mono-num uppercase tracking-wider text-slate-200 bg-slate-800">
+            Đang tải...
+          </span>
+        </div>
+      </div>
+
+      <!-- Thanh chọn chu kỳ: Ngắn Hạn (1-2 Tuần) vs Trung Hạn (1-3 Tháng) vs Dài Hạn (1-3 Năm) -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl bg-slate-950/80 border border-slate-800">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-semibold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+            <span>⏱️</span> Chọn Chu Kỳ Chiến Lược & Kế Hoạch Đầu Tư:
+          </span>
+        </div>
+        <div class="inline-flex flex-wrap rounded-lg bg-slate-900 p-1 border border-slate-800 text-xs gap-1">
+          <button id="trading-hz-short" data-trading-hz="short_term" class="px-3.5 py-1.5 rounded-md font-semibold text-white bg-slate-800 shadow transition-all flex items-center gap-1.5">
+            <span>⚡</span>
+            <span>Ngắn Hạn (1 – 2 Tuần / T+)</span>
+          </button>
+          <button id="trading-hz-med" data-trading-hz="medium_term" class="px-3.5 py-1.5 rounded-md font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-1.5">
+            <span>🎯</span>
+            <span>Trung Hạn (1 – 3 Tháng / Sóng)</span>
+          </button>
+          <button id="trading-hz-long" data-trading-hz="long_term" class="px-3.5 py-1.5 rounded-md font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-1.5">
+            <span>💎</span>
+            <span>Dài Hạn (1 – 3 Năm / Tích Sản)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Khuyến nghị hành động & Bối cảnh kỹ thuật -->
+      <div class="p-4 rounded-xl bg-slate-900/70 border border-slate-800/90 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="space-y-1 max-w-3xl">
+          <div class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+            <span>🎯</span> Bối cảnh & Khuyến nghị hành động hôm nay:
+          </div>
+          <p id="swing-action-summary" class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+            Đang tải dữ liệu...
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 text-xs font-mono-num shrink-0">
+          <div class="p-2 rounded-lg bg-slate-950/80 border border-slate-800">
+            <span class="text-slate-400">RSI(14):</span> <strong id="swing-rsi-status" class="text-amber-400">--</strong>
+          </div>
+          <div class="p-2 rounded-lg bg-slate-950/80 border border-slate-800">
+            <span class="text-slate-400">Trend:</span> <strong id="swing-trend-status" class="text-emerald-400">--</strong>
+          </div>
+          <div class="p-2 rounded-lg bg-slate-950/80 border border-slate-800">
+            <span class="text-slate-400">MACD:</span> <strong id="swing-macd-status" class="text-sky-400">--</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Khuyến nghị chọn công cụ lướt sóng: Vàng Nhẫn 9999 vs SJC -->
+      <div id="swing-instrument-card" class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-3">
+        <!-- Dynamically rendered -->
+      </div>
+
+      <!-- Chi tiết Kế Hoạch Lệnh Lướt Sóng (Swing Trade Setup) -->
+      <div class="space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Chọn công cụ xem kế hoạch:</span>
+            <div class="inline-flex rounded-lg bg-slate-900 p-1 border border-slate-800 text-xs">
+              <button id="swing-tab-ring" class="px-3 py-1.5 rounded-md font-semibold text-white bg-slate-800 shadow transition-all">💍 Vàng Nhẫn 9999</button>
+              <button id="swing-tab-sjc" class="px-3 py-1.5 rounded-md font-semibold text-slate-400 hover:text-white transition-all">🇻🇳 Vàng SJC</button>
+              <button id="swing-tab-xau" class="px-3 py-1.5 rounded-md font-semibold text-slate-400 hover:text-white transition-all">🌐 XAU/USD (TG)</button>
+            </div>
+          </div>
+          <span id="swing-setup-rating-tag" class="text-xs font-mono-num font-semibold px-2.5 py-1 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-400">
+            Đánh giá: Đang tải...
+          </span>
+        </div>
+
+        <!-- Setup Details Grid: 4 Cột (Vùng Mua, Cắt Lỗ, Chốt Lời TP1, Chốt Lời TP2) -->
+        <div id="swing-setup-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+          <!-- Dynamically rendered -->
+        </div>
+
+        <!-- Hộp Tóm tắt Đánh giá Tỷ lệ R:R và Thước đo Kỷ luật -->
+        <div id="swing-discipline-container" class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-slate-300 leading-relaxed space-y-1.5">
+          <!-- Dynamically rendered -->
+        </div>
+      </div>
+    </div> <!-- end section-swing-trading -->
+
+      <!-- Bottom Quick Tab Navigator -->
+      <div class="tab-footer-nav">
+        <button type="button" data-nav-target="section-factors" class="tab-nav-arrow-btn">
+          <span>⬅️</span>
+          <span>4. Yếu Tố Vĩ Mô</span>
+        </button>
+        <span class="text-xs text-slate-400 hidden sm:inline">Mục 5/6: <strong class="text-amber-400">Dự Báo & Lướt Sóng</strong></span>
+        <button type="button" data-nav-target="section-calculator" class="tab-nav-arrow-btn">
+          <span>6. Tính Hòa Vốn</span>
+          <span>➡️</span>
+        </button>
+      </div>
     </section>
 
     <!-- ======================================================================
-         PHẦN 5: BẢNG GIÁ CÁC THƯƠNG HIỆU TRONG NƯỚC & CÔNG CỤ TÍNH HÒA VỐN
+         PHẦN 6: BẢNG GIÁ CÁC THƯƠNG HIỆU TRONG NƯỚC & CÔNG CỤ TÍNH HÒA VỐN
          ====================================================================== -->
-    <section id="section-calculator" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-      <!-- Bảng giá chi tiết các thương hiệu vàng tại Việt Nam (7 cột) -->
-      <div class="lg:col-span-7 terminal-card p-5 sm:p-6 flex flex-col justify-between">
+    <section id="section-calculator" class="space-y-6 tab-section">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Bảng giá chi tiết các thương hiệu vàng tại Việt Nam (7 cột) -->
+        <div class="lg:col-span-7 terminal-card p-5 sm:p-6 flex flex-col justify-between">
         <div>
           <h3 class="text-base font-bold text-white flex items-center gap-2">
             <span class="w-2 h-4 rounded-full bg-amber-400"></span>
@@ -462,21 +769,49 @@
 
         <div class="space-y-2">
           <div class="text-xs font-semibold uppercase tracking-wider text-slate-400">
-            Lợi nhuận ròng kỳ vọng (Kịch bản tích cực - Đã trừ chênh lệch Mua-Bán):
+            Lợi nhuận ròng kỳ vọng theo từng mốc (Kịch bản tích cực - Đã trừ chênh lệch Mua-Bán):
           </div>
-          <div class="p-3 rounded-lg bg-slate-900/70 border border-slate-800 flex items-center justify-between text-xs">
-            <span class="text-slate-300">Sau 1 – 4 Tuần (Ngắn hạn):</span>
-            <span id="calc-pnl-short" class="font-mono-num font-bold">+0.00 triệu VNĐ</span>
-          </div>
-          <div class="p-3 rounded-lg bg-slate-900/70 border border-slate-800 flex items-center justify-between text-xs">
-            <span class="text-slate-300">Sau 3 – 6 Tháng (Trung hạn):</span>
-            <span id="calc-pnl-mid" class="font-mono-num font-bold">+0.00 triệu VNĐ</span>
-          </div>
-          <div class="p-3 rounded-lg bg-slate-900/70 border border-slate-800 flex items-center justify-between text-xs">
-            <span class="text-slate-300">Sau 1 – 3 Năm (Dài hạn):</span>
-            <span id="calc-pnl-long" class="font-mono-num font-bold">+0.00 triệu VNĐ</span>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <div class="p-2.5 rounded-lg bg-slate-900/70 border border-slate-800 flex flex-col justify-between">
+              <span class="text-slate-400">Sau 1 Tuần (7 Ngày):</span>
+              <span id="calc-pnl-1w" class="font-mono-num font-bold mt-0.5">+0.00 triệu VNĐ</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-900/70 border border-slate-800 flex flex-col justify-between">
+              <span class="text-slate-400">Sau 1 Tháng (30 Ngày):</span>
+              <span id="calc-pnl-1m" class="font-mono-num font-bold mt-0.5">+0.00 triệu VNĐ</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-900/70 border border-slate-800 flex flex-col justify-between">
+              <span class="text-slate-400">Sau 3 Tháng (1 Quý):</span>
+              <span id="calc-pnl-3m" class="font-mono-num font-bold mt-0.5">+0.00 triệu VNĐ</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-900/70 border border-slate-800 flex flex-col justify-between">
+              <span class="text-slate-400">Sau 6 Tháng (Nửa năm):</span>
+              <span id="calc-pnl-6m" class="font-mono-num font-bold mt-0.5">+0.00 triệu VNĐ</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-900/70 border border-slate-800 flex flex-col justify-between">
+              <span class="text-slate-400">Sau 1 Năm (12 Tháng):</span>
+              <span id="calc-pnl-1y" class="font-mono-num font-bold mt-0.5">+0.00 triệu VNĐ</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-900/70 border border-slate-800 flex flex-col justify-between">
+              <span class="text-slate-400">Sau 3 – 5 Năm (Dài hạn):</span>
+              <span id="calc-pnl-5y" class="font-mono-num font-bold mt-0.5">+0.00 triệu VNĐ</span>
+            </div>
           </div>
         </div>
+      </div>
+      </div> <!-- end grid -->
+
+      <!-- Bottom Quick Tab Navigator -->
+      <div class="tab-footer-nav">
+        <button type="button" data-nav-target="section-forecast" class="tab-nav-arrow-btn">
+          <span>⬅️</span>
+          <span>5. Dự Báo & Lướt Sóng</span>
+        </button>
+        <span class="text-xs text-slate-400 hidden sm:inline">Mục 6/6: <strong class="text-amber-400">Bảng Giá Thương Hiệu & Tính Hòa Vốn</strong></span>
+        <button type="button" data-nav-target="section-overview" class="tab-nav-arrow-btn">
+          <span>Quay lại: 1. Bảng Giá</span>
+          <span>🔄</span>
+        </button>
       </div>
     </section>
 

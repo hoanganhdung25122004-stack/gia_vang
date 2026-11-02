@@ -1,9 +1,9 @@
-name: Daily Gold Price & Macro Update (1x/Day)
+name: Auto Update Gold Price, Real-Time News & Macro Events (Every 6 Hours)
 
 on:
   schedule:
-    # Chạy tự động mỗi ngày 1 lần lúc 01:30 UTC (tức 08:30 sáng giờ Việt Nam GMT+7)
-    - cron: '30 1 * * *'
+    # Chạy tự động 4 lần/ngày (mỗi 6 tiếng: 02:30, 08:30, 14:30, 20:30 giờ Việt Nam GMT+7)
+    - cron: '30 1,7,13,19 * * *'
   workflow_dispatch: # Cho phép bấm nút "Run workflow" thủ công bất cứ lúc nào trên GitHub
 
 permissions:

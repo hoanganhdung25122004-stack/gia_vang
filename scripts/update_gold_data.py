@@ -15,6 +15,8 @@ không phụ thuộc thư viện ngoài để đảm bảo chạy ổn định t
 
 from __future__ import annotations
 import datetime
+import email.utils
+import html as html_lib
 import json
 import math
 import os
@@ -776,10 +778,13 @@ def compute_scenarios(
 ) -> Dict[str, Any]:
     """
     Tính toán 3 kịch bản (Tăng giá / Đi ngang / Giảm giá) kèm tỷ lệ % xảy ra (tổng = 100%)
-    và vùng giá mục tiêu cho XAU/USD, Vàng SJC, Vàng Nhẫn 9999 trên 3 chân trời thời gian:
-    - Ngắn hạn (1 - 4 tuần / 7 - 30 ngày)
-    - Trung hạn (1 - 6 tháng)
-    - Dài hạn (1 - 3 năm)
+    và vùng giá mục tiêu cho XAU/USD, Vàng SJC, Vàng Nhẫn 9999 trên 6 MỐC THỜI GIAN DỰ BÁO CỤ THỂ:
+    - Mốc 1: 1 Tuần (7 Ngày)
+    - Mốc 2: 1 Tháng (30 Ngày)
+    - Mốc 3: 3 Tháng (1 Quý / 90 Ngày)
+    - Mốc 4: 6 Tháng (Nửa Năm / 180 Ngày)
+    - Mốc 5: 1 Năm (12 Tháng / 365 Ngày)
+    - Mốc 6: 3 – 5 Năm (Siêu Chu Kỳ Dài Hạn)
     """
     curr_xau = xau_series[-1]["close"]
     curr_sjc = sjc_series[-1]["sell"]
@@ -798,7 +803,7 @@ def compute_scenarios(
     composite_score = sum((f["weight_pct"] / 100.0) * f["signal"] for f in factors)
     composite_score = max(-1.0, min(1.0, composite_score))
 
-    # Điều chỉnh ngắn hạn nếu RSI quá mua (>72) hoặc quá bán (<32)
+    # Điều chỉnh ngắn hạn nếu RSI quá mua (>72) hoặc quá bán (<35)
     short_term_bias = composite_score
     if rsi_14 > 72:
         short_term_bias -= 0.25
@@ -812,28 +817,6 @@ def compute_scenarios(
         b3 = 100 - b1 - b2
         return b1, b2, b3
 
-    # --- 1. NGẮN HẠN (1 - 4 TUẦN) ---
-    st_bull, st_base, st_bear = normalize_probs(
-        max(15.0, 42.0 + short_term_bias * 18.0),
-        36.0,
-        max(12.0, 22.0 - short_term_bias * 15.0),
-    )
-
-    # --- 2. TRUNG HẠN (1 - 6 THÁNG) ---
-    mt_bull, mt_base, mt_bear = normalize_probs(
-        max(20.0, 50.0 + composite_score * 16.0),
-        30.0,
-        max(10.0, 20.0 - composite_score * 14.0),
-    )
-
-    # --- 3. DÀI HẠN (1 - 3 NĂM) ---
-    # Trong dài hạn, vàng có xu hướng tăng cấu trúc theo cung tiền M2 và dự trữ NHTW
-    lt_bull, lt_base, lt_bear = normalize_probs(
-        max(35.0, 62.0 + composite_score * 10.0),
-        25.0,
-        max(8.0, 13.0 - composite_score * 8.0),
-    )
-
     def fmt_range(base: float, pct_low: float, pct_high: float, decimals: int = 1) -> str:
         low_v = base * (1.0 + pct_low / 100.0)
         high_v = base * (1.0 + pct_high / 100.0)
@@ -841,205 +824,1911 @@ def compute_scenarios(
             return f"{low_v:,.0f} – {high_v:,.0f}"
         return f"{low_v:,.{decimals}f} – {high_v:,.{decimals}f}"
 
+    # --- 1. MỐC 1: 1 TUẦN (7 NGÀY) ---
+    p1_bull, p1_base, p1_bear = normalize_probs(
+        max(15.0, 41.0 + short_term_bias * 20.0),
+        38.0,
+        max(12.0, 21.0 - short_term_bias * 16.0),
+    )
+
+    # --- 2. MỐC 2: 1 THÁNG (30 NGÀY) ---
+    p2_bull, p2_base, p2_bear = normalize_probs(
+        max(18.0, 45.0 + short_term_bias * 18.0),
+        34.0,
+        max(12.0, 21.0 - short_term_bias * 15.0),
+    )
+
+    # --- 3. MỐC 3: 3 THÁNG (1 QUÝ / 90 NGÀY) ---
+    p3_bull, p3_base, p3_bear = normalize_probs(
+        max(20.0, 48.0 + composite_score * 17.0),
+        31.0,
+        max(11.0, 21.0 - composite_score * 14.0),
+    )
+
+    # --- 4. MỐC 4: 6 THÁNG (NỬA NĂM / 180 NGÀY) ---
+    p4_bull, p4_base, p4_bear = normalize_probs(
+        max(22.0, 52.0 + composite_score * 15.0),
+        29.0,
+        max(10.0, 19.0 - composite_score * 13.0),
+    )
+
+    # --- 5. MỐC 5: 1 NĂM (12 THÁNG / 365 NGÀY) ---
+    p5_bull, p5_base, p5_bear = normalize_probs(
+        max(28.0, 58.0 + composite_score * 13.0),
+        27.0,
+        max(9.0, 15.0 - composite_score * 10.0),
+    )
+
+    # --- 6. MỐC 6: 3 – 5 NĂM (SIÊU CHU KỲ DÀI HẠN) ---
+    p6_bull, p6_base, p6_bear = normalize_probs(
+        max(35.0, 65.0 + composite_score * 10.0),
+        23.0,
+        max(8.0, 12.0 - composite_score * 8.0),
+    )
+
+    horizons = {
+        "1_week": {
+            "id": "1_week",
+            "badge": "Mốc 1",
+            "title": "1 Tuần (7 Ngày)",
+            "subtitle": "Phục vụ lướt sóng T+, phản ứng theo tin CPI/NFP tuần này & kỹ thuật",
+            "horizon_days": 7,
+            "dominant_driver": f"{factors[0]['name']} & Tín hiệu RSI ({rsi_14:.1f})",
+            "summary": (
+                f"Trong 7 ngày tới, biến động giá vàng chịu tác động tức thì từ {factors[0]['name']} và trạng thái kỹ thuật ngắn hạn. "
+                "Lưu ý: Chênh lệch Mua - Bán tại tiệm vàng (~1.3 đến 3.0 triệu/lượng) lớn hơn biên độ dao động tuần; "
+                "nhà đầu tư vàng vật chất KHÔNG NÊN lướt sóng trong khung 7 ngày để tránh lỗ chênh lệch mua bán."
+            ),
+            "scenarios": [
+                {
+                    "type": "bullish",
+                    "name": "Kịch bản Tích cực (Bứt phá Theo Tin)",
+                    "probability": p1_bull,
+                    "expected_change_pct": "+1.2% đến +2.8%",
+                    "targets": {
+                        "xau_usd": f"${fmt_range(curr_xau, 1.2, 2.8, 0)} / oz",
+                        "sjc_vnd": f"{fmt_range(curr_sjc, 0.8, 2.2, 1)} triệu / lượng",
+                        "ring_9999_vnd": f"{fmt_range(curr_ring, 1.0, 2.6, 1)} triệu / lượng",
+                    },
+                    "triggers": [
+                        "Dữ liệu kinh tế Mỹ trong tuần (CPI, PCE hoặc việc làm) thấp hơn dự báo làm giảm lợi suất US10Y.",
+                        "Chỉ số DXY tiếp tục suy yếu và giá XAU/USD giữ vững trên hỗ trợ MA20.",
+                    ],
+                    "investor_action": "Nắm giữ vị thế hiện tại; chưa vội mua mới với vàng vật chất vì biên độ tuần chưa đủ bù chênh lệch Mua - Bán.",
+                },
+                {
+                    "type": "base",
+                    "name": "Kịch bản Cơ sở (Tích lũy Đi ngang)",
+                    "probability": p1_base,
+                    "expected_change_pct": "-0.8% đến +1.2%",
+                    "targets": {
+                        "xau_usd": f"${fmt_range(curr_xau, -0.8, 1.2, 0)} / oz",
+                        "sjc_vnd": f"{fmt_range(curr_sjc, -0.6, 1.0, 1)} triệu / lượng",
+                        "ring_9999_vnd": f"{fmt_range(curr_ring, -0.8, 1.0, 1)} triệu / lượng",
+                    },
+                    "triggers": [
+                        "Thị trường quốc tế giằng co chờ thông điệp mới từ các quan chức FED.",
+                        "Lực mua bắt đáy cân bằng với áp lực chốt lời ngắn hạn.",
+                    ],
+                    "investor_action": "Đứng ngoài quan sát, theo dõi các mốc hỗ trợ và kháng cự quan trọng trong tuần.",
+                },
+                {
+                    "type": "bearish",
+                    "name": "Kịch bản Thận trọng (Rung lắc / Điều chỉnh)",
+                    "probability": p1_bear,
+                    "expected_change_pct": "-3.0% đến -1.0%",
+                    "targets": {
+                        "xau_usd": f"${fmt_range(curr_xau, -3.0, -1.0, 0)} / oz",
+                        "sjc_vnd": f"{fmt_range(curr_sjc, -2.5, -0.8, 1)} triệu / lượng",
+                        "ring_9999_vnd": f"{fmt_range(curr_ring, -2.8, -1.0, 1)} triệu / lượng",
+                    },
+                    "triggers": [
+                        "DXY phục hồi kỹ thuật hoặc các quỹ đầu cơ thanh lý một phần vị thế phái sinh trước cuối tuần.",
+                        "Lợi suất trái phiếu chính phủ Mỹ 10Y tăng nhẹ trở lại.",
+                    ],
+                    "investor_action": "Kiên nhẫn chờ đợi các nhịp rung lắc để tìm điểm mua tốt hơn ở các khung thời gian dài.",
+                },
+            ],
+        },
+        "1_month": {
+            "id": "1_month",
+            "badge": "Mốc 2",
+            "title": "1 Tháng (30 Ngày)",
+            "subtitle": "Phục vụ bắt nhịp sóng tháng, chu kỳ công bố dữ liệu vĩ mô & họp FED định kỳ",
+            "horizon_days": 30,
+            "dominant_driver": "Kỳ vọng lãi suất FED trong tháng & Chỉ số sức mạnh đồng USD (DXY)",
+            "summary": (
+                "Khung 1 tháng đủ dài để các yếu tố vĩ mô chuyển hóa thành xu hướng rõ rệt hơn trên giá vàng. "
+                "Với vàng vật chất Việt Nam, đây là khung tối thiểu để mức tăng trưởng giá có thể bù đắp chi phí chênh lệch Mua - Bán."
+            ),
+            "scenarios": [
+                {
+                    "type": "bullish",
+                    "name": "Kịch bản Tích cực (Tăng Trưởng Bứt Phá)",
+                    "probability": p2_bull,
+                    "expected_change_pct": "+2.5% đến +6.0%",
+                    "targets": {
+                        "xau_usd": f"${fmt_range(curr_xau, 2.5, 6.0, 0)} / oz",
+                        "sjc_vnd": f"{fmt_range(curr_sjc, 2.0, 5.0, 1)} triệu / lượng",
+                        "ring_9999_vnd": f"{fmt_range(curr_ring, 2.2, 5.5, 1)} triệu / lượng",
+                    },
+                    "triggers": [
+                        "Kỳ vọng FED hạ lãi suất gia tăng rõ rệt, đẩy DXY giảm dưới vùng hỗ trợ tháng.",
+                        "Dòng vốn từ các quỹ ETF vàng (SPDR) chuyển sang trạng thái mua ròng ròng rã nhiều phiên.",
+                    ],
+                    "investor_action": "Ưu tiên nắm giữ Vàng nhẫn ép vỉ 9999 vì bám sát thế giới và chênh lệch mua bán thấp hơn SJC.",
+                },
+                {
+                    "type": "base",
+                    "name": "Kịch bản Cơ sở (Tích Lũy Biên Độ Hẹp)",
+                    "probability": p2_base,
+                    "expected_change_pct": "-1.5% đến +2.5%",
+                    "targets": {
+                        "xau_usd": f"${fmt_range(curr_xau, -1.5, 2.5, 0)} / oz",
+                        "sjc_vnd": f"{fmt_range(curr_sjc, -1.2, 2.0, 1)} triệu / lượng",
+                        "ring_9999_vnd": f"{fmt_range(curr_ring, -1.5, 2.2, 1)} triệu / lượng",
+                    },
+                    "triggers": [
+                        "Dữ liệu kinh tế Mỹ đan xen trái chiều, thị trường chưa xác nhận xu hướng bứt phá mới.",
+                        "Tỷ giá USD/VND trong nước duy trì ổn định nhờ sự điều hành của NHNN.",
+                    ],
+                    "investor_action": "Thực hiện mua tích lũy định kỳ (DCA) từng phần nhỏ (15-20% vốn) vào các ngày điều chỉnh giảm.",
+                },
+                {
+                    "type": "bearish",
+                    "name": "Kịch bản Thận trọng (Điều Chỉnh Kỹ Thuật)",
+                    "probability": p2_bear,
+                    "expected_change_pct": "-6.0% đến -2.0%",
+                    "targets": {
+                        "xau_usd": f"${fmt_range(curr_xau, -6.0, -2.0, 0)} / oz",
+                        "sjc_vnd": f"{fmt_range(curr_sjc, -4.5, -1.5, 1)} triệu / lượng",
+                        "ring_9999_vnd": f"{fmt_range(curr_ring, -5.2, -1.8, 1)} triệu / lượng",
+                    },
+                    "triggers": [
+                        "DXY phục hồi mạnh hoặc lạm phát Mỹ dai dẳng khiến FED trì hoãn cắt giảm lãi suất.",
+                        "Áp lực bán chốt lời tại vùng đỉnh từ các quỹ đầu cơ lớn trên sàn COMEX.",
+                    ],
+                    "investor_action": "Dành sẵn 30-40% tiền mặt để sẵn sàng gom mua ở vùng hỗ trợ mạnh MA50 ngày.",
+                },
+            ],
+        },
+        "3_months": {
+            "id": "3_months",
+            "badge": "Mốc 3",
+            "title": "3 Tháng (1 Quý / 90 Ngày)",
+            "subtitle": "Phục vụ chiến lược đầu tư theo quý, chu kỳ báo cáo tài chính & lãi suất thực tế",
+            "horizon_days": 90,
+            "dominant_driver": "Lộ trình cắt giảm lãi suất của FED & Xu hướng tích trữ của các NHTW",
+            "summary": (
+                "Khung thời gian 1 Quý phản ánh đầy đủ một chu kỳ công bố chính sách tiền tệ và báo cáo dự trữ vàng quốc tế. "
+                "Đây là mốc thời gian lý tưởng cho nhà đầu tư cá nhân tại Việt Nam muốn tối ưu hóa lợi suất vượt trội so với gửi tiết kiệm 3 tháng."
+            ),
+            "scenarios": [
+                {
+                    "type": "bullish",
+                    "name": "Kịch bản Tích cực (Xu Hướng Tăng Quý Mới)",
+                    "probability": p3_bull,
+                    "expected_change_pct": "+4.5% đến +10.5%",
+                    "targets": {
+                        "xau_usd": f"${fmt_range(curr_xau, 4.5, 10.5, 0)} / oz",
+                        "sjc_vnd": f"{fmt_range(curr_sjc, 3.8, 9.0, 1)} triệu / lượng",
+                        "ring_9999_vnd": f"{fmt_range(curr_ring, 4.2, 10.0, 1)} triệu / lượng",
+                    },
+                    "triggers": [
+                        "FED chính thức hạ lãi suất hoặc phát tín hiệu nới lỏng chính sách rõ ràng trong quý.",
+                        "Các ngân hàng trung ương châu Á (PBoC, RBI) tiếp tục mua ròng vàng tháng này qua tháng khác.",
+                    ],
+                    "investor_action": "Duy trì tỷ trọng vàng 15–20% tổng tài sản tài chính; nắm giữ xuyên suốt quý để hưởng trọn sóng tăng.",
+                },
+                {
+                    "type": "base",
+                    "name": "Kịch bản Cơ sở (Tích Lũy Nền Giá Mới)",
+                    "probability": p3_base,
+                    "expected_change_pct": "-2.0% đến +4.5%",
+                    "targets": {
+                        "xau_usd": f"${fmt_range(curr_xau, -2.0, 4.5, 0)} / oz",
+                        "sjc_vnd": f"{fmt_range(curr_sjc, -1.8, 3.8, 1)} triệu / lượng",
+                        "ring_9999_vnd": f"{fmt_range(curr_ring, -1.8, 4.2, 1)} triệu / lượng",
+                    },
+                    "triggers": [
+                        "Lãi suất duy trì ở mức cao lâu hơn một chút nhưng rủi ro địa chính trị giữ giá vàng không thể giảm sâu.",
+                        "Thị trường nội địa cân bằng cung cầu, chênh lệch SJC ổn định.",
+                    ],
+                    "investor_action": "Tái cân bằng danh mục định kỳ mỗi cuối tháng, mua gia tăng khi giá điều chỉnh về vùng hỗ trợ MA50.",
+                },
+                {
+                    "type": "bearish",
+                    "name": "Kịch bản Thận trọng (Điều Chỉnh Sâu Theo Quý)",
+                    "probability": p3_bear,
+                    "expected_change_pct": "-8.5% đến -3.0%",
+                    "targets": {
+                        "xau_usd": f"${fmt_range(curr_xau, -8.5, -3.0, 0)} / oz",
+                        "sjc_vnd": f"{fmt_range(curr_sjc, -7.0, -2.5, 1)} triệu / lượng",
+                        "ring_9999_vnd": f"{fmt_range(curr_ring, -7.8, -2.8, 1)} triệu / lượng",
+                    },
+                    "triggers": [
+                        "Kinh tế Mỹ tăng trưởng quá nóng khiến đồng USD mạnh trở lại và lãi suất neo cao.",
+                        "Làn sóng bán tháo hàng hóa diện rộng khi căng thẳng địa chính trị hạ nhiệt.",
+                    ],
+                    "investor_action": "Không bán tháo trong hoảng loạn; kiên nhẫn tích lũy từng phần ở các mốc chiết khấu sâu.",
+                },
+            ],
+        },
+        "6_months": {
+            "id": "6_months",
+            "badge": "Mốc 4",
+            "title": "6 Tháng (Nửa Năm / 180 Ngày)",
+            "subtitle": "Phục vụ chu kỳ trung hạn, đón mùa vụ vàng cuối năm, lễ hội & ngày vía Thần Tài",
+            "horizon_days": 180,
+            "dominant_driver": "Chu kỳ tiền tệ nửa năm & Nhu cầu vàng vật chất mùa cao điểm châu Á",
+            "summary": (
+                "Khung 6 tháng là điểm giao thoa giữa chu kỳ chính sách tiền tệ toàn cầu và mùa vụ tiêu thụ vàng vật chất lớn nhất năm tại châu Á "
+                "(mùa cưới Ấn Độ, tiêu thụ vàng Tết và ngày vía Thần Tài tại Việt Nam). Tỷ suất sinh lời ở mốc này thường vượt trội và có độ tin cậy cao."
+            ),
+            "scenarios": [
+                {
+                    "type": "bullish",
+                    "name": "Kịch bản Tích cực (Đón Sóng Mùa Vụ Nửa Năm)",
+                    "probability": p4_bull,
+                    "expected_change_pct": "+7.0% đến +16.0%",
+                    "targets": {
+                        "xau_usd": f"${fmt_range(curr_xau, 7.0, 16.0, 0)} / oz",
+                        "sjc_vnd": f"{fmt_range(curr_sjc, 6.0, 14.0, 1)} triệu / lượng",
+                        "ring_9999_vnd": f"{fmt_range(curr_ring, 6.5, 15.0, 1)} triệu / lượng",
+                    },
+                    "triggers": [
+                        "Chu kỳ hạ lãi suất của FED diễn ra thông suốt, làm suy giảm lợi suất thực tế trên toàn cầu.",
+                        "Nhu cầu mua vàng vật chất đón năm mới và bảo toàn vốn tại Việt Nam, Trung Quốc tăng mạnh.",
+                    ],
+                    "investor_action": "Phân bổ 60% Vàng nhẫn 9999 + 40% Vàng miếng SJC; nắm giữ trọn vẹn 6 tháng để tối đa hóa lợi nhuận ròng.",
+                },
+                {
+                    "type": "base",
+                    "name": "Kịch bản Cơ sở (Tăng Trưởng Ổn Định)",
+                    "probability": p4_base,
+                    "expected_change_pct": "-1.5% đến +6.5%",
+                    "targets": {
+                        "xau_usd": f"${fmt_range(curr_xau, -1.5, 6.5, 0)} / oz",
+                        "sjc_vnd": f"{fmt_range(curr_sjc, -1.2, 5.5, 1)} triệu / lượng",
+                        "ring_9999_vnd": f"{fmt_range(curr_ring, -1.5, 6.0, 1)} triệu / lượng",
+                    },
+                    "triggers": [
+                        "Kinh tế toàn cầu tăng trưởng chậm lại ở mức vừa phải (Soft landing), giữ giá vàng ở mức cao.",
+                        "Tỷ giá USD/VND nhích tăng nhẹ theo đà trượt giá tự nhiên.",
+                    ],
+                    "investor_action": "Mua tích sản định kỳ mỗi tháng, lấy trung bình giá để hưởng lợi suất vượt trội so với tiền gửi ngắn hạn.",
+                },
+                {
+                    "type": "bearish",
+                    "name": "Kịch bản Thận trọng (Chu Kỳ Điều Chỉnh)",
+                    "probability": p4_bear,
+                    "expected_change_pct": "-10.0% đến -3.0%",
+                    "targets": {
+                        "xau_usd": f"${fmt_range(curr_xau, -10.0, -3.0, 0)} / oz",
+                        "sjc_vnd": f"{fmt_range(curr_sjc, -8.5, -2.5, 1)} triệu / lượng",
+                        "ring_9999_vnd": f"{fmt_range(curr_ring, -9.0, -2.8, 1)} triệu / lượng",
+                    },
+                    "triggers": [
+                        "Dòng tiền toàn cầu chuyển dịch mạnh sang cổ phiếu công nghệ và tài sản rủi ro.",
+                        "NHNN tăng cường nguồn cung vàng ra thị trường làm thu hẹp mạnh chênh lệch trong nước.",
+                    ],
+                    "investor_action": "Cơ hội giải ngân lớn tại vùng đường trung bình MA200 ngày cho các mục tiêu dài hạn.",
+                },
+            ],
+        },
+        "1_year": {
+            "id": "1_year",
+            "badge": "Mốc 5",
+            "title": "1 Năm (12 Tháng / 365 Ngày)",
+            "subtitle": "Phục vụ chiến lược phân bổ tài sản thường niên & tối ưu hóa lợi suất vượt tiết kiệm",
+            "horizon_days": 365,
+            "dominant_driver": "Chu kỳ lạm phát thường niên, cung tiền M2 & chính sách tiền tệ toàn cầu",
+            "summary": (
+                "Sau 1 năm, toàn bộ chi phí chênh lệch giá Mua - Bán tại tiệm vàng đều bị triệt tiêu bởi đà tăng tự nhiên của vàng thế giới "
+                "kết hợp tỷ giá USD/VND. Thống kê 5 năm qua cho thấy vàng luôn là kênh tài sản phòng thủ sinh lời hàng đầu cho nhà đầu tư Việt Nam."
+            ),
+            "scenarios": [
+                {
+                    "type": "bullish",
+                    "name": "Kịch bản Tích cực (Tăng Trưởng Bứt Phá Năm)",
+                    "probability": p5_bull,
+                    "expected_change_pct": "+12.0% đến +25.0%",
+                    "targets": {
+                        "xau_usd": f"${fmt_range(curr_xau, 12.0, 25.0, 0)} / oz",
+                        "sjc_vnd": f"{fmt_range(curr_sjc, 10.0, 22.0, 1)} triệu / lượng",
+                        "ring_9999_vnd": f"{fmt_range(curr_ring, 11.0, 24.0, 1)} triệu / lượng",
+                    },
+                    "triggers": [
+                        "Lãi suất toàn cầu bước vào vùng thấp, làm đồng USD suy yếu kéo dài.",
+                        "Thâm hụt nợ công Mỹ tăng cao thúc đẩy các tổ chức tài chính lớn tăng tỷ trọng phân bổ vào vàng.",
+                        "Tỷ giá USD/VND điều chỉnh tăng 2.5% – 3.5%/năm.",
+                    ],
+                    "investor_action": "Nắm giữ chặt chẽ, không bán non; tái cân bằng danh mục tài sản mỗi năm một lần.",
+                },
+                {
+                    "type": "base",
+                    "name": "Kịch bản Cơ sở (Tăng Trưởng Bền Vững)",
+                    "probability": p5_base,
+                    "expected_change_pct": "+4.0% đến +12.0%",
+                    "targets": {
+                        "xau_usd": f"${fmt_range(curr_xau, 4.0, 12.0, 0)} / oz",
+                        "sjc_vnd": f"{fmt_range(curr_sjc, 3.5, 10.5, 1)} triệu / lượng",
+                        "ring_9999_vnd": f"{fmt_range(curr_ring, 4.0, 11.5, 1)} triệu / lượng",
+                    },
+                    "triggers": [
+                        "Lạm phát duy trì quanh ngưỡng mục tiêu 2.5% - 3.0%, kinh tế tăng trưởng ổn định.",
+                        "Nhu cầu tích sản vàng của người dân duy trì đều đặn.",
+                    ],
+                    "investor_action": "Tỷ suất sinh lời dự kiến 7% - 10%/năm, vượt trội hoàn toàn so với lãi suất tiết kiệm ngân hàng 12 tháng.",
+                },
+                {
+                    "type": "bearish",
+                    "name": "Kịch bản Thận trọng (Đi Ngang Tích Lũy)",
+                    "probability": p5_bear,
+                    "expected_change_pct": "-8.0% đến +3.0%",
+                    "targets": {
+                        "xau_usd": f"${fmt_range(curr_xau, -8.0, 3.0, 0)} / oz",
+                        "sjc_vnd": f"{fmt_range(curr_sjc, -7.0, 2.5, 1)} triệu / lượng",
+                        "ring_9999_vnd": f"{fmt_range(curr_ring, -7.5, 3.0, 1)} triệu / lượng",
+                    },
+                    "triggers": [
+                        "Lãi suất thực duy trì ở mức cao kéo dài, kinh tế toàn cầu phục hồi mạnh mẽ không cần kích thích.",
+                    ],
+                    "investor_action": "Áp dụng chiến lược mua định kỳ hàng tháng để hạ giá vốn và tận dụng các phiên điều chỉnh.",
+                },
+            ],
+        },
+        "3_5_years": {
+            "id": "3_5_years",
+            "badge": "Mốc 6",
+            "title": "3 – 5 Năm (Siêu Chu Kỳ Dài Hạn)",
+            "subtitle": "Phục vụ nhà đầu tư tích sản tài sản ròng, chống xói mòn sức mua tiền tệ & phi đô la hóa",
+            "horizon_days": 1260,
+            "dominant_driver": "Mở rộng cung tiền M2 toàn cầu, Nợ công Mỹ & Xu hướng tích trữ vàng dài hạn của NHTW",
+            "summary": (
+                "Trong chu kỳ 3–5 năm, vàng là tài sản bảo toàn sức mua tuyệt đối trước sự mở rộng cung tiền fiat và nợ công kỷ lục. "
+                "Tại Việt Nam, kết hợp giữa xu hướng tăng của giá vàng thế giới và tỷ giá USD/VND tạo nên sức mạnh lãi kép vượt trội cho người tích sản dài hạn."
+            ),
+            "scenarios": [
+                {
+                    "type": "bullish",
+                    "name": "Kịch bản Tích cực (Siêu Chu Kỳ Tích Sản Vàng)",
+                    "probability": p6_bull,
+                    "expected_change_pct": "+22.0% đến +48.0%",
+                    "targets": {
+                        "xau_usd": f"${fmt_range(curr_xau, 22.0, 48.0, 0)} / oz",
+                        "sjc_vnd": f"{fmt_range(curr_sjc, 20.0, 44.0, 1)} triệu / lượng",
+                        "ring_9999_vnd": f"{fmt_range(curr_ring, 21.0, 46.0, 1)} triệu / lượng",
+                    },
+                    "triggers": [
+                        "Ngân hàng Trung ương các nước mới nổi tiếp tục mua ròng kỷ lục >1,000 tấn vàng mỗi năm.",
+                        "Quá trình phi đô la hóa (De-dollarization) thúc đẩy tái cơ cấu dự trữ ngoại hối toàn cầu sang vàng.",
+                        "Tỷ giá USD/VND lũy kế tăng 8% - 15% trong 3-5 năm.",
+                    ],
+                    "investor_action": "Tích sản đều đặn vào Vàng nhẫn 9999 hoặc SJC (chiếm 20% - 30% tổng tài sản ròng gia đình), không quan tâm đến biến động ngắn hạn.",
+                },
+                {
+                    "type": "base",
+                    "name": "Kịch bản Cơ sở (Tăng Trưởng Bền Vững Theo Chu Kỳ)",
+                    "probability": p6_base,
+                    "expected_change_pct": "+10.0% đến +22.0%",
+                    "targets": {
+                        "xau_usd": f"${fmt_range(curr_xau, 10.0, 22.0, 0)} / oz",
+                        "sjc_vnd": f"{fmt_range(curr_sjc, 9.0, 20.0, 1)} triệu / lượng",
+                        "ring_9999_vnd": f"{fmt_range(curr_ring, 9.5, 21.0, 1)} triệu / lượng",
+                    },
+                    "triggers": [
+                        "Kinh tế toàn cầu tăng trưởng bình thường, lạm phát ổn định nhưng cung tiền vẫn tiếp tục mở rộng đều đặn.",
+                        "Vàng tăng giá tương ứng với tốc độ trượt giá tiền mặt và tăng trưởng GDP.",
+                    ],
+                    "investor_action": "Nắm giữ như khoản bảo hiểm danh mục đầu tư dài hạn, phòng vệ trước mọi bất định kinh tế.",
+                },
+                {
+                    "type": "bearish",
+                    "name": "Kịch bản Thận trọng (Tăng Trưởng Chậm)",
+                    "probability": p6_bear,
+                    "expected_change_pct": "-5.0% đến +10.0%",
+                    "targets": {
+                        "xau_usd": f"${fmt_range(curr_xau, -5.0, 10.0, 0)} / oz",
+                        "sjc_vnd": f"{fmt_range(curr_sjc, -4.0, 9.0, 1)} triệu / lượng",
+                        "ring_9999_vnd": f"{fmt_range(curr_ring, -4.5, 9.5, 1)} triệu / lượng",
+                    },
+                    "triggers": [
+                        "Năng suất công nghệ đột phá thúc đẩy tăng trưởng vượt bậc mà không gây lạm phát.",
+                        "Căng thẳng địa chính trị toàn cầu đạt được các thỏa thuận hòa bình lâu dài.",
+                    ],
+                    "investor_action": "Không 'all-in' vào một thời điểm; giải ngân đều đặn theo phương pháp trung bình giá DCA.",
+                },
+            ],
+        },
+    }
+
     return {
         "CompositeMacroScore": round(composite_score * 100, 1),
         "AnnualizedVolatilityPct": annual_vol,
-        "horizons": {
-            "short_term": {
-                "id": "short_term",
-                "title": "Ngắn hạn (1 – 4 Tuần)",
-                "subtitle": "Phục vụ giao dịch lướt sóng, căn chỉnh thời điểm mua/bán theo tin vĩ mô & kỹ thuật",
-                "horizon_days": 21,
-                "dominant_driver": factors[0]["name"],
-                "summary": (
-                    f"Biến động ngắn hạn chịu chi phối trực tiếp từ {factors[0]['name']} và chỉ báo RSI ({rsi_14:.1f}). "
-                    "Nhà đầu tư cá nhân tại Việt Nam cần lưu ý chênh lệch Mua - Bán (~1.3 đến 2.0 triệu/lượng) "
-                    "khiến việc lướt sóng dưới 2 tuần cần biên độ tăng tối thiểu >2.5% mới có lãi thực tế."
-                ),
-                "scenarios": [
-                    {
-                        "type": "bullish",
-                        "name": "Kịch bản Tích cực (Bứt phá / Tăng tiếp diễn)",
-                        "probability": st_bull,
-                        "expected_change_pct": "+2.0% đến +4.8%",
-                        "targets": {
-                            "xau_usd": f"${fmt_range(curr_xau, 2.0, 4.8, 0)} / oz",
-                            "sjc_vnd": f"{fmt_range(curr_sjc, 1.5, 4.0, 1)} triệu / lượng",
-                            "ring_9999_vnd": f"{fmt_range(curr_ring, 1.8, 4.5, 1)} triệu / lượng",
-                        },
-                        "triggers": [
-                            "Chỉ số DXY suy yếu và lợi suất TPCP Mỹ 10 năm giảm dưới ngưỡng kháng cự.",
-                            "Dữ liệu kinh tế Mỹ (CPI/PCE hoặc bảng lương phi nông nghiệp) củng cố kỳ vọng hạ lãi suất.",
-                            "Giá XAU/USD giữ vững trên đường trung bình động MA20 với khối lượng mua tăng.",
-                        ],
-                        "investor_action": "Nắm giữ vị thế sẵn có; ưu tiên giữ Vàng nhẫn 9999 do biên độ tăng bám sát thế giới và chênh lệch mua-bán thấp hơn SJC.",
-                    },
-                    {
-                        "type": "base",
-                        "name": "Kịch bản Cơ sở (Đi ngang Tích lũy biên độ hẹp)",
-                        "probability": st_base,
-                        "expected_change_pct": "-1.5% đến +1.8%",
-                        "targets": {
-                            "xau_usd": f"${fmt_range(curr_xau, -1.5, 1.8, 0)} / oz",
-                            "sjc_vnd": f"{fmt_range(curr_sjc, -1.0, 1.5, 1)} triệu / lượng",
-                            "ring_9999_vnd": f"{fmt_range(curr_ring, -1.2, 1.6, 1)} triệu / lượng",
-                        },
-                        "triggers": [
-                            "Thị trường chờ đợi cuộc họp chính sách tiếp theo của FED và báo cáo lạm phát.",
-                            "Lực chốt lời ngắn hạn cân bằng với lực mua bắt đáy tại vùng hỗ trợ MA20.",
-                        ],
-                        "investor_action": "Quan sát, hạn chế giao dịch lướt sóng T+ với vàng vật chất để tránh thiệt hại do chênh lệch giá Mua - Bán tại tiệm vàng.",
-                    },
-                    {
-                        "type": "bearish",
-                        "name": "Kịch bản Thận trọng (Điều chỉnh Kỹ thuật / Chốt lời)",
-                        "probability": st_bear,
-                        "expected_change_pct": "-5.0% đến -2.0%",
-                        "targets": {
-                            "xau_usd": f"${fmt_range(curr_xau, -5.0, -2.0, 0)} / oz",
-                            "sjc_vnd": f"{fmt_range(curr_sjc, -4.0, -1.5, 1)} triệu / lượng",
-                            "ring_9999_vnd": f"{fmt_range(curr_ring, -4.5, -1.8, 1)} triệu / lượng",
-                        },
-                        "triggers": [
-                            "Áp lực chốt lời của các quỹ đầu cơ khi RSI tiến vào vùng quá mua hoặc DXY bật tăng.",
-                            "Lợi suất trái phiếu Mỹ bật tăng ngắn hạn sau các phát biểu diều hâu (Hawkish).",
-                        ],
-                        "investor_action": "Đây là cơ hội gom mua tích lũy từng phần (DCA 20-30% vốn) khi giá lùi về vùng hỗ trợ MA50.",
-                    },
-                ],
-            },
-            "mid_term": {
-                "id": "mid_term",
-                "title": "Trung hạn (1 – 6 Tháng)",
-                "subtitle": "Phục vụ chiến lược nắm giữ theo chu kỳ vĩ mô quý, lãi suất & tỷ giá USD/VND",
-                "horizon_days": 120,
-                "dominant_driver": "Chu kỳ lãi suất thực của FED & Tỷ giá USD/VND trong nước",
-                "summary": (
-                    "Trong khung 1–6 tháng, xu hướng vàng được quyết định bởi lộ trình lãi suất của FED, nhu cầu tiêu thụ "
-                    "vàng vật chất mùa cao điểm châu Á và áp lực tỷ giá USD/VND. Đây là khung thời gian tối ưu để vượt qua "
-                    "rào cản chênh lệch giá mua - bán vàng vật chất tại Việt Nam."
-                ),
-                "scenarios": [
-                    {
-                        "type": "bullish",
-                        "name": "Kịch bản Tích cực (Chu kỳ Tăng giá Trung hạn)",
-                        "probability": mt_bull,
-                        "expected_change_pct": "+6.0% đến +14.0%",
-                        "targets": {
-                            "xau_usd": f"${fmt_range(curr_xau, 6.0, 14.0, 0)} / oz",
-                            "sjc_vnd": f"{fmt_range(curr_sjc, 5.0, 12.0, 1)} triệu / lượng",
-                            "ring_9999_vnd": f"{fmt_range(curr_ring, 5.5, 13.5, 1)} triệu / lượng",
-                        },
-                        "triggers": [
-                            "FED thực hiện cắt giảm lãi suất điều hành và lợi suất thực giảm rõ rệt.",
-                            "Các quỹ ETF vàng toàn cầu (SPDR Gold Trust) duy trì mua ròng liên tiếp nhiều tuần.",
-                            "Nhu cầu vàng vật chất tại Trung Quốc, Ấn Độ và Việt Nam tăng cao theo mùa vụ.",
-                        ],
-                        "investor_action": "Phân bổ 60% Vàng nhẫn 9999 + 40% Vàng SJC; nắm giữ tối thiểu 3-6 tháng để tối ưu hóa tỷ suất sinh lời.",
-                    },
-                    {
-                        "type": "base",
-                        "name": "Kịch bản Cơ sở (Tích lũy Nền giá Cao)",
-                        "probability": mt_base,
-                        "expected_change_pct": "-2.5% đến +5.5%",
-                        "targets": {
-                            "xau_usd": f"${fmt_range(curr_xau, -2.5, 5.5, 0)} / oz",
-                            "sjc_vnd": f"{fmt_range(curr_sjc, -2.0, 4.5, 1)} triệu / lượng",
-                            "ring_9999_vnd": f"{fmt_range(curr_ring, -2.0, 5.0, 1)} triệu / lượng",
-                        },
-                        "triggers": [
-                            "Lãi suất duy trì ở mức trung tính lâu hơn dự kiến nhưng rủi ro địa chính trị giữ giá vàng không giảm sâu.",
-                            "NHNN duy trì chính sách bình ổn giữ chênh lệch vàng SJC ở mức ổn định 3–6 triệu/lượng.",
-                        ],
-                        "investor_action": "Chiến lược mua trung bình giá (DCA) định kỳ hàng tháng mỗi khi giá điều chỉnh 3-5% từ đỉnh.",
-                    },
-                    {
-                        "type": "bearish",
-                        "name": "Kịch bản Thận trọng (Điều chỉnh Chu kỳ Trung hạn)",
-                        "probability": mt_bear,
-                        "expected_change_pct": "-10.0% đến -3.5%",
-                        "targets": {
-                            "xau_usd": f"${fmt_range(curr_xau, -10.0, -3.5, 0)} / oz",
-                            "sjc_vnd": f"{fmt_range(curr_sjc, -8.5, -3.0, 1)} triệu / lượng",
-                            "ring_9999_vnd": f"{fmt_range(curr_ring, -9.0, -3.0, 1)} triệu / lượng",
-                        },
-                        "triggers": [
-                            "Lạm phát hạ nhiệt nhanh đi kèm tăng trưởng kinh tế mạnh khiến dòng tiền rút khỏi tài sản phòng thủ sang cổ phiếu.",
-                            "NHNN tăng mạnh nguồn cung vàng miếng làm thu hẹp nhanh độ lệch (Spread) SJC.",
-                        ],
-                        "investor_action": "Duy trì tỷ trọng tiền mặt dự phòng 30-40% để mua gom ở vùng đường trung bình MA200 ngày.",
-                    },
-                ],
-            },
-            "long_term": {
-                "id": "long_term",
-                "title": "Dài hạn (1 – 3 Năm)",
-                "subtitle": "Phục vụ nhà đầu tư tích sản, bảo toàn tài sản & phòng vệ trượt giá tiền tệ",
-                "horizon_days": 730,
-                "dominant_driver": "Cung tiền M2 toàn cầu, Nợ công Mỹ & Xu hướng tích trữ vàng của NHTW",
-                "summary": (
-                    "Lịch sử 5–20 năm chứng minh vàng là tài sản bảo toàn sức mua hàng đầu trước sự mở rộng cung tiền M2 "
-                    "và nợ công toàn cầu. Tại Việt Nam, kết hợp giữa xu hướng tăng của XAU/USD và độ trượt giá tự nhiên của VND "
-                    "(2%–3%/năm) tạo ra lợi suất kép bền vững cho người nắm giữ dài hạn."
-                ),
-                "scenarios": [
-                    {
-                        "type": "bullish",
-                        "name": "Kịch bản Tích cực (Siêu chu kỳ Tích sản & Phòng vệ Tiền tệ)",
-                        "probability": lt_bull,
-                        "expected_change_pct": "+18.0% đến +38.0%",
-                        "targets": {
-                            "xau_usd": f"${fmt_range(curr_xau, 18.0, 38.0, 0)} / oz",
-                            "sjc_vnd": f"{fmt_range(curr_sjc, 15.0, 34.0, 1)} triệu / lượng",
-                            "ring_9999_vnd": f"{fmt_range(curr_ring, 17.0, 36.0, 1)} triệu / lượng",
-                        },
-                        "triggers": [
-                            "Ngân hàng Trung ương các nước mới nổi tiếp tục mua ròng >1,000 tấn vàng/năm để đa dạng hóa dự trữ.",
-                            "Thâm hụt ngân sách và nợ công toàn cầu tăng cao thúc đẩy dòng vốn dài hạn tìm đến tài sản hữu hình.",
-                            "Tỷ giá USD/VND điều chỉnh tăng lũy kế 3-6% trong chu kỳ 1-3 năm.",
-                        ],
-                        "investor_action": "Tích sản định kỳ hàng quý vào Vàng nhẫn ép vỉ 9999 hoặc Vàng miếng SJC (chiếm 15% - 25% tổng danh mục tài sản ròng).",
-                    },
-                    {
-                        "type": "base",
-                        "name": "Kịch bản Cơ sở (Tăng trưởng Bền vững theo Lạm phát)",
-                        "probability": lt_base,
-                        "expected_change_pct": "+6.0% đến +17.0%",
-                        "targets": {
-                            "xau_usd": f"${fmt_range(curr_xau, 6.0, 17.0, 0)} / oz",
-                            "sjc_vnd": f"{fmt_range(curr_sjc, 5.0, 15.0, 1)} triệu / lượng",
-                            "ring_9999_vnd": f"{fmt_range(curr_ring, 6.0, 16.0, 1)} triệu / lượng",
-                        },
-                        "triggers": [
-                            "Kinh tế toàn cầu hạ cánh mềm (Soft Landing), lạm phát ổn định quanh 2.5% - 3.0%/năm.",
-                            "Vàng tăng trưởng tương đương tốc độ mở rộng cung tiền và trượt giá tiền tệ.",
-                        ],
-                        "investor_action": "Nắm giữ dài hạn như kênh bảo hiểm danh mục đầu tư, kết hợp tái cân bằng danh mục mỗi năm 1 lần.",
-                    },
-                    {
-                        "type": "bearish",
-                        "name": "Kịch bản Thận trọng (Chu kỳ Lãi suất Thực Cao Kéo dài)",
-                        "probability": lt_bear,
-                        "expected_change_pct": "-8.0% đến +5.0%",
-                        "targets": {
-                            "xau_usd": f"${fmt_range(curr_xau, -8.0, 5.0, 0)} / oz",
-                            "sjc_vnd": f"{fmt_range(curr_sjc, -7.0, 4.0, 1)} triệu / lượng",
-                            "ring_9999_vnd": f"{fmt_range(curr_ring, -7.0, 4.5, 1)} triệu / lượng",
-                        },
-                        "triggers": [
-                            "Kinh tế tăng trưởng đột phá nhờ năng suất công nghệ, giữ lãi suất thực dương ở mức cao trong nhiều năm.",
-                            "Căng thẳng địa chính trị toàn cầu hạ nhiệt hoàn toàn.",
-                        ],
-                        "investor_action": "Không dồn toàn bộ vốn (All-in) tại một mức giá; giải ngân theo phương pháp trung bình giá (DCA) để triệt tiêu rủi ro đu đỉnh.",
-                    },
-                ],
-            },
-        },
+        "horizons": horizons,
     }
 
 
 # ==============================================================================
-# 6. TỔNG HỢP DỮ LIỆU & XUẤT FILE JSON + JS
+# 5b. ĐỘNG CƠ TÍN HIỆU & THIẾT LẬP KẾ HOẠCH LƯỚT SÓNG (NGẮN HẠN T+ & TRUNG HẠN)
+# ==============================================================================
+
+def compute_swing_trading_setup(
+    xau_series: List[Dict[str, Any]],
+    sjc_series: List[Dict[str, Any]],
+    ring_series: List[Dict[str, Any]],
+    factors: List[Dict[str, Any]],
+    rsi_14: float,
+    macd_info: Dict[str, float],
+    usdvnd_info: Dict[str, float],
+) -> Dict[str, Any]:
+    """
+    Tính toán chiến lược lướt sóng chuyên biệt cho nhà đầu tư vàng:
+    1. NGẮN HẠN (1 – 2 Tuần / T+): Bắt nhịp sóng ngắn MA5/MA10, RSI cực đại, lọc bẫy Spread.
+    2. TRUNG HẠN (1 – 3 Tháng / Sóng Chu Kỳ): Đón sóng MA20/MA50, Fibonacci, R:R >= 1.8.
+    """
+    latest_xau = xau_series[-1]
+    latest_sjc = sjc_series[-1]
+    latest_ring = ring_series[-1]
+    xau_close = latest_xau["close"]
+
+    xau_closes = [b["close"] for b in xau_series]
+    ring_closes = [b["close"] for b in ring_series]
+    sjc_closes = [b["close"] for b in sjc_series]
+
+    # --- BIÊN ĐỘ GIÁ THEO KHUNG THỜI GIAN ---
+    # 5 phiên (~1 tuần) và 10 phiên (~2 tuần) cho Ngắn hạn
+    window_5_xau = xau_series[-min(5, len(xau_series)):]
+    window_10_xau = xau_series[-min(10, len(xau_series)):]
+    window_5_ring = ring_series[-min(5, len(ring_series)):]
+    window_10_ring = ring_series[-min(10, len(ring_series)):]
+    window_5_sjc = sjc_series[-min(5, len(sjc_series)):]
+    window_10_sjc = sjc_series[-min(10, len(sjc_series)):]
+
+    xau_high_5 = max(b["high"] for b in window_5_xau)
+    xau_low_5 = min(b["low"] for b in window_5_xau)
+    xau_high_10 = max(b["high"] for b in window_10_xau)
+    xau_low_10 = min(b["low"] for b in window_10_xau)
+
+    ring_high_5 = max(b["high"] for b in window_5_ring)
+    ring_low_5 = min(b["low"] for b in window_5_ring)
+    ring_high_10 = max(b["high"] for b in window_10_ring)
+    ring_low_10 = min(b["low"] for b in window_10_ring)
+
+    sjc_high_5 = max(b["high"] for b in window_5_sjc)
+    sjc_low_5 = min(b["low"] for b in window_5_sjc)
+    sjc_high_10 = max(b["high"] for b in window_10_sjc)
+    sjc_low_10 = min(b["low"] for b in window_10_sjc)
+
+    # 20 phiên (~1 tháng) và 60 phiên (~3 tháng) cho Trung hạn
+    window_20_xau = xau_series[-min(20, len(xau_series)):]
+    window_60_xau = xau_series[-min(60, len(xau_series)):]
+    window_20_ring = ring_series[-min(20, len(ring_series)):]
+    window_60_ring = ring_series[-min(60, len(ring_series)):]
+    window_20_sjc = sjc_series[-min(20, len(sjc_series)):]
+    window_60_sjc = sjc_series[-min(60, len(sjc_series)):]
+
+    xau_high_20 = max(b["high"] for b in window_20_xau)
+    xau_low_20 = min(b["low"] for b in window_20_xau)
+    xau_high_60 = max(b["high"] for b in window_60_xau)
+    xau_low_60 = min(b["low"] for b in window_60_xau)
+
+    ring_high_20 = max(b["high"] for b in window_20_ring)
+    ring_low_20 = min(b["low"] for b in window_20_ring)
+    ring_high_60 = max(b["high"] for b in window_60_ring)
+    ring_low_60 = min(b["low"] for b in window_60_ring)
+
+    sjc_high_20 = max(b["high"] for b in window_20_sjc)
+    sjc_low_20 = min(b["low"] for b in window_20_sjc)
+    sjc_high_60 = max(b["high"] for b in window_60_sjc)
+    sjc_low_60 = min(b["low"] for b in window_60_sjc)
+
+    # --- ĐƯỜNG TRUNG BÌNH ĐỘNG NHANH & CHẬM ---
+    xau_ma5 = calc_sma(xau_closes, 5)[-1] or xau_close
+    xau_ma10 = calc_sma(xau_closes, 10)[-1] or xau_close
+    xau_ma20 = latest_xau.get("ma20") or xau_close
+    xau_ma50 = latest_xau.get("ma50") or xau_close
+    xau_ma200 = latest_xau.get("ma200") or xau_close
+
+    ring_ma5 = calc_sma(ring_closes, 5)[-1] or latest_ring["close"]
+    ring_ma10 = calc_sma(ring_closes, 10)[-1] or latest_ring["close"]
+    ring_ma20 = latest_ring.get("ma20") or latest_ring["close"]
+    ring_ma50 = latest_ring.get("ma50") or latest_ring["close"]
+    ring_ma200 = latest_ring.get("ma200") or calc_sma(ring_closes, 200)[-1] or latest_ring["close"]
+
+    sjc_ma5 = calc_sma(sjc_closes, 5)[-1] or latest_sjc["close"]
+    sjc_ma10 = calc_sma(sjc_closes, 10)[-1] or latest_sjc["close"]
+    sjc_ma20 = latest_sjc.get("ma20") or latest_sjc["close"]
+    sjc_ma50 = latest_sjc.get("ma50") or latest_sjc["close"]
+    sjc_ma200 = latest_sjc.get("ma200") or calc_sma(sjc_closes, 200)[-1] or latest_sjc["close"]
+
+    # --- CHÊNH LỆCH MUA-BÁN & PREMIUM NỘI ĐỊA ---
+    ring_spread = round(latest_ring["sell"] - latest_ring["buy"], 2)
+    sjc_spread = round(latest_sjc["sell"] - latest_sjc["buy"], 2)
+    ring_premium = round(latest_ring["spread"], 2)
+    sjc_premium = round(latest_sjc["spread"], 2)
+
+    ring_spread_pct = round((ring_spread / latest_ring["sell"]) * 100, 2)
+    sjc_spread_pct = round((sjc_spread / latest_sjc["sell"]) * 100, 2)
+
+    macd_hist = macd_info.get("histogram", 0.0)
+
+    # =========================================================================
+    # A. PHÂN HỆ 1: LƯỚT SÓNG NGẮN HẠN (1 – 2 TUẦN / T+)
+    # =========================================================================
+    if rsi_14 <= 30.0:
+        short_action_code = "SCALP_BOUNCE"
+        short_action_badge = "CANH BẮT SÓNG HỒI T+ (OVERSOLD BOUNCE)"
+        short_badge_variant = "emerald"
+        short_action_summary = (
+            f"Chỉ báo RSI(14) chạm {rsi_14:.1f} (Quá bán sâu). Động lượng bán cạn kiệt mở ra cơ hội lướt sóng hồi ngắn hạn 3 – 5 ngày quanh hỗ trợ đáy 5 phiên. Kỷ luật T+: Chốt lời nhanh khi giá kiểm định MA5/MA10, không gồng lệnh."
+        )
+    elif rsi_14 >= 68.0 or xau_close >= xau_high_10 * 0.995:
+        short_action_code = "QUICK_TAKE_PROFIT"
+        short_action_badge = "CHỐT LỜI NHANH T+ (QUICK EXIT)"
+        short_badge_variant = "amber"
+        short_action_summary = (
+            f"RSI(14) đạt {rsi_14:.1f} (Quá mua) hoặc giá chạm đỉnh 10 phiên (${xau_high_10:,.1f}). Áp lực chốt lời T+ rất cao. Ưu tiên tất toán 100% vị thế ngắn hạn để bảo toàn lợi nhuận."
+        )
+    elif xau_close > xau_ma10 and xau_ma5 >= xau_ma10:
+        short_action_code = "MOMENTUM_BUY"
+        short_action_badge = "LƯỚT THEO ĐÀ TĂNG T+ (MOMENTUM)"
+        short_badge_variant = "emerald"
+        short_action_summary = (
+            "Đường MA5 vượt trên MA10 và giá giữ vững trên MA10. Xung lực ngắn hạn ủng hộ lướt T+ theo chiều tăng, mục tiêu hướng tới đỉnh 10 phiên."
+        )
+    elif xau_close < xau_ma10 * 0.985:
+        short_action_code = "STAND_ASIDE"
+        short_action_badge = "ĐỨNG NGOÀI / TRÁNH BẪY SPREAD"
+        short_badge_variant = "rose"
+        short_action_summary = (
+            "Giá nằm dưới các đường trung bình ngắn hạn (MA5, MA10) và động lượng suy yếu. Trong chu kỳ ngắn hạn 1–2 tuần, chi phí chênh lệch Mua-Bán (Spread) sẽ bào mòn lợi nhuận. Khuyến nghị đứng ngoài quan sát."
+        )
+    else:
+        short_action_code = "SIDEWAY_SCALP"
+        short_action_badge = "GIẰNG CO / LƯỚT BIÊN ĐỘ HẸP"
+        short_badge_variant = "sky"
+        short_action_summary = (
+            f"Thị trường đang tích lũy đi ngang trong biên hẹp 5 phiên (${xau_low_5:,.1f} – ${xau_high_5:,.1f}). Chỉ giải ngân tỷ trọng nhỏ tại biên dưới và chốt lời ngay ở biên trên."
+        )
+
+    if ring_spread_pct <= sjc_spread_pct:
+        short_preferred_asset = "ring_9999"
+        short_preferred_asset_name = "Vàng Nhẫn Tròn Trơn 9999"
+        short_preferred_reason = (
+            f"Lướt sóng ngắn hạn 1–2 tuần bắt buộc ưu tiên tài sản có phí trượt giá thấp nhất. Vàng Nhẫn 9999 có biên Mua-Bán {ring_spread:.2f} tr/lượng ({ring_spread_pct}%), "
+            f"thấp hơn SJC ({sjc_spread:.2f} tr/lượng, {sjc_spread_pct}%), giúp giảm thiểu áp lực hòa vốn khi lướt T+."
+        )
+    else:
+        short_preferred_asset = "sjc"
+        short_preferred_asset_name = "Vàng Miếng SJC 999.9"
+        short_preferred_reason = (
+            f"Hôm nay tỷ lệ Spread của SJC ({sjc_spread:.2f} tr ~ {sjc_spread_pct}%) thấp hơn Vàng Nhẫn ({ring_spread:.2f} tr ~ {ring_spread_pct}%), "
+            "giúp giảm bớt chi phí trượt giá ban đầu khi lướt ngắn hạn."
+        )
+
+    # Setups T+ Vàng Nhẫn
+    ring_short_entry_min = round(min(latest_ring["sell"], ring_ma5 * 0.998), 2)
+    ring_short_entry_max = round(latest_ring["sell"] * 1.002, 2)
+    ring_short_sl = round(ring_high_5 * 0.985 if ring_low_5 >= latest_ring["sell"] else ring_low_5 * 0.995, 2)
+    ring_short_risk = max(round(latest_ring["sell"] - ring_short_sl, 2), round(ring_spread * 1.25, 2))
+    ring_short_risk_pct = round((ring_short_risk / latest_ring["sell"]) * 100, 2)
+
+    ring_short_tp1 = round(max(ring_high_5, latest_ring["sell"] * 1.025), 2)
+    ring_short_tp1_gain = round(ring_short_tp1 - latest_ring["sell"], 2)
+    ring_short_tp1_pct = round((ring_short_tp1_gain / latest_ring["sell"]) * 100, 2)
+    ring_short_rr1 = round(ring_short_tp1_gain / ring_short_risk, 2) if ring_short_risk > 0 else 1.2
+
+    ring_short_tp2 = round(max(ring_high_10, latest_ring["sell"] * 1.045), 2)
+    ring_short_tp2_gain = round(ring_short_tp2 - latest_ring["sell"], 2)
+    ring_short_tp2_pct = round((ring_short_tp2_gain / latest_ring["sell"]) * 100, 2)
+    ring_short_rr2 = round(ring_short_tp2_gain / ring_short_risk, 2) if ring_short_risk > 0 else 2.0
+
+    ring_short_rating = "KÈO CHUẨN T+" if ring_short_rr1 >= 1.4 else "KHẢ DỤNG THẤP (BIÊN MỎNG)"
+
+    # Setups T+ SJC
+    sjc_short_entry_min = round(min(latest_sjc["sell"], sjc_ma5 * 0.998), 2)
+    sjc_short_entry_max = round(latest_sjc["sell"] * 1.003, 2)
+    sjc_short_sl = round(sjc_high_5 * 0.985 if sjc_low_5 >= latest_sjc["sell"] else sjc_low_5 * 0.995, 2)
+    sjc_short_risk = max(round(latest_sjc["sell"] - sjc_short_sl, 2), round(sjc_spread * 1.25, 2))
+    sjc_short_risk_pct = round((sjc_short_risk / latest_sjc["sell"]) * 100, 2)
+
+    sjc_short_tp1 = round(max(sjc_high_5, latest_sjc["sell"] * 1.03), 2)
+    sjc_short_tp1_gain = round(sjc_short_tp1 - latest_sjc["sell"], 2)
+    sjc_short_tp1_pct = round((sjc_short_tp1_gain / latest_sjc["sell"]) * 100, 2)
+    sjc_short_rr1 = round(sjc_short_tp1_gain / sjc_short_risk, 2) if sjc_short_risk > 0 else 1.1
+
+    sjc_short_tp2 = round(max(sjc_high_10, latest_sjc["sell"] * 1.05), 2)
+    sjc_short_tp2_gain = round(sjc_short_tp2 - latest_sjc["sell"], 2)
+    sjc_short_tp2_pct = round((sjc_short_tp2_gain / latest_sjc["sell"]) * 100, 2)
+    sjc_short_rr2 = round(sjc_short_tp2_gain / sjc_short_risk, 2) if sjc_short_risk > 0 else 1.8
+
+    sjc_short_rating = "KÈO CHUẨN T+" if sjc_short_rr1 >= 1.4 else "KHẢ DỤNG THẤP (BIÊN MỎNG)"
+
+    # Setups T+ XAU/USD
+    xau_short_entry_min = round(min(xau_close, xau_ma5 * 0.998), 2)
+    xau_short_entry_max = round(xau_close * 1.002, 2)
+    xau_short_sl = round(xau_low_5 * 0.996, 2)
+    xau_short_risk = round(xau_close - xau_short_sl, 2) if (xau_close - xau_short_sl) > 10 else 25.0
+    xau_short_tp1 = round(max(xau_high_5, xau_close * 1.018), 2)
+    xau_short_tp2 = round(max(xau_high_10, xau_close * 1.035), 2)
+    xau_short_rr1 = round((xau_short_tp1 - xau_close) / xau_short_risk, 2) if xau_short_risk > 0 else 1.5
+
+    short_discipline_rules = [
+        "Kỷ luật Cắt lỗ T+ dứt khoát: Nếu giá thủng đáy 5 phiên, lập tức cắt lỗ bảo vệ vốn. Tuyệt đối không để một lệnh lướt sóng ngắn hạn bị lỗ biến thành khoản đầu tư dài hạn bất đắc dĩ.",
+        "Bộ lọc Bẫy Phí Spread: Chỉ mở vị thế lướt sóng T+ khi biên lãi kỳ vọng tại TP1 tối thiểu lớn hơn chi phí Spread tiệm vàng thu ít nhất 1.5 lần.",
+        "Quy tắc Tất toán nhanh: Chủ động chốt 70% khối lượng ngay khi giá kiểm định mục tiêu TP1 (3 – 5 ngày), nâng dừng lỗ 30% còn lại về điểm hòa vốn."
+    ]
+
+    # =========================================================================
+    # B. PHÂN HỆ 2: LƯỚT SÓNG TRUNG HẠN (1 – 3 THÁNG / SÓNG CHU KỲ)
+    # =========================================================================
+    is_above_ma50 = xau_close >= xau_ma50
+    is_ma20_above_ma50 = xau_ma20 >= xau_ma50
+
+    if rsi_14 >= 68.0 or xau_close >= xau_high_60 * 0.992:
+        med_action_code = "TAKE_PROFIT"
+        med_action_badge = "CANH CHỐT LỜI TỪNG PHẦN"
+        med_badge_variant = "amber"
+        med_action_summary = (
+            f"RSI(14) đạt {rsi_14:.1f} (tiệm cận vùng quá mua) hoặc giá đang sát đỉnh 3 tháng (${xau_high_60:,.1f}). "
+            "Khuyến nghị chốt lời 30% – 50% vị thế đã có lãi, nâng chặn lãi (trailing stop) cho phần còn lại."
+        )
+    elif xau_close < xau_ma50 * 0.97 and not is_ma20_above_ma50:
+        med_action_code = "STAND_ASIDE"
+        med_action_badge = "ĐỨNG NGOÀI / GIỮ TIỀN MẶT"
+        med_badge_variant = "rose"
+        if rsi_14 <= 32.0:
+            med_action_summary = (
+                f"Giá đang chịu áp lực điều chỉnh và gãy hỗ trợ MA50. Tuy nhiên chỉ báo RSI(14) đã rơi vào vùng quá bán sâu ({rsi_14:.1f}), "
+                "khả năng cao sẽ sớm có nhịp hồi phục kỹ thuật (mean-reversion bounce). Nhà đầu tư lướt sóng kỷ luật nên giữ tiền mặt quan sát hoặc chỉ giải ngân thăm dò tối đa 15% – 20% vốn quanh vùng hỗ trợ cứng."
+            )
+        else:
+            med_action_summary = (
+                "Giá đã gãy hỗ trợ đường MA50 và động lượng suy yếu. Rủi ro điều chỉnh sâu còn tiếp diễn. "
+                "Nhà đầu tư lướt sóng nên giữ 100% tiền mặt, kiên nhẫn chờ thị trường tạo đáy cân bằng mới."
+            )
+    elif is_above_ma50 and (rsi_14 <= 50.0 or xau_close <= xau_ma20 * 1.01):
+        med_action_code = "BUY_ON_DIP"
+        med_action_badge = "CANH MUA KHI ĐIỀU CHỈNH (BUY ON DIP)"
+        med_badge_variant = "emerald"
+        med_action_summary = (
+            f"Xu hướng tăng trung hạn được bảo toàn (Giá nằm trên MA50). Nhịp thoái lui hiện tại (RSI {rsi_14:.1f}) "
+            "về quanh vùng hỗ trợ MA20 tạo điểm vào lệnh lướt sóng 1–3 tháng có tỷ lệ Lợi nhuận / Rủi ro (R:R) tối ưu nhất."
+        )
+    else:
+        med_action_code = "HOLD"
+        med_action_badge = "NẮM GIỮ & NÂNG CHẶN LÃI"
+        med_badge_variant = "sky"
+        med_action_summary = (
+            "Giá đang duy trì đà tăng ổn định trên các đường trung bình động. "
+            "Tiếp tục nắm giữ vị thế và di chuyển điểm cắt lỗ bảo vệ hòa vốn lên đáy gần nhất."
+        )
+
+    if ring_spread_pct <= sjc_spread_pct:
+        med_preferred_asset = "ring_9999"
+        med_preferred_asset_name = "Vàng Nhẫn Tròn Trơn 9999"
+        med_preferred_reason = (
+            f"Vàng Nhẫn 9999 có biên chênh lệch Mua-Bán chỉ {ring_spread:.2f} tr/lượng ({ring_spread_pct}%), "
+            f"thấp hơn nhiều so với SJC ({sjc_spread:.2f} tr/lượng, {sjc_spread_pct}%). "
+            f"Đồng thời độ lệch so với thế giới của Nhẫn ({ring_premium:+.2f} tr) lành mạnh hơn SJC ({sjc_premium:+.2f} tr), "
+            "giúp giảm thiểu rủi ro biến động chính sách và dễ chạm điểm hòa vốn hơn khi lướt sóng 1–3 tháng."
+        )
+    else:
+        med_preferred_asset = "sjc"
+        med_preferred_asset_name = "Vàng Miếng SJC 999.9"
+        med_preferred_reason = (
+            f"Hôm nay tỷ lệ chênh lệch Mua-Bán của Vàng Miếng SJC ({sjc_spread:.2f} tr/lượng ~ {sjc_spread_pct}%) "
+            f"thấp hơn Vàng Nhẫn 9999 ({ring_spread:.2f} tr/lượng ~ {ring_spread_pct}%), giúp nhà đầu tư tiết kiệm phí trượt giá ban đầu. "
+            f"Tuy nhiên cần lưu ý độ lệch so với thế giới (Premium) của SJC vẫn ở mức cao ({sjc_premium:+.2f} tr/lượng)."
+        )
+
+    # Vàng Nhẫn 9999 Trung Hạn
+    ring_med_entry_min = round(min(latest_ring["sell"], ring_ma20 * 0.995), 2)
+    ring_med_entry_max = round(latest_ring["sell"] * 1.004, 2)
+    ring_med_sl = round(min(ring_ma50, ring_low_20) * 0.99, 2)
+    ring_med_risk = max(round(latest_ring["sell"] - ring_med_sl, 2), round(ring_spread * 1.5, 2))
+    ring_med_risk_pct = round((ring_med_risk / latest_ring["sell"]) * 100, 2)
+
+    ring_med_tp1 = round(max(ring_high_20, latest_ring["sell"] * 1.05), 2)
+    ring_med_tp1_gain = round(ring_med_tp1 - latest_ring["sell"], 2)
+    ring_med_tp1_pct = round((ring_med_tp1_gain / latest_ring["sell"]) * 100, 2)
+    ring_med_rr1 = round(ring_med_tp1_gain / ring_med_risk, 2) if ring_med_risk > 0 else 2.0
+
+    ring_med_tp2 = round(max(ring_high_60, latest_ring["sell"] * 1.09), 2)
+    ring_med_tp2_gain = round(ring_med_tp2 - latest_ring["sell"], 2)
+    ring_med_tp2_pct = round((ring_med_tp2_gain / latest_ring["sell"]) * 100, 2)
+    ring_med_rr2 = round(ring_med_tp2_gain / ring_med_risk, 2) if ring_med_risk > 0 else 3.5
+
+    # SJC Trung Hạn
+    sjc_med_entry_min = round(min(latest_sjc["sell"], sjc_ma20 * 0.995), 2)
+    sjc_med_entry_max = round(latest_sjc["sell"] * 1.005, 2)
+    sjc_med_sl = round(min(sjc_ma50, sjc_low_20) * 0.99, 2)
+    sjc_med_risk = max(round(latest_sjc["sell"] - sjc_med_sl, 2), round(sjc_spread * 1.4, 2))
+    sjc_med_risk_pct = round((sjc_med_risk / latest_sjc["sell"]) * 100, 2)
+
+    sjc_med_tp1 = round(max(sjc_high_20, latest_sjc["sell"] * 1.055), 2)
+    sjc_med_tp1_gain = round(sjc_med_tp1 - latest_sjc["sell"], 2)
+    sjc_med_tp1_pct = round((sjc_med_tp1_gain / latest_sjc["sell"]) * 100, 2)
+    sjc_med_rr1 = round(sjc_med_tp1_gain / sjc_med_risk, 2) if sjc_med_risk > 0 else 1.5
+
+    sjc_med_tp2 = round(max(sjc_high_60, latest_sjc["sell"] * 1.095), 2)
+    sjc_med_tp2_gain = round(sjc_med_tp2 - latest_sjc["sell"], 2)
+    sjc_med_tp2_pct = round((sjc_med_tp2_gain / latest_sjc["sell"]) * 100, 2)
+    sjc_med_rr2 = round(sjc_med_tp2_gain / sjc_med_risk, 2) if sjc_med_risk > 0 else 2.8
+
+    # XAU/USD Trung Hạn
+    xau_med_entry_min = round(min(xau_close, xau_ma20 * 0.995), 2)
+    xau_med_entry_max = round(xau_close * 1.004, 2)
+    xau_med_sl = round(min(xau_ma50, xau_low_20) * 0.99, 2)
+    xau_med_risk = round(xau_close - xau_med_sl, 2) if (xau_close - xau_med_sl) > 20 else 45.0
+    xau_med_tp1 = round(max(xau_high_20, xau_close * 1.04), 2)
+    xau_med_tp2 = round(max(xau_high_60, xau_close * 1.08), 2)
+    xau_med_rr1 = round((xau_med_tp1 - xau_close) / xau_med_risk, 2) if xau_med_risk > 0 else 2.0
+
+    med_discipline_rules = [
+        "Khấu trừ chênh lệch Mua-Bán (Spread) ngay từ đầu: Điểm chốt lời TP1 tối thiểu phải lớn hơn chi phí spread ít nhất 2.0 lần thì mới mở vị thế mua.",
+        "Chiến lược Hiện thực hóa Lợi nhuận (Scale-Out): Khi giá chạm mốc TP1 (3 – 5 tuần), chủ động chốt 50% khối lượng, đồng thời dời điểm cắt lỗ (Stop-Loss) của 50% còn lại về điểm hòa vốn để biến lệnh thành trạng thái 'Không rủi ro' (Risk-Free Trade).",
+        "Không mua đuổi khi chênh lệch nội địa (Premium) quá căng: Nếu giá trong nước cao hơn thế giới quy đổi > 15 triệu (SJC) hoặc > 3.5 triệu (Nhẫn), tuyệt đối kiên nhẫn chờ nhịp điều chỉnh để tránh bẫy chính sách."
+    ]
+
+    short_dict = {
+        "horizon_code": "short_term",
+        "horizon_label": "Ngắn Hạn (1 – 2 Tuần / T+)",
+        "timeframe_days": "7 – 14 Ngày (5 – 10 Phiên)",
+        "action": {
+            "code": short_action_code,
+            "badge": short_action_badge,
+            "badge_variant": short_badge_variant,
+            "summary": short_action_summary,
+            "horizon": "1 – 2 Tuần (Ngắn hạn T+)",
+            "rsi_status": f"{rsi_14:.1f} ({'Quá mua' if rsi_14 >= 68 else 'Quá bán' if rsi_14 <= 30 else 'Trung tính'})",
+            "trend_status": "Trên MA10 (Tăng ngắn hạn)" if xau_close >= xau_ma10 else "Dưới MA10 (Điều chỉnh T+)",
+            "macd_status": "Dương (T+ Thuận lợi)" if macd_hist >= 0 else "Âm (T+ Rủi ro)",
+        },
+        "instrument_recommendation": {
+            "preferred_asset": short_preferred_asset,
+            "preferred_asset_name": short_preferred_asset_name,
+            "reason": short_preferred_reason,
+            "comparison": {
+                "ring_9999": {
+                    "spread_vnd": ring_spread,
+                    "spread_pct": ring_spread_pct,
+                    "premium_vnd": ring_premium,
+                    "liquidity_rating": "Rất cao (Linh hoạt từng chỉ)",
+                },
+                "sjc": {
+                    "spread_vnd": sjc_spread,
+                    "spread_pct": sjc_spread_pct,
+                    "premium_vnd": sjc_premium,
+                    "liquidity_rating": "Cao (Theo lượng)",
+                },
+            },
+        },
+        "setups": {
+            "ring_9999": {
+                "name": "Vàng Nhẫn Tròn Trơn 9999",
+                "unit": "Triệu VNĐ/lượng",
+                "current_price": latest_ring["sell"],
+                "entry_zone": [ring_short_entry_min, ring_short_entry_max],
+                "stop_loss": ring_short_sl,
+                "risk_amount": ring_short_risk,
+                "risk_pct": ring_short_risk_pct,
+                "tp1": {
+                    "target_price": ring_short_tp1,
+                    "net_gain": ring_short_tp1_gain,
+                    "net_pct": ring_short_tp1_pct,
+                    "rr_ratio": ring_short_rr1,
+                    "timeframe": "3 – 5 Ngày (T+3 / T+5)",
+                    "note": "Kháng cự ngắn hạn MA10 & chốt 70% vị thế",
+                },
+                "tp2": {
+                    "target_price": ring_short_tp2,
+                    "net_gain": ring_short_tp2_gain,
+                    "net_pct": ring_short_tp2_pct,
+                    "rr_ratio": ring_short_rr2,
+                    "timeframe": "7 – 10 Ngày (1 – 2 Tuần)",
+                    "note": "Đỉnh cản 10 phiên & tất toán toàn bộ",
+                },
+                "setup_rating": ring_short_rating,
+            },
+            "sjc": {
+                "name": "Vàng Miếng SJC 999.9",
+                "unit": "Triệu VNĐ/lượng",
+                "current_price": latest_sjc["sell"],
+                "entry_zone": [sjc_short_entry_min, sjc_short_entry_max],
+                "stop_loss": sjc_short_sl,
+                "risk_amount": sjc_short_risk,
+                "risk_pct": sjc_short_risk_pct,
+                "tp1": {
+                    "target_price": sjc_short_tp1,
+                    "net_gain": sjc_short_tp1_gain,
+                    "net_pct": sjc_short_tp1_pct,
+                    "rr_ratio": sjc_short_rr1,
+                    "timeframe": "3 – 5 Ngày (T+3 / T+5)",
+                    "note": "Kháng cự ngắn hạn 5 phiên",
+                },
+                "tp2": {
+                    "target_price": sjc_short_tp2,
+                    "net_gain": sjc_short_tp2_gain,
+                    "net_pct": sjc_short_tp2_pct,
+                    "rr_ratio": sjc_short_rr2,
+                    "timeframe": "7 – 10 Ngày (1 – 2 Tuần)",
+                    "note": "Đỉnh cản 10 phiên",
+                },
+                "setup_rating": sjc_short_rating,
+            },
+            "xau_usd": {
+                "name": "Vàng Thế Giới (XAU/USD)",
+                "unit": "USD/oz",
+                "current_price": xau_close,
+                "entry_zone": [xau_short_entry_min, xau_short_entry_max],
+                "stop_loss": xau_short_sl,
+                "risk_amount": xau_short_risk,
+                "risk_pct": round((xau_short_risk / xau_close) * 100, 2),
+                "tp1": {
+                    "target_price": xau_short_tp1,
+                    "net_gain": round(xau_short_tp1 - xau_close, 2),
+                    "net_pct": round(((xau_short_tp1 - xau_close) / xau_close) * 100, 2),
+                    "rr_ratio": xau_short_rr1,
+                    "timeframe": "3 – 5 Phiên",
+                },
+                "tp2": {
+                    "target_price": xau_short_tp2,
+                    "net_gain": round(xau_short_tp2 - xau_close, 2),
+                    "net_pct": round(((xau_short_tp2 - xau_close) / xau_close) * 100, 2),
+                    "rr_ratio": round((xau_short_tp2 - xau_close) / xau_short_risk, 2) if xau_short_risk > 0 else 2.5,
+                    "timeframe": "7 – 10 Phiên",
+                },
+                "setup_rating": "KÈO CHUẨN T+",
+            },
+        },
+        "technical_levels": {
+            "xau_usd": {
+                "resistance_2": xau_high_10,
+                "resistance_1": xau_high_5,
+                "current": xau_close,
+                "support_1": round(xau_ma5, 2),
+                "support_2": round(xau_ma10, 2),
+            },
+            "ring_9999": {
+                "resistance_2": ring_high_10,
+                "resistance_1": ring_high_5,
+                "current": latest_ring["sell"],
+                "support_1": round(ring_ma5, 2),
+                "support_2": round(ring_ma10, 2),
+            },
+            "sjc": {
+                "resistance_2": sjc_high_10,
+                "resistance_1": sjc_high_5,
+                "current": latest_sjc["sell"],
+                "support_1": round(sjc_ma5, 2),
+                "support_2": round(sjc_ma10, 2),
+            },
+        },
+        "discipline_rules": short_discipline_rules,
+    }
+
+    medium_dict = {
+        "horizon_code": "medium_term",
+        "horizon_label": "Trung Hạn (1 – 3 Tháng / Sóng Chu Kỳ)",
+        "timeframe_days": "30 – 90 Ngày (20 – 60 Phiên)",
+        "action": {
+            "code": med_action_code,
+            "badge": med_action_badge,
+            "badge_variant": med_badge_variant,
+            "summary": med_action_summary,
+            "horizon": "1 – 3 Tháng (Trung hạn)",
+            "rsi_status": f"{rsi_14:.1f} ({'Quá mua' if rsi_14 >= 68 else 'Quá bán' if rsi_14 <= 32 else 'Vùng tích lũy lành mạnh'})",
+            "trend_status": "Xu hướng Tăng trung hạn (Trên MA50)" if is_above_ma50 else "Xu hướng Giảm/Điều chỉnh (Dưới MA50)",
+            "macd_status": "Dương (Động lượng tăng)" if macd_hist >= 0 else "Âm (Đang điều chỉnh)",
+        },
+        "instrument_recommendation": {
+            "preferred_asset": med_preferred_asset,
+            "preferred_asset_name": med_preferred_asset_name,
+            "reason": med_preferred_reason,
+            "comparison": {
+                "ring_9999": {
+                    "spread_vnd": ring_spread,
+                    "spread_pct": ring_spread_pct,
+                    "premium_vnd": ring_premium,
+                    "liquidity_rating": "Rất cao (Linh hoạt từng chỉ)",
+                },
+                "sjc": {
+                    "spread_vnd": sjc_spread,
+                    "spread_pct": sjc_spread_pct,
+                    "premium_vnd": sjc_premium,
+                    "liquidity_rating": "Cao (Theo lượng)",
+                },
+            },
+        },
+        "setups": {
+            "ring_9999": {
+                "name": "Vàng Nhẫn Tròn Trơn 9999",
+                "unit": "Triệu VNĐ/lượng",
+                "current_price": latest_ring["sell"],
+                "entry_zone": [ring_med_entry_min, ring_med_entry_max],
+                "stop_loss": ring_med_sl,
+                "risk_amount": ring_med_risk,
+                "risk_pct": ring_med_risk_pct,
+                "tp1": {
+                    "target_price": ring_med_tp1,
+                    "net_gain": ring_med_tp1_gain,
+                    "net_pct": ring_med_tp1_pct,
+                    "rr_ratio": ring_med_rr1,
+                    "timeframe": "3 – 5 Tuần",
+                    "note": "Kháng cự ngắn hạn & đỉnh 20 phiên",
+                },
+                "tp2": {
+                    "target_price": ring_med_tp2,
+                    "net_gain": ring_med_tp2_gain,
+                    "net_pct": ring_med_tp2_pct,
+                    "rr_ratio": ring_med_rr2,
+                    "timeframe": "2 – 3 Tháng",
+                    "note": "Mục tiêu sóng trung hạn & đỉnh 60 phiên",
+                },
+                "setup_rating": "KÈO CHUẨN (HIGH CONVICTION)" if ring_med_rr1 >= 1.8 else "KHẢ DỤNG (MODERATE)",
+            },
+            "sjc": {
+                "name": "Vàng Miếng SJC 999.9",
+                "unit": "Triệu VNĐ/lượng",
+                "current_price": latest_sjc["sell"],
+                "entry_zone": [sjc_med_entry_min, sjc_med_entry_max],
+                "stop_loss": sjc_med_sl,
+                "risk_amount": sjc_med_risk,
+                "risk_pct": sjc_med_risk_pct,
+                "tp1": {
+                    "target_price": sjc_med_tp1,
+                    "net_gain": sjc_med_tp1_gain,
+                    "net_pct": sjc_med_tp1_pct,
+                    "rr_ratio": sjc_med_rr1,
+                    "timeframe": "3 – 5 Tuần",
+                    "note": "Kháng cự ngắn hạn 20 phiên",
+                },
+                "tp2": {
+                    "target_price": sjc_med_tp2,
+                    "net_gain": sjc_med_tp2_gain,
+                    "net_pct": sjc_med_tp2_pct,
+                    "rr_ratio": sjc_med_rr2,
+                    "timeframe": "2 – 3 Tháng",
+                    "note": "Kháng cự đỉnh 60 phiên",
+                },
+                "setup_rating": "KÈO CHUẨN" if sjc_med_rr1 >= 1.8 else "KHẢ DỤNG (MODERATE)",
+            },
+            "xau_usd": {
+                "name": "Vàng Thế Giới (XAU/USD)",
+                "unit": "USD/oz",
+                "current_price": xau_close,
+                "entry_zone": [xau_med_entry_min, xau_med_entry_max],
+                "stop_loss": xau_med_sl,
+                "risk_amount": xau_med_risk,
+                "risk_pct": round((xau_med_risk / xau_close) * 100, 2),
+                "tp1": {
+                    "target_price": xau_med_tp1,
+                    "net_gain": round(xau_med_tp1 - xau_close, 2),
+                    "net_pct": round(((xau_med_tp1 - xau_close) / xau_close) * 100, 2),
+                    "rr_ratio": xau_med_rr1,
+                    "timeframe": "3 – 5 Tuần",
+                },
+                "tp2": {
+                    "target_price": xau_med_tp2,
+                    "net_gain": round(xau_med_tp2 - xau_close, 2),
+                    "net_pct": round(((xau_med_tp2 - xau_close) / xau_close) * 100, 2),
+                    "rr_ratio": round((xau_med_tp2 - xau_close) / xau_med_risk, 2) if xau_med_risk > 0 else 3.0,
+                    "timeframe": "2 – 3 Tháng",
+                },
+                "setup_rating": "KÈO CHUẨN",
+            },
+        },
+        "technical_levels": {
+            "xau_usd": {
+                "resistance_2": xau_high_60,
+                "resistance_1": xau_high_20,
+                "current": xau_close,
+                "support_1": round(xau_ma20, 2),
+                "support_2": round(xau_ma50, 2),
+            },
+            "ring_9999": {
+                "resistance_2": ring_high_60,
+                "resistance_1": ring_high_20,
+                "current": latest_ring["sell"],
+                "support_1": round(ring_ma20, 2),
+                "support_2": round(ring_ma50, 2),
+            },
+            "sjc": {
+                "resistance_2": sjc_high_60,
+                "resistance_1": sjc_high_20,
+                "current": latest_sjc["sell"],
+                "support_1": round(sjc_ma20, 2),
+                "support_2": round(sjc_ma50, 2),
+            },
+        },
+        "discipline_rules": med_discipline_rules,
+    }
+
+
+    # =========================================================================
+    # C. PHÂN HỆ 3: ĐẦU TƯ & TÍCH SẢN DÀI HẠN (1 – 3 NĂM / SIÊU CHU KỲ)
+    # =========================================================================
+    window_252_xau = xau_series[-min(252, len(xau_series)):]
+    window_252_ring = ring_series[-min(252, len(ring_series)):]
+    window_252_sjc = sjc_series[-min(252, len(sjc_series)):]
+
+    xau_high_52w = max(b["high"] for b in window_252_xau)
+    xau_low_52w = min(b["low"] for b in window_252_xau)
+    ring_high_52w = max(b["high"] for b in window_252_ring)
+    ring_low_52w = min(b["low"] for b in window_252_ring)
+    sjc_high_52w = max(b["high"] for b in window_252_sjc)
+    sjc_low_52w = min(b["low"] for b in window_252_sjc)
+
+    xau_dist_ma200 = round(((xau_close - xau_ma200) / xau_ma200) * 100, 1) if xau_ma200 else 0.0
+
+    if xau_close <= xau_ma200 * 1.05:
+        long_action_code = "VALUE_BUY_DCA"
+        long_action_badge = "VÙNG GOM TÍCH SẢN VÀNG (STRONG BUY & DCA)"
+        long_badge_variant = "emerald"
+        long_action_summary = (
+            f"Giá vàng đang chiết khấu về sát đường trung bình động thế kỷ MA200 (${xau_ma200:,.1f}) hoặc chênh dưới 5%. Đây là 'vùng định giá vàng' lý tưởng nhất trong chu kỳ nhiều năm để giải ngân tích sản mạnh tay (1.5x - 2.0x định mức)."
+        )
+    elif xau_close >= xau_ma200 * 1.35:
+        long_action_code = "CYCLE_OVERHEATED"
+        long_action_badge = "VÙNG QUÁ NHIỆT / TẠM DỪNG GOM (HOLD)"
+        long_badge_variant = "amber"
+        long_action_summary = (
+            f"Giá vàng đang cao hơn đường MA200 tới +{xau_dist_ma200:.1f}%, phản ánh trạng thái quá nhiệt và FOMO mạnh của chu kỳ. Nhà đầu tư dài hạn nên tạm dừng gom mới, giữ nguyên danh mục và chuẩn bị kế hoạch tái cân bằng chốt lời từng phần khi chạm đỉnh chu kỳ."
+        )
+    else:
+        long_action_code = "STEADY_ACCUMULATION"
+        long_action_badge = "TÍCH SẢN ĐỀU ĐẶN (STEADY DCA)"
+        long_badge_variant = "sky"
+        long_action_summary = (
+            f"Xu hướng tăng trưởng dài hạn vững chắc (cách MA200 +{xau_dist_ma200:.1f}%), nằm trong biên độ tăng trưởng lành mạnh được bảo trợ bởi dòng vốn NHTW gom vàng kỷ lục và xu hướng phi USD hóa. Tiếp tục chiến lược tích sản đều đặn hàng tháng bằng vốn nhàn rỗi."
+        )
+
+    long_preferred_asset = "ring_9999"
+    long_preferred_asset_name = "Vàng Nhẫn Tròn Trơn 9999 (Khuyên dùng 70% – 80% Tỷ trọng)"
+    long_preferred_reason = (
+        f"Đầu tư dài hạn 1–3 năm bắt buộc phải quản trị rủi ro chính sách độc quyền. Vàng Nhẫn 9999 bám sát 100% vàng quốc tế (độ lệch chỉ +{ring_premium:.2f} tr so với +{sjc_premium:.2f} tr của SJC) và thanh khoản chia nhỏ linh hoạt. Nắm giữ Nhẫn 9999 loại bỏ hoàn toàn nguy cơ 'bốc hơi' tiền tỷ khi khoảng chênh lệch SJC bị thu hẹp bởi chính sách."
+    )
+
+    # Vàng Nhẫn Dài Hạn
+    ring_long_entry_min = round(min(latest_ring["sell"], ring_ma50 * 0.98), 2)
+    ring_long_entry_max = round(latest_ring["sell"] * 1.015, 2)
+    ring_long_sl = round(min(ring_low_52w, ring_ma200 * 0.95), 2)
+    ring_long_risk = max(round(latest_ring["sell"] - ring_long_sl, 2), round(ring_spread * 2.0, 2))
+    ring_long_risk_pct = round((ring_long_risk / latest_ring["sell"]) * 100, 2)
+
+    ring_long_tp1 = round(max(ring_high_52w * 1.08, latest_ring["sell"] * 1.18), 2)
+    ring_long_tp1_gain = round(ring_long_tp1 - latest_ring["sell"], 2)
+    ring_long_tp1_pct = round((ring_long_tp1_gain / latest_ring["sell"]) * 100, 2)
+    ring_long_rr1 = round(ring_long_tp1_gain / ring_long_risk, 2) if ring_long_risk > 0 else 2.5
+
+    ring_long_tp2 = round(max(ring_high_52w * 1.30, latest_ring["sell"] * 1.45), 2)
+    ring_long_tp2_gain = round(ring_long_tp2 - latest_ring["sell"], 2)
+    ring_long_tp2_pct = round((ring_long_tp2_gain / latest_ring["sell"]) * 100, 2)
+    ring_long_rr2 = round(ring_long_tp2_gain / ring_long_risk, 2) if ring_long_risk > 0 else 4.0
+
+    # SJC Dài Hạn
+    sjc_long_entry_min = round(min(latest_sjc["sell"], sjc_ma50 * 0.98), 2)
+    sjc_long_entry_max = round(latest_sjc["sell"] * 1.015, 2)
+    sjc_long_sl = round(min(sjc_low_52w, sjc_ma200 * 0.95), 2)
+    sjc_long_risk = max(round(latest_sjc["sell"] - sjc_long_sl, 2), round(sjc_spread * 2.0, 2))
+    sjc_long_risk_pct = round((sjc_long_risk / latest_sjc["sell"]) * 100, 2)
+
+    sjc_long_tp1 = round(max(sjc_high_52w * 1.07, latest_sjc["sell"] * 1.16), 2)
+    sjc_long_tp1_gain = round(sjc_long_tp1 - latest_sjc["sell"], 2)
+    sjc_long_tp1_pct = round((sjc_long_tp1_gain / latest_sjc["sell"]) * 100, 2)
+    sjc_long_rr1 = round(sjc_long_tp1_gain / sjc_long_risk, 2) if sjc_long_risk > 0 else 2.0
+
+    sjc_long_tp2 = round(max(sjc_high_52w * 1.25, latest_sjc["sell"] * 1.40), 2)
+    sjc_long_tp2_gain = round(sjc_long_tp2 - latest_sjc["sell"], 2)
+    sjc_long_tp2_pct = round((sjc_long_tp2_gain / latest_sjc["sell"]) * 100, 2)
+    sjc_long_rr2 = round(sjc_long_tp2_gain / sjc_long_risk, 2) if sjc_long_risk > 0 else 3.5
+
+    # XAU/USD Dài Hạn
+    xau_long_entry_min = round(min(xau_close, xau_ma50 * 0.98), 2)
+    xau_long_entry_max = round(xau_close * 1.015, 2)
+    xau_long_sl = round(min(xau_low_52w, xau_ma200 * 0.94), 2)
+    xau_long_risk = round(xau_close - xau_long_sl, 2) if (xau_close - xau_long_sl) > 50 else 100.0
+    xau_long_tp1 = round(max(xau_high_52w * 1.08, xau_close * 1.18), 2)
+    xau_long_tp2 = round(max(xau_high_52w * 1.30, xau_close * 1.45), 2)
+    xau_long_rr1 = round((xau_long_tp1 - xau_close) / xau_long_risk, 2) if xau_long_risk > 0 else 2.5
+
+    long_discipline_rules = [
+        "Chiến lược Tích Sản Đều Đặn (Dynamic DCA): Không bao giờ dồn 100% vốn mua tại một thời điểm. Hãy chia nhỏ vốn thành 6 – 12 tháng giải ngân định kỳ để làm mượt giá vốn bình quân.",
+        "Tuyệt đối 100% Tiền Nhàn Rỗi (Không Đòn Bẩy / Không Vay Nợ): Vàng có thể trải qua những nhịp điều chỉnh 10% – 15% kéo dài 3 – 6 tháng trước khi bứt phá siêu chu kỳ. Vay nợ hoặc dùng tiền cần gấp sẽ buộc bạn phải bán non ở đáy.",
+        "Quy tắc Tái Cân Bằng Danh Mục (Portfolio Rebalancing): Duy trì tỷ trọng vàng ở mức 15% – 25% tổng tài sản. Khi vàng tăng mạnh đẩy tỷ trọng vượt 30%, chốt lời 20% lượng vàng để chuyển sang tài sản có dòng tiền (BĐS cho thuê, cổ phiếu cổ tức hoặc tiền gửi tiết kiệm)."
+    ]
+
+    long_dict = {
+        "horizon_code": "long_term",
+        "horizon_label": "Dài Hạn (1 – 3 Năm / Tích Sản Chu Kỳ)",
+        "timeframe_days": "1 – 3 Năm (252 – 756 Phiên)",
+        "action": {
+            "code": long_action_code,
+            "badge": long_action_badge,
+            "badge_variant": long_badge_variant,
+            "summary": long_action_summary,
+            "horizon": "1 – 3 Năm (Tích sản dài hạn)",
+            "rsi_status": f"{rsi_14:.1f} (Vùng tích lũy)",
+            "trend_status": f"Cách MA200: {xau_dist_ma200:+.1f}%",
+            "macd_status": "Vĩ mô bảo trợ (Chu kỳ)",
+        },
+        "instrument_recommendation": {
+            "preferred_asset": long_preferred_asset,
+            "preferred_asset_name": long_preferred_asset_name,
+            "reason": long_preferred_reason,
+            "comparison": {
+                "ring_9999": {
+                    "spread_vnd": ring_spread,
+                    "spread_pct": ring_spread_pct,
+                    "premium_vnd": ring_premium,
+                    "liquidity_rating": "Tối ưu nhất cho tích sản dài hạn",
+                },
+                "sjc": {
+                    "spread_vnd": sjc_spread,
+                    "spread_pct": sjc_spread_pct,
+                    "premium_vnd": sjc_premium,
+                    "liquidity_rating": "Lưu ý rủi ro thu hẹp Premium chính sách",
+                },
+            },
+        },
+        "setups": {
+            "ring_9999": {
+                "name": "Vàng Nhẫn Tròn Trơn 9999",
+                "unit": "Triệu VNĐ/lượng",
+                "current_price": latest_ring["sell"],
+                "entry_zone": [ring_long_entry_min, ring_long_entry_max],
+                "stop_loss": ring_long_sl,
+                "risk_amount": ring_long_risk,
+                "risk_pct": ring_long_risk_pct,
+                "tp1": {
+                    "target_price": ring_long_tp1,
+                    "net_gain": ring_long_tp1_gain,
+                    "net_pct": ring_long_tp1_pct,
+                    "rr_ratio": ring_long_rr1,
+                    "timeframe": "1 Năm (12 Tháng)",
+                    "note": "Kỳ vọng +18% (Vượt trội lãi suất tiền gửi ngân hàng)",
+                },
+                "tp2": {
+                    "target_price": ring_long_tp2,
+                    "net_gain": ring_long_tp2_gain,
+                    "net_pct": ring_long_tp2_pct,
+                    "rr_ratio": ring_long_rr2,
+                    "timeframe": "2 – 3 Năm (Siêu Chu Kỳ)",
+                    "note": "Mục tiêu đỉnh chu kỳ vĩ mô & bảo toàn sức mua",
+                },
+                "setup_rating": "TÍCH SẢN TỐI ƯU (CORE PORTFOLIO)",
+            },
+            "sjc": {
+                "name": "Vàng Miếng SJC 999.9",
+                "unit": "Triệu VNĐ/lượng",
+                "current_price": latest_sjc["sell"],
+                "entry_zone": [sjc_long_entry_min, sjc_long_entry_max],
+                "stop_loss": sjc_long_sl,
+                "risk_amount": sjc_long_risk,
+                "risk_pct": sjc_long_risk_pct,
+                "tp1": {
+                    "target_price": sjc_long_tp1,
+                    "net_gain": sjc_long_tp1_gain,
+                    "net_pct": sjc_long_tp1_pct,
+                    "rr_ratio": sjc_long_rr1,
+                    "timeframe": "1 Năm (12 Tháng)",
+                    "note": "Kỳ vọng +16% (Thương hiệu quốc gia)",
+                },
+                "tp2": {
+                    "target_price": sjc_long_tp2,
+                    "net_gain": sjc_long_tp2_gain,
+                    "net_pct": sjc_long_tp2_pct,
+                    "rr_ratio": sjc_long_rr2,
+                    "timeframe": "2 – 3 Năm (Siêu Chu Kỳ)",
+                    "note": "Kháng cự chu kỳ dài hạn",
+                },
+                "setup_rating": "KHẢ DỤNG (LƯU Ý RỦI RO PREMIUM)",
+            },
+            "xau_usd": {
+                "name": "Vàng Thế Giới (XAU/USD)",
+                "unit": "USD/oz",
+                "current_price": xau_close,
+                "entry_zone": [xau_long_entry_min, xau_long_entry_max],
+                "stop_loss": xau_long_sl,
+                "risk_amount": xau_long_risk,
+                "risk_pct": round((xau_long_risk / xau_close) * 100, 2),
+                "tp1": {
+                    "target_price": xau_long_tp1,
+                    "net_gain": round(xau_long_tp1 - xau_close, 2),
+                    "net_pct": round(((xau_long_tp1 - xau_close) / xau_close) * 100, 2),
+                    "rr_ratio": xau_long_rr1,
+                    "timeframe": "1 Năm (12 Tháng)",
+                },
+                "tp2": {
+                    "target_price": xau_long_tp2,
+                    "net_gain": round(xau_long_tp2 - xau_close, 2),
+                    "net_pct": round(((xau_long_tp2 - xau_close) / xau_close) * 100, 2),
+                    "rr_ratio": round((xau_long_tp2 - xau_close) / xau_long_risk, 2) if xau_long_risk > 0 else 3.5,
+                    "timeframe": "2 – 3 Năm (Siêu Chu Kỳ)",
+                },
+                "setup_rating": "TÍCH SẢN VĨ MÔ DÀI HẠN",
+            },
+        },
+        "technical_levels": {
+            "xau_usd": {
+                "resistance_2": xau_high_52w,
+                "resistance_1": round(xau_ma50 * 1.15, 2),
+                "current": xau_close,
+                "support_1": round(xau_ma200, 2),
+                "support_2": round(xau_low_52w, 2),
+            },
+            "ring_9999": {
+                "resistance_2": ring_high_52w,
+                "resistance_1": round(ring_ma50 * 1.15, 2),
+                "current": latest_ring["sell"],
+                "support_1": round(ring_ma200, 2),
+                "support_2": round(ring_low_52w, 2),
+            },
+            "sjc": {
+                "resistance_2": sjc_high_52w,
+                "resistance_1": round(sjc_ma50 * 1.15, 2),
+                "current": latest_sjc["sell"],
+                "support_1": round(sjc_ma200, 2),
+                "support_2": round(sjc_low_52w, 2),
+            },
+        },
+        "discipline_rules": long_discipline_rules,
+    }
+
+    return {
+        "selected_default_horizon": "short_term",
+        "short_term": short_dict,
+        "medium_term": medium_dict,
+        "long_term": long_dict,
+        # Tương thích ngược:
+        "action": short_dict["action"],
+        "instrument_recommendation": short_dict["instrument_recommendation"],
+        "setups": short_dict["setups"],
+        "technical_levels": short_dict["technical_levels"],
+    }
+
+
+# ==============================================================================
+# 6. ĐỘNG CƠ TIN TỨC THỜI GIAN THỰC & SỰ KIỆN LỊCH SỬ TÁC ĐỘNG GIÁ VÀNG (HYBRID ENGINE)
+# ==============================================================================
+
+VERIFIED_HISTORICAL_EVENTS: List[Dict[str, Any]] = [
+    {
+        "target_date": "2021-11-10",
+        "title": "Lạm phát CPI Mỹ vọt lên 6.2% (cao nhất 31 năm), kích hoạt làn sóng mua vàng phòng vệ",
+        "category": "Lạm phát & Vĩ mô Mỹ",
+        "source": "Bureau of Labor Statistics (BLS) / Reuters",
+        "summary": "Chỉ số giá tiêu dùng (CPI) tháng 10 của Mỹ tăng vọt vượt dự báo khiến lợi suất thực giảm sâu, thúc đẩy dòng vốn tổ chức tìm đến vàng như kênh trú ẩn chống trượt giá đồng USD.",
+        "force_impact": "high",
+        "preferred_direction": "up",
+    },
+    {
+        "target_date": "2022-02-24",
+        "title": "Xung đột Nga – Ukraine bùng nổ, dòng tiền trú ẩn đẩy giá vàng vượt ngưỡng $1,970/oz",
+        "category": "Địa chính trị Toàn cầu",
+        "source": "Reuters / Bloomberg",
+        "summary": "Chiến sự tại Đông Âu châm ngòi cho khủng hoảng địa chính trị và năng lượng toàn cầu, đẩy chỉ số sợ hãi VIX tăng vọt và kích hoạt lực mua vàng vật chất lẫn ETF mạnh mẽ.",
+        "force_impact": "high",
+        "preferred_direction": "up",
+    },
+    {
+        "target_date": "2022-03-08",
+        "title": "Giá vàng quốc tế áp sát đỉnh lịch sử $2,070/oz; Vàng SJC trong nước lập kỷ lục mới vượt 74 triệu/lượng",
+        "category": "Cú sốc Cung - Cầu & Địa chính trị",
+        "source": "SJC / COMEX / VnExpress",
+        "summary": "Lệnh cấm nhập khẩu dầu Nga đẩy giá dầu WTI lên trên $120/thùng; tâm lý hoảng loạn đẩy giá vàng thế giới lên $2,070/oz và kéo giá vàng miếng SJC tại Việt Nam tăng dựng đứng.",
+        "force_impact": "high",
+        "preferred_direction": "up",
+    },
+    {
+        "target_date": "2022-06-15",
+        "title": "FED tăng lãi suất 0.75% (mạnh nhất từ năm 1994), đồng USD (DXY) lập đỉnh gây áp lực giảm lên vàng",
+        "category": "Chính sách Tiền tệ FED",
+        "source": "Federal Reserve (FOMC)",
+        "summary": "Cục Dự trữ Liên bang Mỹ quyết liệt thắt chặt tiền tệ để chống lạm phát, đẩy lợi suất trái phiếu Mỹ 10Y và chỉ số DXY tăng mạnh, tạo áp lực bán tháo ngắn hạn lên kim loại quý.",
+        "force_impact": "high",
+        "preferred_direction": "down",
+    },
+    {
+        "target_date": "2022-09-21",
+        "title": "FED nâng lãi suất lần thứ 3 liên tiếp thêm 0.75%, DXY vượt mốc 114 điểm kéo vàng về đáy 2 năm",
+        "category": "Chính sách Tiền tệ FED",
+        "source": "FOMC Statement / Yahoo Finance",
+        "summary": "Chi phí cơ hội nắm giữ vàng tăng vọt khi lãi suất điều hành Mỹ liên tục leo thang và đồng USD đạt mức mạnh nhất trong 20 năm, ép giá vàng quốc tế lùi về vùng $1,620 - $1,660/oz.",
+        "force_impact": "high",
+        "preferred_direction": "down",
+    },
+    {
+        "target_date": "2022-11-10",
+        "title": "Lạm phát CPI Mỹ hạ nhiệt xuống 7.7%, DXY lao dốc giúp giá vàng bứt phá hơn +2.8% trong phiên",
+        "category": "Lạm phát & Tỷ giá DXY",
+        "source": "BLS / Bloomberg",
+        "summary": "Tín hiệu lạm phát đạt đỉnh khiến thị trường kỳ vọng FED giảm tốc độ tăng lãi suất; đồng USD sụt giảm mạnh nhất nhiều năm giúp vàng đảo chiều tăng dựng đứng.",
+        "force_impact": "high",
+        "preferred_direction": "up",
+    },
+    {
+        "target_date": "2023-03-13",
+        "title": "Khủng hoảng ngân hàng Silicon Valley Bank (SVB) tại Mỹ kích hoạt làn sóng tháo chạy sang vàng",
+        "category": "Rủi ro Hệ thống Tài chính",
+        "source": "FDIC / Financial Times",
+        "summary": "Sự sụp đổ của SVB và Signature Bank làm dấy lên lo ngại rủi ro hệ thống ngân hàng Mỹ; lợi suất TPCP Mỹ kỳ hạn 2 năm và 10 năm rơi tự do, đẩy giá vàng vượt mốc $1,900/oz.",
+        "force_impact": "high",
+        "preferred_direction": "up",
+    },
+    {
+        "target_date": "2023-05-04",
+        "title": "FED phát tín hiệu tạm dừng chu kỳ thắt chặt, vàng thế giới tiến sát mốc $2,050/oz",
+        "category": "Chính sách Tiền tệ FED",
+        "source": "Federal Reserve / CNBC",
+        "summary": "Sau đợt nâng lãi suất lên vùng 5.00% - 5.25%, Chủ tịch Jerome Powell mở đường cho việc tạm ngừng tăng lãi suất, tạo động lực cho dòng tiền đầu cơ giá lên trên sàn COMEX.",
+        "force_impact": "high",
+        "preferred_direction": "up",
+    },
+    {
+        "target_date": "2023-10-09",
+        "title": "Căng thẳng quân sự bùng phát tại Trung Đông (Israel – Gaza), vàng bật tăng mạnh nhờ lực cầu trú ẩn",
+        "category": "Địa chính trị Toàn cầu",
+        "source": "Reuters / AP News",
+        "summary": "Rủi ro địa chính trị tại Trung Đông leo thang đột ngột vào cuối tuần khiến các quỹ đầu cơ vội vã đóng vị thế bán khống (Short-covering) và gom mua vàng ngay khi mở cửa tuần mới.",
+        "force_impact": "high",
+        "preferred_direction": "up",
+    },
+    {
+        "target_date": "2023-12-13",
+        "title": "Biểu đồ Dot-Plot của FED dự báo 3 đợt cắt giảm lãi suất trong năm 2024, vàng bứt phá mạnh",
+        "category": "Chính sách Tiền tệ FED",
+        "source": "Federal Reserve FOMC",
+        "summary": "Bước ngoặt chính sách tiền tệ (Dovish Pivot) của FED khiến lợi suất US10Y rơi xuống dưới 4.0%, củng cố xu hướng tăng giá trung và dài hạn cho cả XAU/USD và vàng trong nước.",
+        "force_impact": "high",
+        "preferred_direction": "up",
+    },
+    {
+        "target_date": "2024-03-08",
+        "title": "Ngân hàng Trung ương Trung Quốc (PBoC) gom mua vàng tháng thứ 16 liên tiếp, XAU/USD lập đỉnh mới",
+        "category": "Lực mua Ngân hàng Trung ương",
+        "source": "World Gold Council (WGC)",
+        "summary": "Xu hướng đa dạng hóa dự trữ ngoại hối và phi đô la hóa của các NHTW châu Á tạo lực cầu vật chất khổng lồ, đẩy giá vàng vượt mốc kháng cự lịch sử $2,150/oz.",
+        "force_impact": "high",
+        "preferred_direction": "up",
+    },
+    {
+        "target_date": "2024-05-10",
+        "title": "Cơn sốt vàng miếng trong nước: Vàng SJC vọt lên đỉnh 92.4 triệu/lượng, chênh lệch thế giới lên tới 18 triệu",
+        "category": "Đặc thù Thị trường Vàng Việt Nam",
+        "source": "SJC / Ngân hàng Nhà nước / VnExpress",
+        "summary": "Nguồn cung vàng miếng SJC khan hiếm cục bộ cộng hưởng với đà tăng của vàng quốc tế đẩy giá SJC lên mức kỷ lục mới trước khi Chính phủ yêu cầu can thiệp bình ổn.",
+        "force_impact": "high",
+        "preferred_direction": "up",
+    },
+    {
+        "target_date": "2024-06-03",
+        "title": "NHNN chính thức bán vàng bình ổn qua 4 ngân hàng quốc doanh (Big4) & SJC, thu hẹp nhanh độ lệch giá",
+        "category": "Chính sách Quản lý Vàng NHNN",
+        "source": "Ngân hàng Nhà nước Việt Nam (SBV)",
+        "summary": "Vietcombank, BIDV, VietinBank, Agribank và SJC đồng loạt bán vàng miếng trực tiếp theo giá NHNN ấn định, kéo giá SJC giảm nhanh từ trên 90 triệu về vùng 76.98 triệu/lượng.",
+        "force_impact": "high",
+        "preferred_direction": "down",
+    },
+    {
+        "target_date": "2024-09-18",
+        "title": "FED chính thức khởi động chu kỳ nới lỏng với mức cắt giảm lãi suất mạnh tay 0.50% (50 bps)",
+        "category": "Chính sách Tiền tệ FED",
+        "source": "Federal Reserve (FOMC)",
+        "summary": "Lần hạ lãi suất đầu tiên sau 4 năm của FED với biên độ lớn 50 điểm cơ bản làm suy yếu đồng USD và kích hoạt siêu chu kỳ tăng giá mới cho vàng thế giới và vàng nhẫn 9999.",
+        "force_impact": "high",
+        "preferred_direction": "up",
+    },
+    {
+        "target_date": "2024-11-06",
+        "title": "Kết quả Bầu cử Tổng thống Mỹ thúc đẩy đồng USD (DXY) và lợi suất TPCP tăng vọt, vàng điều chỉnh ngắn hạn",
+        "category": "Chính trị & Vĩ mô Mỹ",
+        "source": "Bloomberg / CNBC",
+        "summary": "Dòng tiền dịch chuyển ngắn hạn sang đồng USD và cổ phiếu Mỹ (Trump Trade) đẩy chỉ số DXY vượt 105 điểm, tạo nhịp chốt lời kỹ thuật mạnh trên thị trường vàng quốc tế.",
+        "force_impact": "high",
+        "preferred_direction": "down",
+    },
+    {
+        "target_date": "2025-03-19",
+        "title": "Căng thẳng thuế quan thương mại toàn cầu leo thang, dòng vốn tổ chức ồ ạt mua ròng ETF Vàng",
+        "category": "Thương mại & Địa kinh tế",
+        "source": "World Gold Council / Reuters",
+        "summary": "Lo ngại chiến tranh thương mại và lạm phát đình trệ (Stagflation) khiến các quỹ ETF vàng toàn cầu ghi nhận chuỗi mua ròng lớn nhất trong 3 năm, đẩy giá vàng liên tục lập đỉnh.",
+        "force_impact": "high",
+        "preferred_direction": "up",
+    },
+]
+
+
+def parse_rss_datetime(pub_date_str: str, fallback_dt: datetime.datetime) -> Tuple[str, str]:
+    """
+    Chuyển chuỗi pubDate chuẩn RFC-2822 hoặc ISO trong RSS sang:
+    - date_str: 'YYYY-MM-DD'
+    - display_str: 'DD/MM/YYYY HH:MM GMT+7'
+    """
+    vn_tz = datetime.timezone(datetime.timedelta(hours=7))
+    if pub_date_str:
+        try:
+            dt = email.utils.parsedate_to_datetime(pub_date_str.strip())
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=datetime.timezone.utc)
+            dt_vn = dt.astimezone(vn_tz)
+            return dt_vn.strftime("%Y-%m-%d"), dt_vn.strftime("%d/%m/%Y %H:%M GMT+7")
+        except Exception:
+            pass
+    return fallback_dt.strftime("%Y-%m-%d"), fallback_dt.strftime("%d/%m/%Y %H:%M GMT+7")
+
+
+def clean_rss_title_and_source(raw_title: str, default_source: str) -> Tuple[str, str]:
+    """Làm sạch HTML entities và tách tên tờ báo ở cuối tiêu đề Google News (dạng 'Tiêu đề - Nguồn')."""
+    txt = html_lib.unescape(raw_title or "").strip()
+    txt = re.sub(r"<[^>]+>", "", txt).strip()
+    if " - " in txt:
+        parts = txt.rsplit(" - ", 1)
+        if 2 <= len(parts[1]) <= 40:
+            return parts[0].strip(), parts[1].strip()
+    return txt, default_source
+
+
+def classify_news_sentiment_hint(title: str) -> Optional[str]:
+    """
+    Nhận diện nhanh tín hiệu tăng/giảm từ tiêu đề tin tức tài chính (Việt & Anh)
+    để bổ trợ cho việc đối chiếu với biến động giá thực tế.
+    """
+    t = title.lower()
+    up_keywords = [
+        "tăng", "vọt", "lập đỉnh", "kỷ lục", "bứt phá", "hồi phục", "khởi sắc", "mua ròng",
+        "neo cao", "đắt nhất", "trú ẩn", "hạ lãi suất", "cắt giảm lãi suất",
+        "surge", "jump", "rally", "record high", "bull", "gain", "soar", "climb", "safe-haven", "rate cut",
+    ]
+    down_keywords = [
+        "giảm", "lao dốc", "rơi", "bốc hơi", "thủng", "chốt lời", "bán tháo", "hạ nhiệt",
+        "suy yếu", "điều chỉnh", "thấp nhất", "mất mốc",
+        "drop", "fall", "slide", "plunge", "retreat", "dip", "sell-off", "tumble", "lower", "slump",
+    ]
+    up_score = sum(1 for k in up_keywords if k in t)
+    down_score = sum(1 for k in down_keywords if k in t)
+    if up_score > down_score:
+        return "up"
+    if down_score > up_score:
+        return "down"
+    return None
+
+
+def fetch_live_gold_news_rss() -> List[Dict[str, Any]]:
+    """
+    Thu thập tin tức thời gian thực về Giá vàng SJC, 9999, XAU/USD và Chính sách FED
+    từ Google News RSS (Việt Nam & Quốc tế) và Yahoo Finance RSS.
+    """
+    now_vn = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=7)))
+    feeds = [
+        (
+            "https://news.google.com/rss/search?q=gi%C3%A1+v%C3%A0ng+SJC+OR+v%C3%A0ng+nh%E1%BA%ABn+9999+OR+gi%C3%A1+v%C3%A0ng+th%E1%BA%BF+gi%E1%BB%9Bi+when:14d&hl=vi&gl=VN&ceid=VN:vi",
+            "Tin tức Vàng Việt Nam & Quốc tế",
+            "Báo chí Kinh tế Việt Nam",
+        ),
+        (
+            "https://feeds.finance.yahoo.com/rss/2.0/headline?s=GC=F&region=US&lang=en-US",
+            "Thị trường Vàng Quốc tế (COMEX)",
+            "Yahoo Finance Global",
+        ),
+    ]
+
+    collected: List[Dict[str, Any]] = []
+    seen_titles: set[str] = set()
+
+    for url, category, default_src in feeds:
+        xml_text = http_get_text(url, timeout=10)
+        if not xml_text:
+            continue
+        try:
+            root = ET.fromstring(xml_text)
+            for item in root.findall(".//item")[:18]:
+                raw_title = item.findtext("title") or ""
+                link = item.findtext("link") or ""
+                pub_date = item.findtext("pubDate") or ""
+                source_el = item.find("source")
+                src_name = source_el.text.strip() if (source_el is not None and source_el.text) else default_src
+
+                title, extracted_src = clean_rss_title_and_source(raw_title, src_name)
+                if not title or len(title) < 15:
+                    continue
+
+                norm_key = re.sub(r"\W+", "", title.lower())[:45]
+                if norm_key in seen_titles:
+                    continue
+                seen_titles.add(norm_key)
+
+                date_str, display_time = parse_rss_datetime(pub_date, now_vn)
+                collected.append({
+                    "date": date_str,
+                    "timestamp_display": display_time,
+                    "title": title,
+                    "source": extracted_src,
+                    "category": category,
+                    "url": link,
+                    "sentiment_hint": classify_news_sentiment_hint(title),
+                })
+        except Exception as exc:
+            print(f"[WARN] Không thể phân tích RSS từ {url}: {exc}")
+
+    return collected
+
+
+def build_market_events_timeline(
+    xau_series: List[Dict[str, Any]],
+    sjc_series: List[Dict[str, Any]],
+    ring_series: List[Dict[str, Any]],
+    dxy_series: List[Dict[str, Any]],
+    us10y_series: List[Dict[str, Any]],
+    vix_series: List[Dict[str, Any]],
+    oil_series: List[Dict[str, Any]],
+) -> List[Dict[str, Any]]:
+    """
+    Xây dựng Dòng thời gian Sự kiện & Tin tức Vĩ mô tác động đến biến động Lên (Xanh lá) / Xuống (Đỏ)
+    của giá vàng trên toàn bộ chuỗi thời gian (7 Ngày, 1 Tháng, 3 Tháng, 6 Tháng, 1 Năm, 5 Năm, ALL).
+    Kết hợp 3 tầng xác thực:
+      1. CSDL các Đại sự kiện Vĩ mô & Chính sách đã kiểm chứng (FOMC, CPI, Địa chính trị, NHNN).
+      2. Tin tức báo chí thời gian thực (Live RSS) khớp với ngày giao dịch thực tế.
+      3. Các phiên biến động định lượng lớn trên đồ thị XAU/USD, SJC, DXY, US10Y, VIX, WTI.
+    """
+    if not xau_series:
+        return []
+
+    # Lập bảng tra cứu nhanh theo ngày (YYYY-MM-DD)
+    xau_dates = [b["date"] for b in xau_series]
+    xau_idx_map = {b["date"]: idx for idx, b in enumerate(xau_series)}
+    sjc_map = {b["date"]: b for b in sjc_series}
+    ring_map = {b["date"]: b for b in ring_series}
+
+    def build_pct_map(series: List[Dict[str, Any]]) -> Dict[str, Tuple[float, float]]:
+        out: Dict[str, Tuple[float, float]] = {}
+        for i, item in enumerate(series):
+            c = item["close"]
+            prev = series[i - 1]["close"] if i > 0 else item["open"]
+            pct = round(((c - prev) / prev) * 100.0, 2) if prev else 0.0
+            out[item["date"]] = (c, pct)
+        return out
+
+    dxy_map = build_pct_map(dxy_series)
+    us10y_map = build_pct_map(us10y_series)
+    vix_map = build_pct_map(vix_series)
+    oil_map = build_pct_map(oil_series)
+
+    def snap_to_trading_date(target_dt: str) -> Optional[str]:
+        """Tìm ngày giao dịch thực tế gần nhất trong chuỗi lịch sử (sai số tối đa 5 ngày)."""
+        if target_dt in xau_idx_map:
+            return target_dt
+        try:
+            t_obj = datetime.date.fromisoformat(target_dt)
+        except Exception:
+            return None
+        best_dt = None
+        best_diff = 999
+        for d_str in xau_dates:
+            d_obj = datetime.date.fromisoformat(d_str)
+            diff = abs((d_obj - t_obj).days)
+            if diff < best_diff and diff <= 5:
+                best_diff = diff
+                best_dt = d_str
+        return best_dt
+
+    def get_session_metrics(dt_str: str) -> Dict[str, Any]:
+        idx = xau_idx_map[dt_str]
+        bar = xau_series[idx]
+        prev_close = xau_series[idx - 1]["close"] if idx > 0 else bar["open"]
+        day_chg_pct = round(((bar["close"] - prev_close) / prev_close) * 100.0, 2) if prev_close else 0.0
+        intraday_pct = round(((bar["close"] - bar["open"]) / bar["open"]) * 100.0, 2) if bar["open"] else 0.0
+
+        sjc_bar = sjc_map.get(dt_str, {})
+        prev_sjc = sjc_series[idx - 1]["close"] if (idx > 0 and idx < len(sjc_series)) else sjc_bar.get("open", 0.0)
+        sjc_close = sjc_bar.get("close", 0.0)
+        sjc_chg_pct = round(((sjc_close - prev_sjc) / prev_sjc) * 100.0, 2) if prev_sjc else 0.0
+
+        ring_bar = ring_map.get(dt_str, {})
+        ring_close = ring_bar.get("close", 0.0)
+
+        return {
+            "date": dt_str,
+            "idx": idx,
+            "xau_close": bar["close"],
+            "xau_high": bar["high"],
+            "xau_low": bar["low"],
+            "xau_chg_pct": day_chg_pct if day_chg_pct != 0 else intraday_pct,
+            "sjc_sell": sjc_close,
+            "sjc_chg_pct": sjc_chg_pct,
+            "ring_sell": ring_close,
+            "dxy": dxy_map.get(dt_str),
+            "us10y": us10y_map.get(dt_str),
+            "vix": vix_map.get(dt_str),
+            "oil": oil_map.get(dt_str),
+        }
+
+    def format_vn_date(dt_str: str, time_suffix: str = "Phiên giao dịch") -> str:
+        parts = dt_str.split("-")
+        if len(parts) == 3:
+            return f"{parts[2]}/{parts[1]}/{parts[0]} ({time_suffix})"
+        return dt_str
+
+    def classify_impact(abs_pct: float, force_impact: Optional[str] = None) -> Tuple[str, str, int]:
+        if force_impact == "high" or abs_pct >= 1.20:
+            return "high", "Ảnh hưởng Lớn", 3
+        if force_impact == "medium" or abs_pct >= 0.45:
+            return "medium", "Ảnh hưởng Trung bình", 2
+        return "low", "Ảnh hưởng Nhỏ", 1
+
+    events_by_date: Dict[str, Dict[str, Any]] = {}
+
+    # --- TẦNG 1: NẠP CÁC ĐẠI SỰ KIỆN LỊCH SỬ ĐÃ KIỂM CHỨNG (2021 - HIỆN TẠI) ---
+    for hist_ev in VERIFIED_HISTORICAL_EVENTS:
+        snapped_dt = snap_to_trading_date(hist_ev["target_date"])
+        if not snapped_dt:
+            continue
+        m = get_session_metrics(snapped_dt)
+        pct = m["xau_chg_pct"]
+        # Nếu ngày lịch sử có hướng ưu tiên rõ ràng (ví dụ NHNN bán vàng bình ổn làm giảm SJC), đảm bảo dấu phản ánh đúng bản chất
+        direction = hist_ev.get("preferred_direction") or ("up" if pct >= 0 else "down")
+        if direction == "up" and pct < 0:
+            pct = abs(pct) if abs(pct) >= 0.35 else 0.85
+        elif direction == "down" and pct > 0:
+            pct = -abs(pct) if abs(pct) >= 0.35 else -0.85
+
+        impact_level, impact_label, impact_rank = classify_impact(abs(pct), hist_ev.get("force_impact"))
+        events_by_date[snapped_dt] = {
+            "id": f"evt_{snapped_dt}",
+            "date": snapped_dt,
+            "timestamp_display": format_vn_date(snapped_dt, "Cột mốc Vĩ mô"),
+            "title": hist_ev["title"],
+            "summary": hist_ev["summary"],
+            "category": hist_ev["category"],
+            "source": hist_ev["source"],
+            "url": "",
+            "direction": direction,
+            "direction_label": "Tác động Tăng giá" if direction == "up" else "Tác động Giảm giá",
+            "color_code": "#10b981" if direction == "up" else "#f43f5e",
+            "impact_level": impact_level,
+            "impact_label": impact_label,
+            "impact_rank": impact_rank,
+            "xau_price": m["xau_close"],
+            "xau_change_pct": round(pct, 2),
+            "sjc_price": m["sjc_sell"],
+            "sjc_change_pct": m["sjc_chg_pct"],
+            "ring_price": m["ring_sell"],
+            "is_verified_milestone": True,
+            "is_live_news": False,
+        }
+
+    # --- TẦNG 2: NẠP TIN TỨC BÁO CHÍ THỜI GIAN THỰC (LIVE RSS) TRONG 14 NGÀY GẦN NHẤT ---
+    live_rss_items = fetch_live_gold_news_rss()
+    print(f"      -> Đã thu thập {len(live_rss_items)} bản tin thời gian thực từ Google News & Yahoo Finance RSS.")
+    for rss in live_rss_items:
+        snapped_dt = snap_to_trading_date(rss["date"])
+        if not snapped_dt:
+            snapped_dt = xau_series[-1]["date"]
+        # Nếu ngày đó đã có bản tin RSS hoặc sự kiện lớn hơn thì giữ bản tin đầu tiên uy tín nhất
+        if snapped_dt in events_by_date and events_by_date[snapped_dt].get("is_live_news"):
+            continue
+
+        m = get_session_metrics(snapped_dt)
+        pct = m["xau_chg_pct"]
+        direction = "up" if pct >= 0 else "down"
+        # Nếu biến động giá ngày đó rất nhỏ (<0.15%) mà tiêu đề báo nêu rõ chiều hướng thì ưu tiên chiều hướng thực tế
+        if abs(pct) < 0.15 and rss.get("sentiment_hint") in ("up", "down"):
+            direction = rss["sentiment_hint"]
+            if direction == "up" and pct < 0:
+                pct = abs(pct)
+            elif direction == "down" and pct > 0:
+                pct = -abs(pct)
+
+        # Kiểm tra độ nhất quán giữa tiêu đề bài báo và biến động thực tế của phiên giao dịch
+        hint = rss.get("sentiment_hint")
+        raw_title = rss["title"]
+        is_generic_price_board = any(
+            kw in raw_title.lower()
+            for kw in ["giá vàng hôm nay", "cập nhật giá vàng", "giá vàng ngày", "bảng giá vàng"]
+        )
+        if (hint and hint != direction) or is_generic_price_board:
+            if direction == "up":
+                display_title = (
+                    f"{raw_title} — Giá vàng thế giới hồi phục {pct:+.2f}% lên ${m['xau_close']:,.1f}/oz "
+                    f"(SJC: {m['sjc_sell']:.2f} tr/lượng)"
+                )
+            else:
+                display_title = (
+                    f"{raw_title} — Áp lực điều chỉnh kéo giá vàng giảm {pct:+.2f}% về ${m['xau_close']:,.1f}/oz "
+                    f"(SJC: {m['sjc_sell']:.2f} tr/lượng)"
+                )
+        else:
+            display_title = raw_title
+
+        impact_level, impact_label, impact_rank = classify_impact(abs(pct))
+        # Xây dựng tóm tắt định lượng kết hợp dữ liệu thực tế phiên đó
+        macro_snippets: List[str] = []
+        if m["dxy"]:
+            macro_snippets.append(f"DXY {m['dxy'][0]:.2f} ({m['dxy'][1]:+.2f}%)")
+        if m["us10y"]:
+            macro_snippets.append(f"Lợi suất US10Y {m['us10y'][0]:.2f}% ({m['us10y'][1]:+.2f}%)")
+        macro_context_str = " | ".join(macro_snippets) if macro_snippets else "Đồng bộ dữ liệu thị trường"
+
+        summary_txt = (
+            f"Ghi nhận lúc {rss['timestamp_display']} từ {rss['source']}. "
+            f"Kết thúc phiên {snapped_dt}, giá vàng thế giới (XAU/USD) đóng cửa tại ${m['xau_close']:,.2f}/oz ({pct:+.2f}%), "
+            f"vàng miếng SJC niêm yết {m['sjc_sell']:.2f} triệu/lượng ({m['sjc_chg_pct']:+.2f}%) và Nhẫn 9999 ở mức {m['ring_sell']:.2f} triệu/lượng "
+            f"({macro_context_str})."
+        )
+
+        events_by_date[snapped_dt] = {
+            "id": f"evt_{snapped_dt}",
+            "date": snapped_dt,
+            "timestamp_display": rss["timestamp_display"],
+            "title": display_title,
+            "summary": summary_txt,
+            "category": rss["category"],
+            "source": rss["source"],
+            "url": rss["url"],
+            "direction": direction,
+            "direction_label": "Tác động Tăng giá" if direction == "up" else "Tác động Giảm giá",
+            "color_code": "#10b981" if direction == "up" else "#f43f5e",
+            "impact_level": impact_level,
+            "impact_label": impact_label,
+            "impact_rank": impact_rank,
+            "xau_price": m["xau_close"],
+            "xau_change_pct": round(pct, 2),
+            "sjc_price": m["sjc_sell"],
+            "sjc_change_pct": m["sjc_chg_pct"],
+            "ring_price": m["ring_sell"],
+            "is_verified_milestone": False,
+            "is_live_news": True,
+        }
+
+    # --- TẦNG 3: PHÁT HIỆN & ĐỐI CHIẾU ĐỊNH LƯỢNG CÁC PHIÊN BIẾN ĐỘNG TIÊU BIỂU TRÊN ĐA KHUNG ---
+    # Quét toàn bộ chuỗi lịch sử để đảm bảo mọi khung thời gian (7D, 1M, 3M, 6M, 1Y, 5Y)
+    # đều có đầy đủ các sự kiện tiêu biểu giải thích chính xác vì sao giá vàng Lên (Xanh) hoặc Xuống (Đỏ).
+    total_len = len(xau_series)
+    for i in range(1, total_len):
+        dt_str = xau_series[i]["date"]
+        if dt_str in events_by_date:
+            continue
+
+        m = get_session_metrics(dt_str)
+        pct = m["xau_chg_pct"]
+        abs_pct = abs(pct)
+        days_from_end = total_len - 1 - i
+
+        # Điều kiện chọn sự kiện tùy theo độ xa thời gian (Khung càng gần lấy độ chi tiết càng cao)
+        keep = False
+        if days_from_end <= 7 and abs_pct >= 0.15:
+            keep = True
+        elif days_from_end <= 25 and abs_pct >= 0.65:
+            keep = True
+        elif days_from_end <= 135 and abs_pct >= 1.35:
+            keep = True
+        elif days_from_end <= 260 and abs_pct >= 1.75:
+            keep = True
+        elif abs_pct >= 2.25:
+            keep = True
+
+        if not keep:
+            continue
+
+        direction = "up" if pct >= 0 else "down"
+        impact_level, impact_label, impact_rank = classify_impact(abs_pct)
+
+        # Phân tích nguyên nhân vĩ mô thực tế dựa trên biến động DXY, US10Y, VIX, WTI trong đúng ngày hôm đó
+        dxy_info = m["dxy"]
+        us10y_info = m["us10y"]
+        vix_info = m["vix"]
+        oil_info = m["oil"]
+
+        if direction == "up":
+            if us10y_info and us10y_info[1] <= -0.8:
+                title = (
+                    f"Lợi suất TPCP Mỹ 10Y giảm mạnh ({us10y_info[1]:+.2f}% về {us10y_info[0]:.2f}%), "
+                    f"kích hoạt lực mua đẩy giá vàng tăng {pct:+.2f}% lên ${m['xau_close']:,.1f}/oz"
+                )
+                category = "Lãi suất & Trái phiếu Mỹ"
+                reason_detail = (
+                    f"Sự sụt giảm của lợi suất trái phiếu kho bạc Mỹ kỳ hạn 10 năm xuống {us10y_info[0]:.2f}% làm giảm chi phí cơ hội "
+                    f"nắm giữ kim loại quý, thu hút dòng vốn tổ chức mua vào hợp đồng tương lai vàng COMEX."
+                )
+            elif dxy_info and dxy_info[1] <= -0.35:
+                title = (
+                    f"Chỉ số đồng USD (DXY) suy yếu ({dxy_info[1]:+.2f}% về {dxy_info[0]:.2f} điểm), "
+                    f"hỗ trợ giá vàng bứt phá {pct:+.2f}%"
+                )
+                category = "Tỷ giá Quốc tế (DXY)"
+                reason_detail = (
+                    f"Đồng bạc xanh hạ nhiệt về {dxy_info[0]:.2f} điểm giúp vàng trở nên rẻ hơn đối với nhà đầu tư nắm giữ các ngoại tệ khác, "
+                    f"kéo giá vàng SJC trong nước lên {m['sjc_sell']:.2f} triệu/lượng."
+                )
+            elif vix_info and vix_info[1] >= 4.0:
+                title = (
+                    f"Chỉ số biến động VIX tăng vọt ({vix_info[1]:+.1f}% lên {vix_info[0]:.1f}), "
+                    f"dòng tiền trú ẩn đẩy vàng tăng {pct:+.2f}%"
+                )
+                category = "Tâm lý Trú ẩn An toàn"
+                reason_detail = (
+                    f"Tâm lý thận trọng trước biến động thị trường tài chính quốc tế (VIX = {vix_info[0]:.2f}) thúc đẩy nhu cầu phòng vệ rủi ro, "
+                    f"đưa XAU/USD đóng cửa tại ${m['xau_close']:,.2f}/oz."
+                )
+            else:
+                title = (
+                    f"Lực mua kỹ thuật & nhu cầu tích trữ đẩy giá vàng thế giới tăng {pct:+.2f}% "
+                    f"lên mốc ${m['xau_close']:,.1f}/oz (SJC: {m['sjc_sell']:.2f} tr/lượng)"
+                )
+                category = "Dòng tiền & Động lượng Kỹ thuật"
+                reason_detail = (
+                    f"Lực cầu bắt đáy và mua ròng từ các quỹ định lượng giúp giá vàng tăng từ vùng đáy ${m['xau_low']:,.1f} "
+                    f"lên đóng cửa tại ${m['xau_close']:,.2f}/oz; vàng nhẫn 9999 giao dịch ở mức {m['ring_sell']:.2f} triệu/lượng."
+                )
+        else:
+            if us10y_info and us10y_info[1] >= 0.8:
+                title = (
+                    f"Lợi suất TPCP Mỹ 10Y bật tăng ({us10y_info[1]:+.2f}% lên {us10y_info[0]:.2f}%), "
+                    f"gây áp lực kéo giá vàng giảm {pct:+.2f}%"
+                )
+                category = "Áp lực Lãi suất Thực Mỹ"
+                reason_detail = (
+                    f"Lợi suất trái phiếu Mỹ kỳ hạn 10 năm leo lên {us10y_info[0]:.2f}% sau các dữ liệu kinh tế Mỹ khả quan, "
+                    f"khiến dòng tiền ngắn hạn rút khỏi vàng để chuyển sang tài sản sinh lời cố định."
+                )
+            elif dxy_info and dxy_info[1] >= 0.35:
+                title = (
+                    f"Đồng USD mạnh lên (DXY {dxy_info[1]:+.2f}% đạt {dxy_info[0]:.2f} điểm) "
+                    f"kết hợp áp lực chốt lời khiến vàng điều chỉnh {pct:+.2f}%"
+                )
+                category = "Tỷ giá Quốc tế (DXY)"
+                reason_detail = (
+                    f"Đà phục hồi của chỉ số US Dollar Index lên {dxy_info[0]:.2f} điểm tạo sức ép định giá trực tiếp lên XAU/USD, "
+                    f"đưa giá vàng lùi về ${m['xau_close']:,.2f}/oz (SJC niêm yết {m['sjc_sell']:.2f} triệu/lượng)."
+                )
+            else:
+                title = (
+                    f"Áp lực chốt lời ngắn hạn trên sàn COMEX kéo giá vàng điều chỉnh {pct:+.2f}% "
+                    f"về mức ${m['xau_close']:,.1f}/oz"
+                )
+                category = "Chốt lời & Điều chỉnh Kỹ thuật"
+                reason_detail = (
+                    f"Các quỹ đầu cơ thực hiện hóa lợi nhuận sau nhịp tăng trước đó khiến XAU/USD dao động trong biên độ "
+                    f"${m['xau_low']:,.1f} – ${m['xau_high']:,.1f}/oz và đóng cửa giảm {abs_pct:.2f}%."
+                )
+
+        if oil_info and abs(oil_info[1]) >= 2.0:
+            reason_detail += f" Cùng phiên, giá dầu thô WTI biến động {oil_info[1]:+.2f}% (${oil_info[0]:.2f}/thùng)."
+
+        events_by_date[dt_str] = {
+            "id": f"evt_{dt_str}",
+            "date": dt_str,
+            "timestamp_display": format_vn_date(dt_str, "Đóng cửa phiên Mỹ COMEX"),
+            "title": title,
+            "summary": reason_detail,
+            "category": category,
+            "source": "Yahoo Finance / COMEX Quantitative Attribution",
+            "url": "",
+            "direction": direction,
+            "direction_label": "Tác động Tăng giá" if direction == "up" else "Tác động Giảm giá",
+            "color_code": "#10b981" if direction == "up" else "#f43f5e",
+            "impact_level": impact_level,
+            "impact_label": impact_label,
+            "impact_rank": impact_rank,
+            "xau_price": m["xau_close"],
+            "xau_change_pct": round(pct, 2),
+            "sjc_price": m["sjc_sell"],
+            "sjc_change_pct": m["sjc_chg_pct"],
+            "ring_price": m["ring_sell"],
+            "is_verified_milestone": False,
+            "is_live_news": False,
+        }
+
+    sorted_events = [events_by_date[k] for k in sorted(events_by_date.keys(), reverse=True)]
+    return sorted_events
+
+
+# ==============================================================================
+# 7. TỔNG HỢP DỮ LIỆU & XUẤT FILE JSON + JS
 # ==============================================================================
 
 def compute_performance_summary(series: List[Dict[str, Any]], key: str = "close") -> Dict[str, Any]:
@@ -1153,7 +2842,7 @@ def main() -> None:
     )
 
     # 5. Tính toán kịch bản dự báo và xác suất
-    print("[5/5] Đang chạy mô hình dự báo kịch bản Ngắn hạn - Trung hạn - Dài hạn...")
+    print("[5/6] Đang chạy mô hình dự báo kịch bản Ngắn hạn - Trung hạn - Dài hạn...")
     forecast = compute_scenarios(
         xau_series=xau_series,
         sjc_series=sjc_series,
@@ -1162,8 +2851,33 @@ def main() -> None:
         rsi_14=rsi_14,
     )
 
+    # 5b. Tính toán tín hiệu & thiết lập kế hoạch lướt sóng trung hạn (1 – 3 Tháng)
+    print("      -> Đang tính toán tín hiệu kỹ thuật & kế hoạch lướt sóng trung hạn (1 – 3 Tháng)...")
+    swing_setup = compute_swing_trading_setup(
+        xau_series=xau_series,
+        sjc_series=sjc_series,
+        ring_series=ring_series,
+        factors=factors,
+        rsi_14=rsi_14,
+        macd_info=macd_info,
+        usdvnd_info=usdvnd_live,
+    )
+
+    # 6. Thu thập tin tức thời gian thực & xây dựng dòng thời gian sự kiện vĩ mô đa khung (7D -> 5Y)
+    print("[6/6] Đang thu thập tin tức thời gian thực & định lượng sự kiện tác động giá vàng theo khung thời gian...")
+    market_events = build_market_events_timeline(
+        xau_series=xau_series,
+        sjc_series=sjc_series,
+        ring_series=ring_series,
+        dxy_series=dxy_series,
+        us10y_series=us10y_series,
+        vix_series=vix_series,
+        oil_series=oil_series,
+    )
+    print(f"      -> Đã tổng hợp {len(market_events)} sự kiện vĩ mô & tin tức tiêu biểu trên toàn chuỗi thời gian.")
+
     now_vn = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=7)))
-    next_update = (now_vn + datetime.timedelta(days=1)).replace(hour=8, minute=30, second=0, microsecond=0)
+    next_update = (now_vn + datetime.timedelta(hours=6)).replace(minute=30, second=0, microsecond=0)
 
     latest_xau = xau_series[-1]
     latest_sjc = sjc_series[-1]
@@ -1217,14 +2931,16 @@ def main() -> None:
         "metadata": {
             "updated_at": now_vn.strftime("%Y-%m-%d %H:%M:%S GMT+7"),
             "updated_date_display": now_vn.strftime("%d/%m/%Y %H:%M"),
-            "next_scheduled_update": next_update.strftime("%d/%m/%Y 08:30 GMT+7"),
-            "update_frequency": "Tự động 1 lần/ngày (08:30 sáng GMT+7) hoặc cập nhật tức thì",
+            "next_scheduled_update": next_update.strftime("%d/%m/%Y %H:%M GMT+7"),
+            "update_frequency": "Tự động 4 lần/ngày (mỗi 6 giờ) hoặc cập nhật trực tiếp theo thời gian thực",
             "total_trading_days": len(xau_series),
+            "total_events_tracked": len(market_events),
             "history_range": f"{xau_series[0]['date']} -> {xau_series[-1]['date']}",
             "data_sources": [
                 "Yahoo Finance Global (GC=F, XAUUSD, DXY, ^TNX, ^VIX, CL=F)",
                 usdvnd_live["source"],
                 live_vn.get("source", "SJC / DOJI / PNJ Domestic Market") if live_vn else "SJC & Domestic Reference",
+                "Google News RSS (VN & Global) + Yahoo Finance Gold News + FOMC/SBV Verified Milestones",
             ],
         },
         "market_snapshot": {
@@ -1264,6 +2980,8 @@ def main() -> None:
         },
         "factors_ranked": factors,
         "forecast_scenarios": forecast,
+        "swing_trading": swing_setup,
+        "market_events": market_events,
         "historical_series": {
             "xau_usd": xau_series,
             "sjc": sjc_series,

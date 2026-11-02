@@ -21,11 +21,28 @@
     showMA20: true,
     showMA50: true,
     showMA200: false,
-    selectedHorizon: 'short_term', // 'short_term' | 'mid_term' | 'long_term'
+    showChartEvents: true,    // Hiển thị các mốc sự kiện (▲ Xanh lá / ▼ Đỏ) trên đồ thị
+    eventImpactFilter: 'auto', // 'auto' (Tiêu biểu theo khung) | 'high' | 'medium' | 'low' | 'all'
+    eventDirectionFilter: 'all', // 'all' | 'up' | 'down'
+    highlightedEventDate: null,
+    selectedHorizon: '1_week', // '1_week' | '1_month' | '3_months' | '6_months' | '1_year' | '3_5_years'
+    swingHorizon: 'short_term', // 'short_term' | 'medium_term'
+    swingAsset: 'ring_9999',  // 'ring_9999' | 'sjc' | 'xau_usd'
     calcAsset: 'ring_9999',
     calcQuantity: 5, // lượng vàng
     mainChart: null,
+    primarySeries: null,
     spreadChart: null,
+  };
+
+  const TIMEFRAME_LABELS = {
+    '7D': '1 Tuần (7 Ngày giao dịch gần nhất)',
+    '1M': '1 Tháng (~22 phiên giao dịch)',
+    '3M': '3 Tháng (~66 phiên giao dịch)',
+    '6M': '6 Tháng (~130 phiên giao dịch)',
+    '1Y': '1 Năm (~252 phiên giao dịch)',
+    '5Y': '5 Năm (Toàn chu kỳ 2021 – 2026)',
+    'ALL': 'Tất Cả Chuỗi Lịch Sử (ALL)',
   };
 
   const TIMEFRAME_DAYS = {
@@ -247,11 +264,18 @@
     document.getElementById('chart-active-title').textContent = `${meta.name} — Khung ${tf}`;
     document.getElementById('chart-active-subtitle').textContent = `${meta.description} | Đơn vị: ${meta.unit}`;
 
-    // Xóa chart cũ nếu có
+    // Hủy instance chart cũ để ngắt sạch toàn bộ event listeners và giải phóng bộ nhớ
+    if (STATE.mainChart) {
+      try {
+        STATE.mainChart.remove();
+      } catch (_) {}
+      STATE.mainChart = null;
+    }
     container.innerHTML = '';
 
+    const initialWidth = container.clientWidth || (container.parentElement ? container.parentElement.clientWidth : 800) || 800;
     const chart = LightweightCharts.createChart(container, {
-      width: container.clientWidth,
+      width: initialWidth,
       height: 440,
       layout: {
         background: { type: 'solid', color: '#0b101b' },
@@ -276,6 +300,37 @@
     });
 
     STATE.mainChart = chart;
+
+    // Xây dựng bảng tra cứu sự kiện theo ngày (YYYY-MM-DD)
+    const allEvents = STATE.data.market_events || [];
+    const eventByDate = {};
+    allEvents.forEach((ev) => {
+      eventByDate[ev.date] = ev;
+    });
+
+    // Biến cache ngày đang hover để chống giật / re-render liên tục khi chuột di chuyển trong cùng 1 nến
+    let lastHoveredDate = null;
+    const handleCrosshairMove = (param, activeSliced, activeByDate) => {
+      let dateKey = null;
+      if (param && param.time) {
+        dateKey = typeof param.time === 'string' ? param.time : null;
+      }
+      if (!dateKey) {
+        const lastBar = activeSliced[activeSliced.length - 1];
+        dateKey = lastBar ? lastBar.date : null;
+      }
+      if (!dateKey) return;
+
+      // NẾU VẪN Ở TRÊN CÙNG 1 CÂY NẾN ĐÓ -> RETURN NGAY ĐỂ TRÁNH GIẬT KHUNG HÌNH (0ms Overhead)!
+      if (dateKey === lastHoveredDate) {
+        return;
+      }
+      lastHoveredDate = dateKey;
+
+      const bar = activeByDate[dateKey] || activeSliced[activeSliced.length - 1];
+      const ev = eventByDate[dateKey] || null;
+      updateOHLCLegend(bar, meta, ev);
+    };
 
     if (assetKey === 'compare_vn') {
       // So sánh 3 đường: SJC Bán ra vs Nhẫn 9999 Bán ra vs Thế giới quy đổi
@@ -303,8 +358,23 @@
       ringLine.setData(ringRaw.map((d) => ({ time: d.date, value: d.sell })));
       worldLine.setData(sjcRaw.map((d) => ({ time: d.date, value: d.world_converted })));
 
+      STATE.primarySeries = sjcLine;
+      const filteredEvents = getFilteredEventsForTimeframe(tf, sjcRaw);
+      applyMarkersToSeries(sjcLine, filteredEvents, tf);
+      renderTimeframeEventsTimeline(tf, sjcRaw, filteredEvents);
+
+      const byDateSjc = {};
+      sjcRaw.forEach((d) => {
+        byDateSjc[d.date] = d;
+      });
+
+      chart.subscribeCrosshairMove((param) => {
+        handleCrosshairMove(param, sjcRaw, byDateSjc);
+      });
+
       renderPerformanceStrip(hist.sjc, 'sjc');
-      updateOHLCLegend(sjcRaw[sjcRaw.length - 1], meta);
+      const lastBar = sjcRaw[sjcRaw.length - 1];
+      updateOHLCLegend(lastBar, meta, lastBar ? eventByDate[lastBar.date] : null);
     } else {
       const rawSeries = hist[assetKey] || hist.xau_usd;
       const sliced = filterSeriesByTimeframe(rawSeries, tf);
@@ -342,6 +412,13 @@
           }))
         );
       }
+
+      STATE.primarySeries = primarySeries;
+
+      // Lọc sự kiện tiêu biểu theo đúng khoảng thời gian đang xem & gắn Markers lên đồ thị
+      const filteredEvents = getFilteredEventsForTimeframe(tf, sliced);
+      applyMarkersToSeries(primarySeries, filteredEvents, tf);
+      renderTimeframeEventsTimeline(tf, sliced, filteredEvents);
 
       // Đường Trung bình động MA20, MA50, MA200
       if (STATE.showMA20) {
@@ -389,17 +466,11 @@
       sliced.forEach((d) => {
         byDate[d.date] = d;
       });
-      updateOHLCLegend(sliced[sliced.length - 1], meta);
+      const latestBar = sliced[sliced.length - 1];
+      updateOHLCLegend(latestBar, meta, latestBar ? eventByDate[latestBar.date] : null);
 
       chart.subscribeCrosshairMove((param) => {
-        if (!param || !param.time) {
-          updateOHLCLegend(sliced[sliced.length - 1], meta);
-          return;
-        }
-        const dateKey = typeof param.time === 'string' ? param.time : null;
-        if (dateKey && byDate[dateKey]) {
-          updateOHLCLegend(byDate[dateKey], meta);
-        }
+        handleCrosshairMove(param, sliced, byDate);
       });
 
       renderPerformanceStrip(rawSeries, assetKey);
@@ -408,21 +479,503 @@
     chart.timeScale().fitContent();
   }
 
-  function updateOHLCLegend(bar, meta) {
+  function updateOHLCLegend(bar, meta, eventObj) {
     if (!bar) return;
-    const el = document.getElementById('chart-ohlc-legend');
-    if (!el) return;
     const isUp = bar.close >= bar.open;
     const color = isUp ? 'text-emerald-400' : 'text-rose-400';
-    el.innerHTML = `
-      <span class="text-slate-400">Ngày: <strong class="text-slate-200">${bar.date}</strong></span>
-      <span class="text-slate-400">Mở: <strong class="text-slate-200">${meta.prefix}${formatNumber(bar.open, meta.decimals)}${meta.suffix}</strong></span>
-      <span class="text-slate-400">Cao: <strong class="text-emerald-400">${meta.prefix}${formatNumber(bar.high, meta.decimals)}${meta.suffix}</strong></span>
-      <span class="text-slate-400">Thấp: <strong class="text-rose-400">${meta.prefix}${formatNumber(bar.low, meta.decimals)}${meta.suffix}</strong></span>
-      <span class="text-slate-400">Đóng: <strong class="${color}">${meta.prefix}${formatNumber(bar.close, meta.decimals)}${meta.suffix}</strong></span>
-      ${bar.ma20 ? `<span class="text-sky-400">MA20: ${formatNumber(bar.ma20, meta.decimals)}</span>` : ''}
-      ${bar.ma50 ? `<span class="text-purple-400">MA50: ${formatNumber(bar.ma50, meta.decimals)}</span>` : ''}
-    `;
+
+    const elDate = document.getElementById('legend-ohlc-date');
+    const elOpen = document.getElementById('legend-ohlc-open');
+    const elHigh = document.getElementById('legend-ohlc-high');
+    const elLow = document.getElementById('legend-ohlc-low');
+    const elClose = document.getElementById('legend-ohlc-close');
+    const elMa20 = document.getElementById('legend-ohlc-ma20');
+    const elMa50 = document.getElementById('legend-ohlc-ma50');
+    const elMa200 = document.getElementById('legend-ohlc-ma200');
+    const elEvent = document.getElementById('legend-ohlc-event');
+
+    if (elDate) elDate.textContent = bar.date;
+    if (elOpen) elOpen.textContent = `${meta.prefix}${formatNumber(bar.open, meta.decimals)}${meta.suffix}`;
+    if (elHigh) elHigh.textContent = `${meta.prefix}${formatNumber(bar.high, meta.decimals)}${meta.suffix}`;
+    if (elLow) elLow.textContent = `${meta.prefix}${formatNumber(bar.low, meta.decimals)}${meta.suffix}`;
+    if (elClose) {
+      elClose.textContent = `${meta.prefix}${formatNumber(bar.close, meta.decimals)}${meta.suffix}`;
+      elClose.className = `${color} font-bold`;
+    }
+
+    if (elMa20) {
+      if (bar.ma20 !== null && bar.ma20 !== undefined && STATE.showMA20) {
+        elMa20.textContent = `MA20: ${formatNumber(bar.ma20, meta.decimals)}`;
+        elMa20.classList.remove('hidden');
+      } else {
+        elMa20.classList.add('hidden');
+      }
+    }
+
+    if (elMa50) {
+      if (bar.ma50 !== null && bar.ma50 !== undefined && STATE.showMA50) {
+        elMa50.textContent = `MA50: ${formatNumber(bar.ma50, meta.decimals)}`;
+        elMa50.classList.remove('hidden');
+      } else {
+        elMa50.classList.add('hidden');
+      }
+    }
+
+    if (elMa200) {
+      if (bar.ma200 !== null && bar.ma200 !== undefined && STATE.showMA200) {
+        elMa200.textContent = `MA200: ${formatNumber(bar.ma200, meta.decimals)}`;
+        elMa200.classList.remove('hidden');
+      } else {
+        elMa200.classList.add('hidden');
+      }
+    }
+
+    if (elEvent) {
+      if (eventObj) {
+        const isEvUp = eventObj.direction === 'up';
+        const evBadgeCls = isEvUp
+          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+          : 'bg-rose-500/20 text-rose-300 border-rose-500/40';
+        const arrow = isEvUp ? '▲' : '▼';
+        const sign = eventObj.xau_change_pct >= 0 ? '+' : '';
+        elEvent.innerHTML = `
+          <div class="flex items-center gap-2 overflow-hidden truncate">
+            <span class="px-2 py-0.5 rounded text-[11px] font-bold ${evBadgeCls} border shrink-0">
+              ${arrow} [${eventObj.impact_label}] ${sign}${eventObj.xau_change_pct.toFixed(2)}%
+            </span>
+            <span class="text-slate-100 font-semibold truncate">${eventObj.title}</span>
+            <span class="text-slate-400 text-[11px] shrink-0 hidden lg:inline">(${eventObj.timestamp_display})</span>
+          </div>
+        `;
+      } else {
+        elEvent.innerHTML = `
+          <span class="text-slate-500 flex items-center gap-1.5 text-[11px] truncate">
+            <span>💡</span>
+            <span>Rê chuột trên đồ thị để xem giá; rê qua nến có mũi tên để xem sự kiện tác động Lên (Xanh) / Xuống (Đỏ).</span>
+          </span>
+        `;
+      }
+    }
+  }
+
+  // ==========================================================================
+  // 3B. LỌC & HIỂN THỊ SỰ KIỆN / TIN TỨC TÁC ĐỘNG GIÁ VÀNG THEO KHUNG THỜI GIAN
+  // ==========================================================================
+
+  function getFilteredEventsForTimeframe(tf, slicedSeries) {
+    if (!STATE.data || !STATE.data.market_events || !slicedSeries || !slicedSeries.length) {
+      return [];
+    }
+    const startDate = slicedSeries[0].date;
+    const endDate = slicedSeries[slicedSeries.length - 1].date;
+
+    // 1. Chỉ lấy các sự kiện nằm đúng trong khoảng thời gian người dùng đang xem [startDate, endDate]
+    let inRange = STATE.data.market_events.filter(
+      (ev) => ev.date >= startDate && ev.date <= endDate
+    );
+
+    // 2. Lọc theo Chiều tác động (Lên: Xanh lá / Xuống: Đỏ) nếu người dùng chọn
+    if (STATE.eventDirectionFilter === 'up') {
+      inRange = inRange.filter((ev) => ev.direction === 'up');
+    } else if (STATE.eventDirectionFilter === 'down') {
+      inRange = inRange.filter((ev) => ev.direction === 'down');
+    }
+
+    // 3. Lọc theo Mức độ ảnh hưởng hoặc Chế độ "Tiêu biểu theo khung thời gian (auto)"
+    const impactFilter = STATE.eventImpactFilter;
+    if (impactFilter === 'high' || impactFilter === 'medium' || impactFilter === 'low') {
+      const matched = inRange.filter((ev) => ev.impact_level === impactFilter);
+      return matched;
+    }
+
+    if (impactFilter === 'all') {
+      return inRange.slice(0, 40);
+    }
+
+    // Chế độ mặc định 'auto': Chỉ chọn lọc các sự kiện quan trọng tiêu biểu tùy theo khoảng thời gian đang xem
+    // - 7D (1 tuần): Lấy tất cả sự kiện Lớn, Trung bình, Nhỏ trong tuần đó (tối đa 8 sự kiện)
+    // - 1M (1 tháng): Ưu tiên sự kiện Lớn + Trung bình + tin tức mới nhất (tối đa 10 sự kiện)
+    // - 3M & 6M: Ưu tiên sự kiện Lớn & các phiên biến động mạnh nhất (tối đa 12 sự kiện)
+    // - 1Y, 5Y, ALL: Chỉ chọn các Đại sự kiện (Ảnh hưởng Lớn / Cột mốc lịch sử đã kiểm chứng) tiêu biểu nhất
+    const maxCountByTf = {
+      '7D': 8,
+      '1M': 10,
+      '3M': 12,
+      '6M': 14,
+      '1Y': 16,
+      '5Y': 20,
+      'ALL': 22,
+    };
+    const limit = maxCountByTf[tf] || 14;
+
+    let candidates = [...inRange];
+    if (tf === '5Y' || tf === 'ALL') {
+      const highOnly = candidates.filter((e) => e.impact_level === 'high' || e.is_verified_milestone);
+      if (highOnly.length >= 6) {
+        candidates = highOnly;
+      }
+    } else if (tf === '1Y' || tf === '6M') {
+      const highAndVerified = candidates.filter(
+        (e) => e.impact_level === 'high' || e.is_verified_milestone || e.is_live_news
+      );
+      if (highAndVerified.length >= 6) {
+        candidates = highAndVerified;
+      }
+    } else if (tf === '3M' || tf === '1M') {
+      const medAndHigh = candidates.filter(
+        (e) => e.impact_level !== 'low' || e.is_live_news
+      );
+      if (medAndHigh.length >= 4) {
+        candidates = medAndHigh;
+      }
+    }
+
+    // Sắp xếp theo độ quan trọng (Cột mốc kiểm chứng -> Tin nóng -> Biên độ biến động %) để lấy top tiêu biểu,
+    // sau đó sắp xếp lại theo thứ tự thời gian từ mới nhất đến cũ nhất để hiển thị
+    candidates.sort((a, b) => {
+      const scoreA =
+        (a.is_verified_milestone ? 100 : 0) +
+        (a.is_live_news ? 40 : 0) +
+        a.impact_rank * 15 +
+        Math.abs(a.xau_change_pct || 0) * 5;
+      const scoreB =
+        (b.is_verified_milestone ? 100 : 0) +
+        (b.is_live_news ? 40 : 0) +
+        b.impact_rank * 15 +
+        Math.abs(b.xau_change_pct || 0) * 5;
+      return scoreB - scoreA;
+    });
+
+    const selected = candidates.slice(0, limit);
+    selected.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+    return selected;
+  }
+
+  function applyMarkersToSeries(series, events, tf) {
+    if (!series || typeof series.setMarkers !== 'function') return;
+    if (!STATE.showChartEvents || !events || !events.length) {
+      series.setMarkers([]);
+      return;
+    }
+
+    // TradingView Lightweight Charts yêu cầu mảng markers sắp xếp tăng dần theo time
+    const ascEvents = [...events].sort((a, b) => (a.date > b.date ? 1 : a.date < b.date ? -1 : 0));
+
+    // Giới hạn số lượng nhãn chữ trên đồ thị ở các khung dài để đồ thị luôn thoáng đãng
+    const maxMarkers = tf === '7D' ? 8 : tf === '1M' ? 10 : tf === '3M' ? 12 : 15;
+    let markerSource = ascEvents;
+    if (ascEvents.length > maxMarkers) {
+      const ranked = [...ascEvents].sort(
+        (a, b) =>
+          (b.is_verified_milestone ? 50 : 0) +
+          Math.abs(b.xau_change_pct) -
+          ((a.is_verified_milestone ? 50 : 0) + Math.abs(a.xau_change_pct))
+      );
+      const keepDates = new Set(ranked.slice(0, maxMarkers).map((e) => e.date));
+      markerSource = ascEvents.filter((e) => keepDates.has(e.date));
+    }
+
+    const impactShort = {
+      high: 'Lớn',
+      medium: 'TB',
+      low: 'Nhỏ',
+    };
+
+    const markers = markerSource.map((ev) => {
+      const isUp = ev.direction === 'up';
+      const sign = ev.xau_change_pct >= 0 ? '+' : '';
+      const tierTxt = impactShort[ev.impact_level] || 'TB';
+      return {
+        time: ev.date,
+        position: isUp ? 'belowBar' : 'aboveBar',
+        color: isUp ? '#10b981' : '#f43f5e',
+        shape: isUp ? 'arrowUp' : 'arrowDown',
+        text: `[${tierTxt}] ${sign}${ev.xau_change_pct.toFixed(1)}%`,
+      };
+    });
+
+    series.setMarkers(markers);
+  }
+
+  function formatDisplayDateShort(isoDate) {
+    if (!isoDate) return '';
+    const p = isoDate.split('-');
+    return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : isoDate;
+  }
+
+  function renderTimeframeEventsTimeline(tf, slicedSeries, events) {
+    const titleEl = document.getElementById('events-timeframe-title');
+    const rangeBadgeEl = document.getElementById('events-timeframe-range-badge');
+    const summaryBadgesEl = document.getElementById('events-summary-badges');
+    const listContainer = document.getElementById('timeframe-events-list');
+    if (!listContainer || !slicedSeries || !slicedSeries.length) return;
+
+    const startDate = slicedSeries[0].date;
+    const endDate = slicedSeries[slicedSeries.length - 1].date;
+    const tfLabel = TIMEFRAME_LABELS[tf] || `Khung ${tf}`;
+
+    if (titleEl) {
+      titleEl.textContent = `Sự Kiện & Tin Tức Tiêu Biểu Tác Động Giá Vàng — ${tfLabel}`;
+    }
+    if (rangeBadgeEl) {
+      rangeBadgeEl.textContent = `${formatDisplayDateShort(startDate)} → ${formatDisplayDateShort(endDate)} (${events.length} sự kiện tiêu biểu)`;
+    }
+
+    const upCount = events.filter((e) => e.direction === 'up').length;
+    const downCount = events.filter((e) => e.direction === 'down').length;
+    const highCount = events.filter((e) => e.impact_level === 'high').length;
+
+    if (summaryBadgesEl) {
+      summaryBadgesEl.innerHTML = `
+        <span class="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-semibold">
+          ▲ Lên (Xanh): ${upCount}
+        </span>
+        <span class="px-2.5 py-1 rounded-lg bg-rose-500/15 text-rose-400 border border-rose-500/30 font-semibold">
+          ▼ Xuống (Đỏ): ${downCount}
+        </span>
+        <span class="hidden sm:inline-block px-2.5 py-1 rounded-lg bg-amber-500/15 text-amber-300 border border-amber-500/30 font-semibold">
+          🔥 Ảnh hưởng Lớn: ${highCount}
+        </span>
+      `;
+    }
+
+    if (!events.length) {
+      listContainer.innerHTML = `
+        <div class="col-span-full p-6 rounded-xl bg-slate-900/70 border border-slate-800 text-center text-sm text-slate-400">
+          Không có sự kiện nào khớp với bộ lọc hiện tại trong khoảng thời gian <strong>${formatDisplayDateShort(startDate)} – ${formatDisplayDateShort(endDate)}</strong>.
+          Hãy chọn nút <strong>"✨ Tiêu biểu theo khung"</strong> hoặc <strong>"Tất cả trong khung"</strong> để xem đầy đủ.
+        </div>
+      `;
+      return;
+    }
+
+    listContainer.innerHTML = events
+      .map((ev) => {
+        const isUp = ev.direction === 'up';
+        const cardClass = isUp ? 'event-card-up' : 'event-card-down';
+        const highlightClass = STATE.highlightedEventDate === ev.date ? 'event-card-highlighted' : '';
+        const dirBadgeClass = isUp
+          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/45'
+          : 'bg-rose-500/20 text-rose-300 border border-rose-500/45';
+        const dirIcon = isUp ? '▲ GIÁ VÀNG LÊN' : '▼ GIÁ VÀNG XUỐNG';
+        const priceColor = isUp ? 'text-emerald-400' : 'text-rose-400';
+
+        let impactBadgeClass = 'impact-badge-medium';
+        let impactIcon = '⚡';
+        if (ev.impact_level === 'high') {
+          impactBadgeClass = 'impact-badge-high';
+          impactIcon = '🔥';
+        } else if (ev.impact_level === 'low') {
+          impactBadgeClass = 'impact-badge-low';
+          impactIcon = '🔹';
+        }
+
+        const xauSign = ev.xau_change_pct >= 0 ? '+' : '';
+        const sjcSign = ev.sjc_change_pct >= 0 ? '+' : '';
+        const sourceLinkHtml = ev.url
+          ? `<a href="${ev.url}" target="_blank" rel="noopener noreferrer" class="text-sky-400 hover:text-sky-300 underline font-medium">Đọc bài gốc ↗</a>`
+          : `<span class="text-slate-400">Xác thực chuỗi OHLC</span>`;
+
+        return `
+          <article class="event-card ${cardClass} ${highlightClass} flex flex-col justify-between gap-2.5" data-event-card-date="${ev.date}">
+            <div>
+              <!-- Dòng 1: Thời gian xảy ra sự kiện + Mức độ ảnh hưởng + Chiều tác động (Xanh lá / Đỏ) -->
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-1.5 text-xs font-mono-num text-slate-300">
+                  <span>🕒</span>
+                  <strong>${ev.timestamp_display}</strong>
+                </div>
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="px-2 py-0.5 rounded-md text-[11px] uppercase tracking-wider ${impactBadgeClass}">
+                    ${impactIcon} ${ev.impact_label}
+                  </span>
+                  <span class="px-2.5 py-0.5 rounded-md text-[11px] font-extrabold font-mono-num ${dirBadgeClass}">
+                    ${dirIcon} (${xauSign}${ev.xau_change_pct.toFixed(2)}%)
+                  </span>
+                </div>
+              </div>
+
+              <!-- Dòng 2: Tiêu đề sự kiện / Tin tức -->
+              <h4 class="text-sm sm:text-base font-bold text-white mt-2 leading-snug">
+                ${ev.title}
+              </h4>
+
+              <!-- Dòng 3: Tóm tắt nguyên nhân & Đối chiếu định lượng -->
+              <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">
+                ${ev.summary}
+              </p>
+            </div>
+
+            <!-- Dòng 4: Dữ liệu Giá vàng phiên xảy ra sự kiện & Nút trỏ lên đồ thị -->
+            <div class="pt-2.5 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs">
+              <div class="flex flex-wrap items-center gap-3 font-mono-num">
+                <span class="text-slate-300">
+                  🌎 XAU: <strong class="${priceColor}">$${formatNumber(ev.xau_price, 1)}</strong>
+                  <span class="${priceColor}">(${xauSign}${ev.xau_change_pct.toFixed(2)}%)</span>
+                </span>
+                <span class="text-slate-300">
+                  🇻🇳 SJC: <strong class="text-amber-300">${formatNumber(ev.sjc_price, 2)} tr</strong>
+                  <span class="text-slate-400">(${sjcSign}${ev.sjc_change_pct.toFixed(2)}%)</span>
+                </span>
+              </div>
+
+              <div class="flex items-center gap-2.5">
+                <span class="text-[11px] text-slate-400">${ev.source}</span>
+                ${sourceLinkHtml}
+                <button type="button" data-focus-date="${ev.date}" class="px-2 py-1 rounded bg-slate-800/90 hover:bg-amber-500 hover:text-slate-950 text-amber-300 border border-amber-500/30 text-[11px] font-semibold transition cursor-pointer">
+                  📍 Xem trên đồ thị
+                </button>
+              </div>
+            </div>
+          </article>
+        `;
+      })
+      .join('');
+
+    // Gắn sự kiện click nút "📍 Xem trên đồ thị" để di chuyển tâm đồ thị và highlight sự kiện
+    listContainer.querySelectorAll('[data-focus-date]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetDate = btn.getAttribute('data-focus-date');
+        focusChartOnEventDate(targetDate);
+      });
+    });
+  }
+
+  function focusChartOnEventDate(targetDate) {
+    if (!targetDate || !STATE.data) return;
+    STATE.highlightedEventDate = targetDate;
+
+    // Highlight thẻ sự kiện
+    document.querySelectorAll('[data-event-card-date]').forEach((el) => {
+      el.classList.toggle('event-card-highlighted', el.getAttribute('data-event-card-date') === targetDate);
+    });
+
+    // Cập nhật thanh Legend phía trên đồ thị đúng vào ngày sự kiện được chọn
+    const hist = STATE.data.historical_series;
+    const assetKey = STATE.selectedAsset === 'compare_vn' ? 'sjc' : STATE.selectedAsset;
+    const rawSeries = hist[assetKey] || hist.xau_usd;
+    const bar = rawSeries.find((d) => d.date === targetDate);
+    const ev = (STATE.data.market_events || []).find((e) => e.date === targetDate);
+    const meta = ASSET_META[STATE.selectedAsset] || ASSET_META.xau_usd;
+
+    if (bar) {
+      updateOHLCLegend(bar, meta, ev || null);
+    }
+
+    const chartSection = document.getElementById('tv-main-chart');
+    if (chartSection) {
+      chartSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  // Làm mới tin tức & dữ liệu trực tiếp ngay trên trình duyệt
+  async function refreshLiveNewsInBrowser() {
+    const iconEl = document.getElementById('refresh-news-icon');
+    const labelEl = document.getElementById('refresh-news-label');
+    if (iconEl) iconEl.classList.add('spin-anim');
+    if (labelEl) labelEl.textContent = 'Đang đồng bộ tin tức...';
+
+    try {
+      // 1. Nạp lại file data/gold_data.json mới nhất (nếu vừa được GitHub Actions hoặc script cập nhật)
+      try {
+        const resp = await fetch('data/gold_data.json?t=' + Date.now(), { cache: 'no-store' });
+        if (resp.ok) {
+          const freshData = await resp.json();
+          if (freshData && freshData.market_snapshot) {
+            STATE.data = freshData;
+          }
+        }
+      } catch (_) {
+        // Bỏ qua nếu mở qua giao thức file:///
+      }
+
+      // 2. Truy vấn bổ sung nguồn Google News RSS thời gian thực qua rss2json API công khai (nếu có kết nối Internet)
+      try {
+        const rssUrl = encodeURIComponent(
+          'https://news.google.com/rss/search?q=giá+vàng+SJC+OR+giá+vàng+thế+giới+when:3d&hl=vi&gl=VN&ceid=VN:vi'
+        );
+        const liveResp = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}`);
+        if (liveResp.ok) {
+          const rssJson = await liveResp.json();
+          if (rssJson && Array.isArray(rssJson.items) && rssJson.items.length > 0 && STATE.data) {
+            mergeLiveBrowserRssItems(rssJson.items);
+          }
+        }
+      } catch (_) {
+        // Nếu offline hoặc bị chặn CORS thì dùng dữ liệu sự kiện đã xác thực trong STATE.data
+      }
+
+      renderHeaderAndKPIs(STATE.data);
+      renderMainStockChart();
+
+      if (labelEl) {
+        const nowStr = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+        labelEl.textContent = `Đã cập nhật (${nowStr})`;
+      }
+    } finally {
+      if (iconEl) iconEl.classList.remove('spin-anim');
+    }
+  }
+
+  function mergeLiveBrowserRssItems(items) {
+    if (!STATE.data || !STATE.data.historical_series || !STATE.data.historical_series.xau_usd.length) return;
+    const xauSeries = STATE.data.historical_series.xau_usd;
+    const sjcSeries = STATE.data.historical_series.sjc;
+    const ringSeries = STATE.data.historical_series.ring_9999;
+    const latestXau = xauSeries[xauSeries.length - 1];
+    const prevXau = xauSeries.length > 1 ? xauSeries[xauSeries.length - 2] : latestXau;
+    const latestSjc = sjcSeries[sjcSeries.length - 1];
+    const latestRing = ringSeries[ringSeries.length - 1];
+
+    const latestPct = prevXau.close
+      ? Number((((latestXau.close - prevXau.close) / prevXau.close) * 100).toFixed(2))
+      : 0;
+
+    const topItem = items[0];
+    if (!topItem || !topItem.title) return;
+
+    const cleanTitle = topItem.title.split(' - ')[0].trim();
+    const srcName = topItem.title.includes(' - ') ? topItem.title.split(' - ').pop().trim() : 'Google News VN';
+    const isUp = latestPct >= 0;
+    const absPct = Math.abs(latestPct);
+    const impactLevel = absPct >= 1.2 ? 'high' : absPct >= 0.45 ? 'medium' : 'low';
+    const impactLabel =
+      impactLevel === 'high' ? 'Ảnh hưởng Lớn' : impactLevel === 'medium' ? 'Ảnh hưởng Trung bình' : 'Ảnh hưởng Nhỏ';
+
+    const existingEvents = STATE.data.market_events || [];
+    const latestDate = latestXau.date;
+    const idx = existingEvents.findIndex((e) => e.date === latestDate);
+    const nowTime = new Date().toLocaleString('vi-VN', { hour12: false });
+
+    const updatedEvent = {
+      id: `evt_live_${latestDate}`,
+      date: latestDate,
+      timestamp_display: `${nowTime} (Trực tiếp)`,
+      title: `${cleanTitle} — Vàng TG ${latestPct >= 0 ? 'tăng' : 'giảm'} ${latestPct >= 0 ? '+' : ''}${latestPct}% ($${formatNumber(latestXau.close, 1)}/oz)`,
+      summary: `Cập nhật trực tiếp từ ${srcName}. Giá vàng thế giới XAU/USD giao dịch tại $${formatNumber(latestXau.close, 2)}/oz (${latestPct >= 0 ? '+' : ''}${latestPct}%), Vàng miếng SJC ở mức ${formatNumber(latestSjc.sell, 2)} triệu/lượng và Nhẫn 9999 ở mức ${formatNumber(latestRing.sell, 2)} triệu/lượng.`,
+      category: 'Tin tức Trực tiếp (Real-time RSS)',
+      source: srcName,
+      url: topItem.link || '',
+      direction: isUp ? 'up' : 'down',
+      direction_label: isUp ? 'Tác động Tăng giá' : 'Tác động Giảm giá',
+      color_code: isUp ? '#10b981' : '#f43f5e',
+      impact_level: impactLevel,
+      impact_label: impactLabel,
+      impact_rank: impactLevel === 'high' ? 3 : impactLevel === 'medium' ? 2 : 1,
+      xau_price: latestXau.close,
+      xau_change_pct: latestPct,
+      sjc_price: latestSjc.sell,
+      sjc_change_pct: STATE.data.market_snapshot.sjc.performance.chg_1d,
+      ring_price: latestRing.sell,
+      is_verified_milestone: false,
+      is_live_news: true,
+    };
+
+    if (idx >= 0) {
+      existingEvents[idx] = updatedEvent;
+    } else {
+      existingEvents.unshift(updatedEvent);
+    }
   }
 
   // ==========================================================================
@@ -513,7 +1066,21 @@
     const forecast = data.forecast_scenarios;
     if (!forecast || !forecast.horizons) return;
 
-    const horizonObj = forecast.horizons[STATE.selectedHorizon] || forecast.horizons.short_term;
+    let hKey = STATE.selectedHorizon;
+    if (!forecast.horizons[hKey]) {
+      if (hKey === 'short_term') hKey = '1_week';
+      else if (hKey === 'mid_term') hKey = '3_months';
+      else if (hKey === 'long_term') hKey = '1_year';
+      else hKey = Object.keys(forecast.horizons)[0] || '1_week';
+      STATE.selectedHorizon = hKey;
+    }
+
+    const horizonObj = forecast.horizons[hKey];
+
+    // Cập nhật trạng thái active của 6 tabs
+    document.querySelectorAll('[data-horizon-tab]').forEach((t) => {
+      t.classList.toggle('active', t.getAttribute('data-horizon-tab') === hKey);
+    });
 
     document.getElementById('horizon-active-title').textContent = horizonObj.title;
     document.getElementById('horizon-active-driver').textContent = `Nhân tố quyết định: ${horizonObj.dominant_driver}`;
@@ -618,6 +1185,274 @@
       .join('');
   }
 
+    // ==========================================================================
+  // 5B. TRUNG TÂM CHIẾN LƯỢC LƯỚT SÓNG (NGẮN HẠN T+ & TRUNG HẠN)
+  // ==========================================================================
+
+  function renderSwingTradingCenter(data) {
+    const swing = data.swing_trading;
+    if (!swing) return;
+
+    // Chọn chân trời lướt sóng: 'short_term' (1-2 Tuần) hoặc 'medium_term' (1-3 Tháng)
+    const currentHorizon = STATE.swingHorizon || 'short_term';
+    const hzData = (swing[currentHorizon]) ? swing[currentHorizon] : swing;
+    const action = hzData.action || {};
+
+    // 1. Cập nhật Tiêu đề, Badge & Tóm tắt hành động
+    const titleEl = document.getElementById('swing-section-title');
+    const subtitleEl = document.getElementById('swing-section-subtitle');
+    const sigLabelEl = document.getElementById('swing-signal-label');
+    const badgeEl = document.getElementById('swing-action-badge');
+    const summaryEl = document.getElementById('swing-action-summary');
+    const rsiEl = document.getElementById('swing-rsi-status');
+    const trendEl = document.getElementById('swing-trend-status');
+    const macdEl = document.getElementById('swing-macd-status');
+
+    if (titleEl) {
+      if (currentHorizon === 'long_term') {
+        titleEl.textContent = `Chiến Lược Tích Sản & Kế Hoạch Đầu Tư Vàng Dài Hạn (1 – 3 Năm)`;
+      } else {
+        titleEl.textContent = `Chiến Lược Lướt Sóng ${hzData.horizon_label || 'Ngắn & Trung Hạn'} & Kế Hoạch Lệnh Chuẩn`;
+      }
+    }
+    if (subtitleEl) {
+      if (currentHorizon === 'short_term') {
+        subtitleEl.textContent = 'Mô hình định lượng sóng nhanh MA5/MA10, chỉ báo xung lực RSI, MACD và kiểm tra điều kiện bẫy Spread thực tế để tối ưu điểm vào lệnh T+.';
+      } else if (currentHorizon === 'medium_term') {
+        subtitleEl.textContent = 'Mô hình định lượng xu hướng MA20/MA50, chỉ báo động lượng RSI, MACD và chi phí Spread thực tế để tối ưu điểm vào lệnh, cắt lỗ và chốt lời theo chuẩn R:R >= 1.8.';
+      } else {
+        subtitleEl.textContent = 'Mô hình định lượng siêu chu kỳ dài hạn MA200, khoảng cách 52 tuần, chiến lược Tích sản DCA đa kỳ và phòng vệ rủi ro chính sách độc quyền chênh lệch nội địa.';
+      }
+    }
+    if (sigLabelEl) {
+      if (currentHorizon === 'short_term') {
+        sigLabelEl.textContent = 'Tín hiệu T+ (1–2 Tuần):';
+      } else if (currentHorizon === 'medium_term') {
+        sigLabelEl.textContent = 'Tín hiệu Trung Hạn (1–3 Tháng):';
+      } else {
+        sigLabelEl.textContent = 'Tín hiệu Tích Sản (1–3 Năm):';
+      }
+    }
+
+    if (badgeEl && action.badge) {
+      badgeEl.textContent = action.badge;
+      const variant = action.badge_variant;
+      let colorClasses = 'text-emerald-400 bg-emerald-500/15 border-emerald-500/30';
+      if (variant === 'rose') {
+        colorClasses = 'text-rose-400 bg-rose-500/15 border-rose-500/30';
+      } else if (variant === 'amber') {
+        colorClasses = 'text-amber-400 bg-amber-500/15 border-amber-500/30';
+      } else if (variant === 'sky') {
+        colorClasses = 'text-sky-400 bg-sky-500/15 border-sky-500/30';
+      }
+      badgeEl.className = `px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-extrabold font-mono-num uppercase tracking-wider border shadow-sm ${colorClasses}`;
+    }
+
+    if (summaryEl && action.summary) summaryEl.textContent = action.summary;
+    if (rsiEl && action.rsi_status) rsiEl.textContent = action.rsi_status;
+    if (trendEl && action.trend_status) trendEl.textContent = action.trend_status;
+    if (macdEl && action.macd_status) macdEl.textContent = action.macd_status;
+
+    // 2. Cập nhật nút bấm chuyển Chu kỳ: Ngắn Hạn vs Trung Hạn vs Dài Hạn
+    const btnShort = document.getElementById('trading-hz-short');
+    const btnMed = document.getElementById('trading-hz-med');
+    const btnLong = document.getElementById('trading-hz-long');
+    const activeBtnClass = 'px-3.5 py-1.5 rounded-md font-semibold text-white bg-slate-800 shadow transition-all flex items-center gap-1.5';
+    const inactiveBtnClass = 'px-3.5 py-1.5 rounded-md font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-1.5';
+    if (btnShort) btnShort.className = currentHorizon === 'short_term' ? activeBtnClass : inactiveBtnClass;
+    if (btnMed) btnMed.className = currentHorizon === 'medium_term' ? activeBtnClass : inactiveBtnClass;
+    if (btnLong) btnLong.className = currentHorizon === 'long_term' ? activeBtnClass : inactiveBtnClass;
+
+    // 3. Render Khuyến nghị chọn Công cụ Lướt Sóng
+    const instCard = document.getElementById('swing-instrument-card');
+    if (instCard && hzData.instrument_recommendation) {
+      const inst = hzData.instrument_recommendation;
+      const ringComp = inst.comparison.ring_9999;
+      const sjcComp = inst.comparison.sjc;
+
+      instCard.innerHTML = `
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-400">⚖️ Khuyên dùng ${currentHorizon === 'short_term' ? 'lướt T+ (1-2 tuần)' : (currentHorizon === 'medium_term' ? 'lướt trung hạn (1-3 tháng)' : 'tích sản dài hạn (1-3 năm)')} hôm nay:</span>
+              <span class="px-2.5 py-0.5 rounded-md text-xs font-bold font-mono-num ${inst.preferred_asset === 'ring_9999' ? 'text-sky-300 bg-sky-500/20 border border-sky-500/30' : 'text-amber-300 bg-amber-500/20 border border-amber-500/30'}">
+                ${inst.preferred_asset_name}
+              </span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed max-w-3xl">
+              ${inst.reason}
+            </p>
+          </div>
+
+          <!-- Comparison Table Mini Pill -->
+          <div class="grid grid-cols-2 gap-3 text-xs shrink-0 font-mono-num">
+            <div class="p-2.5 rounded-lg bg-slate-950/80 border ${inst.preferred_asset === 'ring_9999' ? 'border-sky-500/50 bg-sky-950/20' : 'border-slate-800'} space-y-1">
+              <div class="flex items-center justify-between gap-3">
+                <span class="text-slate-400">💍 Vàng Nhẫn 9999:</span>
+                <span class="font-bold text-sky-400">${formatNumber(ringComp.spread_vnd, 2)} tr</span>
+              </div>
+              <div class="text-[11px] text-slate-400 flex items-center justify-between">
+                <span>Spread: ${ringComp.spread_pct}%</span>
+                <span>Lệch TG: +${formatNumber(ringComp.premium_vnd, 2)} tr</span>
+              </div>
+            </div>
+
+            <div class="p-2.5 rounded-lg bg-slate-950/80 border ${inst.preferred_asset === 'sjc' ? 'border-amber-500/50 bg-amber-950/20' : 'border-slate-800'} space-y-1">
+              <div class="flex items-center justify-between gap-3">
+                <span class="text-slate-400">🇻🇳 Vàng SJC:</span>
+                <span class="font-bold text-amber-400">${formatNumber(sjcComp.spread_vnd, 2)} tr</span>
+              </div>
+              <div class="text-[11px] text-slate-400 flex items-center justify-between">
+                <span>Spread: ${sjcComp.spread_pct}%</span>
+                <span>Lệch TG: +${formatNumber(sjcComp.premium_vnd, 2)} tr</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // 4. Render Setup Grid theo Asset đã chọn
+    const setupGrid = document.getElementById('swing-setup-grid');
+    const ratingTag = document.getElementById('swing-setup-rating-tag');
+    if (!setupGrid || !hzData.setups) return;
+
+    const currentKey = STATE.swingAsset || 'ring_9999';
+    const setup = hzData.setups[currentKey] || hzData.setups.ring_9999;
+
+    if (ratingTag) {
+      ratingTag.textContent = `Chất lượng lệnh: ${setup.setup_rating || 'KÈO CHUẨN'}`;
+      if ((setup.setup_rating || '').includes('HIGH') || (setup.setup_rating || '').includes('CHUẨN')) {
+        ratingTag.className = 'text-xs font-mono-num font-semibold px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400';
+      } else {
+        ratingTag.className = 'text-xs font-mono-num font-semibold px-2.5 py-1 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-400';
+      }
+    }
+
+    setupGrid.innerHTML = `
+      <!-- Card 1: Vùng Mua Gom (Entry Zone) -->
+      <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2.5 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span class="font-bold uppercase tracking-wider text-sky-400">1. VÙNG MUA GOM</span>
+            <span class="px-1.5 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300">Entry</span>
+          </div>
+          <div class="text-lg font-bold font-mono-num text-white mt-1.5">
+            ${formatNumber(setup.entry_zone[0], 2)} – ${formatNumber(setup.entry_zone[1], 2)}
+          </div>
+          <div class="text-[11px] text-slate-400 mt-0.5">${setup.unit}</div>
+        </div>
+        <div class="pt-2 border-t border-slate-800/80 text-[11px] text-slate-400 space-y-1">
+          <div class="flex items-center justify-between">
+            <span>Giá bán hiện tại:</span>
+            <strong class="font-mono-num text-slate-200">${formatNumber(setup.current_price, 2)}</strong>
+          </div>
+          <p class="text-[10px] text-slate-400">${currentHorizon === 'short_term' ? 'Giải ngân thăm dò T+ quanh hỗ trợ ngắn hạn.' : (currentHorizon === 'medium_term' ? 'Canh giải ngân 50% vốn quanh vùng hỗ trợ MA20.' : 'Chiến lược Dynamic DCA: Gom đều đặn theo tháng bằng vốn nhàn rỗi.')}</p>
+        </div>
+      </div>
+
+      <!-- Card 2: Cắt Lỗ Kỷ Luật (Stop-Loss) / Ngưỡng Đánh Giá Lại Chu Kỳ -->
+      <div class="p-4 rounded-xl bg-slate-900/90 border border-rose-500/20 space-y-2.5 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span class="font-bold uppercase tracking-wider text-rose-400">${currentHorizon === 'long_term' ? '2. NGƯỠNG RỦI RO CHU KỲ' : '2. CẮT LỖ KỶ LUẬT'}</span>
+            <span class="px-1.5 py-0.5 rounded bg-rose-950/60 text-rose-300 text-[10px]">${currentHorizon === 'long_term' ? 'Cycle-SL' : 'Stop-Loss'}</span>
+          </div>
+          <div class="text-lg font-bold font-mono-num text-rose-400 mt-1.5">
+            ${formatNumber(setup.stop_loss, 2)}
+          </div>
+          <div class="text-[11px] text-slate-400 mt-0.5">${setup.unit}</div>
+        </div>
+        <div class="pt-2 border-t border-slate-800/80 text-[11px] text-slate-400 space-y-1">
+          <div class="flex items-center justify-between">
+            <span>Rủi ro tối đa:</span>
+            <strong class="font-mono-num text-rose-400">-${formatNumber(setup.risk_amount, 2)} (${setup.risk_pct}%)</strong>
+          </div>
+          <p class="text-[10px] text-rose-300/80">${currentHorizon === 'long_term' ? 'Thủng đáy 52W hoặc MA200: Cần rà soát lại chu kỳ vĩ mô.' : 'Đã trừ hao toàn bộ chi phí chênh lệch Mua-Bán.'}</p>
+        </div>
+      </div>
+
+      <!-- Card 3: Chốt Lời TP1 -->
+      <div class="p-4 rounded-xl bg-slate-900/90 border border-emerald-500/20 space-y-2.5 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span class="font-bold uppercase tracking-wider text-emerald-400">${currentHorizon === 'long_term' ? '3. MỤC TIÊU 1 NĂM (TP1)' : '3. CHỐT LỜI TP1'}</span>
+            <span class="px-1.5 py-0.5 rounded bg-emerald-950/60 text-emerald-300 text-[10px]">${setup.tp1.timeframe}</span>
+          </div>
+          <div class="text-lg font-bold font-mono-num text-emerald-400 mt-1.5">
+            ${formatNumber(setup.tp1.target_price, 2)}
+          </div>
+          <div class="text-[11px] text-slate-400 mt-0.5">${setup.unit}</div>
+        </div>
+        <div class="pt-2 border-t border-slate-800/80 text-[11px] text-slate-400 space-y-1">
+          <div class="flex items-center justify-between">
+            <span>Lãi ròng TP1:</span>
+            <strong class="font-mono-num text-emerald-400">+${formatNumber(setup.tp1.net_gain, 2)} (+${setup.tp1.net_pct}%)</strong>
+          </div>
+          <div class="flex items-center justify-between text-[11px]">
+            <span>Tỷ lệ R:R:</span>
+            <strong class="font-mono-num text-amber-300">1 : ${setup.tp1.rr_ratio}</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: Chốt Lời TP2 -->
+      <div class="p-4 rounded-xl bg-slate-900/90 border border-amber-500/20 space-y-2.5 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span class="font-bold uppercase tracking-wider text-amber-400">${currentHorizon === 'long_term' ? '4. MỤC TIÊU 2-3 NĂM (TP2)' : '4. CHỐT LỜI TP2'}</span>
+            <span class="px-1.5 py-0.5 rounded bg-amber-950/60 text-amber-300 text-[10px]">${setup.tp2.timeframe}</span>
+          </div>
+          <div class="text-lg font-bold font-mono-num text-amber-400 mt-1.5">
+            ${formatNumber(setup.tp2.target_price, 2)}
+          </div>
+          <div class="text-[11px] text-slate-400 mt-0.5">${setup.unit}</div>
+        </div>
+        <div class="pt-2 border-t border-slate-800/80 text-[11px] text-slate-400 space-y-1">
+          <div class="flex items-center justify-between">
+            <span>Lãi ròng TP2:</span>
+            <strong class="font-mono-num text-amber-400">+${formatNumber(setup.tp2.net_gain, 2)} (+${setup.tp2.net_pct}%)</strong>
+          </div>
+          <div class="flex items-center justify-between text-[11px]">
+            <span>Tỷ lệ R:R:</span>
+            <strong class="font-mono-num text-amber-300">1 : ${setup.tp2.rr_ratio}</strong>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // 5. Render Hộp Kỷ Luật & Cảnh Báo
+    const discContainer = document.getElementById('swing-discipline-container');
+    if (discContainer && hzData.discipline_rules) {
+      discContainer.innerHTML = `
+        <div class="font-bold text-amber-400 flex items-center gap-2 text-sm">
+          <span>🛡️</span> 3 Nguyên Tắc Kỷ Luật Sống Còn Khi ${currentHorizon === 'long_term' ? 'Đầu Tư Tích Sản' : 'Lướt Sóng'} ${hzData.horizon_label}:
+        </div>
+        <ul class="list-disc list-inside space-y-1 pl-1 text-slate-300">
+          ${hzData.discipline_rules.map((r) => `<li>${r}</li>`).join('')}
+        </ul>
+      `;
+    }
+
+    // 6. Cập nhật trạng thái nút bấm tab công cụ lướt sóng
+    const tabRing = document.getElementById('swing-tab-ring');
+    const tabSjc = document.getElementById('swing-tab-sjc');
+    const tabXau = document.getElementById('swing-tab-xau');
+
+    const updateTabClass = (el, active) => {
+      if (!el) return;
+      if (active) {
+        el.className = 'px-3 py-1.5 rounded-md font-semibold text-white bg-slate-800 shadow transition-all';
+      } else {
+        el.className = 'px-3 py-1.5 rounded-md font-semibold text-slate-400 hover:text-white transition-all';
+      }
+    };
+
+    updateTabClass(tabRing, currentKey === 'ring_9999');
+    updateTabClass(tabSjc, currentKey === 'sjc');
+    updateTabClass(tabXau, currentKey === 'xau_usd');
+  }
+
   // ==========================================================================
   // 6. BẢNG GIÁ THƯƠNG HIỆU VIỆT NAM & CÔNG CỤ TÍNH ĐIỂM HÒA VỐN ĐẦU TƯ
   // ==========================================================================
@@ -661,24 +1496,29 @@
     document.getElementById('calc-spread-loss').textContent = `-${formatNumber(immediateSpreadLoss, 2)} triệu VNĐ`;
     document.getElementById('calc-breakeven-price').textContent = `${formatNumber(buyInPrice + (buyInPrice - instantResellPrice), 2)} tr/lượng (+${breakevenPct.toFixed(2)}%)`;
 
-    // Tính lợi nhuận ròng kỳ vọng sau khi đã trừ chênh lệch Mua-Bán cho 3 khung thời gian (Kịch bản tích cực trung bình)
-    const stNet = totalCapital * 0.032 - immediateSpreadLoss;
-    const mtNet = totalCapital * 0.095 - immediateSpreadLoss;
-    const ltNet = totalCapital * 0.26 - immediateSpreadLoss;
+    // Tính lợi nhuận ròng kỳ vọng sau khi đã trừ chênh lệch Mua-Bán cho 6 mốc thời gian cụ thể (Kịch bản tích cực)
+    const pnl1w = totalCapital * 0.018 - immediateSpreadLoss;
+    const pnl1m = totalCapital * 0.038 - immediateSpreadLoss;
+    const pnl3m = totalCapital * 0.072 - immediateSpreadLoss;
+    const pnl6m = totalCapital * 0.115 - immediateSpreadLoss;
+    const pnl1y = totalCapital * 0.185 - immediateSpreadLoss;
+    const pnl5y = totalCapital * 0.350 - immediateSpreadLoss;
 
     const fmtPnL = (v) => `${v >= 0 ? '+' : ''}${formatNumber(v, 2)} triệu VNĐ`;
-    const elSt = document.getElementById('calc-pnl-short');
-    const elMt = document.getElementById('calc-pnl-mid');
-    const elLt = document.getElementById('calc-pnl-long');
+    const setPnL = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.textContent = fmtPnL(val);
+        el.className = `font-mono-num font-bold mt-0.5 ${val >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+      }
+    };
 
-    elSt.textContent = fmtPnL(stNet);
-    elSt.className = `font-mono-num font-bold ${stNet >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
-
-    elMt.textContent = fmtPnL(mtNet);
-    elMt.className = `font-mono-num font-bold ${mtNet >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
-
-    elLt.textContent = fmtPnL(ltNet);
-    elLt.className = `font-mono-num font-bold ${ltNet >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+    setPnL('calc-pnl-1w', pnl1w);
+    setPnL('calc-pnl-1m', pnl1m);
+    setPnL('calc-pnl-3m', pnl3m);
+    setPnL('calc-pnl-6m', pnl6m);
+    setPnL('calc-pnl-1y', pnl1y);
+    setPnL('calc-pnl-5y', pnl5y);
   }
 
   // ==========================================================================
@@ -729,6 +1569,35 @@
     bindToggleMA('toggle-ma20', 'showMA20');
     bindToggleMA('toggle-ma50', 'showMA50');
     bindToggleMA('toggle-ma200', 'showMA200');
+    bindToggleMA('toggle-chart-events', 'showChartEvents');
+
+    // Bộ lọc Mức độ ảnh hưởng của Sự kiện (Tiêu biểu theo khung / Lớn / Trung bình / Nhỏ / Tất cả)
+    document.querySelectorAll('[data-evt-impact]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        STATE.eventImpactFilter = btn.getAttribute('data-evt-impact');
+        document.querySelectorAll('[data-evt-impact]').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderMainStockChart();
+      });
+    });
+
+    // Bộ lọc Chiều tác động (Tất cả / Giá Lên Xanh lá / Giá Xuống Đỏ)
+    document.querySelectorAll('[data-evt-dir]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        STATE.eventDirectionFilter = btn.getAttribute('data-evt-dir');
+        document.querySelectorAll('[data-evt-dir]').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderMainStockChart();
+      });
+    });
+
+    // Nút Cập nhật Tin tức Trực tiếp (Real-time RSS Refresh)
+    const refreshBtn = document.getElementById('btn-refresh-live-news');
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', () => {
+        refreshLiveNewsInBrowser();
+      });
+    }
 
     // Chuyển đổi Khung thời gian Dự báo (Ngắn hạn / Trung hạn / Dài hạn)
     document.querySelectorAll('[data-horizon-tab]').forEach((tab) => {
@@ -756,6 +1625,52 @@
       });
     }
 
+        // Chuyển đổi chu kỳ lướt sóng & tích sản (Ngắn Hạn T+ vs Trung Hạn vs Dài Hạn)
+    const btnHzShort = document.getElementById('trading-hz-short');
+    const btnHzMed = document.getElementById('trading-hz-med');
+    const btnHzLong = document.getElementById('trading-hz-long');
+    if (btnHzShort) {
+      btnHzShort.addEventListener('click', () => {
+        STATE.swingHorizon = 'short_term';
+        renderSwingTradingCenter(STATE.data);
+      });
+    }
+    if (btnHzMed) {
+      btnHzMed.addEventListener('click', () => {
+        STATE.swingHorizon = 'medium_term';
+        renderSwingTradingCenter(STATE.data);
+      });
+    }
+    if (btnHzLong) {
+      btnHzLong.addEventListener('click', () => {
+        STATE.swingHorizon = 'long_term';
+        renderSwingTradingCenter(STATE.data);
+      });
+    }
+
+    // Chuyển đổi công cụ xem kế hoạch lướt sóng (Nhẫn / SJC / Thế giới)
+    const tabRing = document.getElementById('swing-tab-ring');
+    const tabSjc = document.getElementById('swing-tab-sjc');
+    const tabXau = document.getElementById('swing-tab-xau');
+    if (tabRing) {
+      tabRing.addEventListener('click', () => {
+        STATE.swingAsset = 'ring_9999';
+        renderSwingTradingCenter(STATE.data);
+      });
+    }
+    if (tabSjc) {
+      tabSjc.addEventListener('click', () => {
+        STATE.swingAsset = 'sjc';
+        renderSwingTradingCenter(STATE.data);
+      });
+    }
+    if (tabXau) {
+      tabXau.addEventListener('click', () => {
+        STATE.swingAsset = 'xau_usd';
+        renderSwingTradingCenter(STATE.data);
+      });
+    }
+
     // Tự động co giãn biểu đồ khi thay đổi kích thước màn hình
     window.addEventListener('resize', () => {
       const container = document.getElementById('tv-main-chart');
@@ -763,6 +1678,148 @@
         STATE.mainChart.applyOptions({ width: container.clientWidth });
       }
     });
+  }
+
+  // ==========================================================================
+  // 7B. HỆ THỐNG TAB ĐỘC LẬP 6 MỤC (MỖI MỤC MỘT MÀN HÌNH RIÊNG BIỆT)
+  // ==========================================================================
+
+  const TAB_KEY_MAP = {
+    '1': 'section-overview',
+    '2': 'section-charts',
+    '3': 'section-events-timeline',
+    '4': 'section-factors',
+    '5': 'section-forecast',
+    '6': 'section-calculator',
+    '0': 'all',
+  };
+
+  function switchMainTab(targetTabId, updateHistory = true, shouldScroll = false) {
+    const tabButtons = document.querySelectorAll('[data-main-tab]');
+    const tabSections = document.querySelectorAll('.tab-section');
+
+    // Chuẩn hóa hash cũ nếu có
+    if (targetTabId === 'section-scenarios' || targetTabId === 'section-swing-trading') {
+      targetTabId = 'section-forecast';
+    }
+
+    let validTarget = false;
+    tabButtons.forEach((btn) => {
+      const tabId = btn.getAttribute('data-main-tab');
+      if (tabId === targetTabId) {
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+        validTarget = true;
+      } else {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-selected', 'false');
+      }
+    });
+
+    if (!validTarget) {
+      targetTabId = 'section-overview';
+      const defaultBtn = document.querySelector('[data-main-tab="section-overview"]');
+      if (defaultBtn) {
+        defaultBtn.classList.add('active');
+        defaultBtn.setAttribute('aria-selected', 'true');
+      }
+    }
+
+    // Ẩn / hiện các khối section tương ứng
+    if (targetTabId === 'all') {
+      tabSections.forEach((sec) => {
+        sec.classList.remove('hidden');
+        sec.classList.add('tab-pane-active');
+      });
+    } else {
+      tabSections.forEach((sec) => {
+        if (sec.id === targetTabId) {
+          sec.classList.remove('hidden');
+          sec.classList.add('tab-pane-active');
+        } else {
+          sec.classList.add('hidden');
+          sec.classList.remove('tab-pane-active');
+        }
+      });
+    }
+
+    // Tự động re-render và căn chỉnh kích thước biểu đồ TradingView
+    if (targetTabId === 'section-charts' || targetTabId === 'all') {
+      setTimeout(() => {
+        const container = document.getElementById('tv-main-chart');
+        if (container && container.clientWidth > 0) {
+          renderMainStockChart();
+        }
+      }, 50);
+    }
+
+    // Lưu tab vào sessionStorage & URL hash
+    try {
+      sessionStorage.setItem('aurum_active_tab', targetTabId);
+      if (updateHistory) {
+        history.replaceState(null, '', '#' + targetTabId);
+      }
+    } catch (_) {}
+
+    // Tự động cuộn nhẹ lên đầu vùng nội dung nếu người dùng đang ở sâu bên dưới
+    if (shouldScroll) {
+      const headerEl = document.querySelector('header');
+      const offsetTop = headerEl ? headerEl.offsetHeight + 10 : 120;
+      const currentScroll = window.scrollY || document.documentElement.scrollTop;
+      if (currentScroll > offsetTop) {
+        window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+      }
+    }
+  }
+
+  function initMainTabs() {
+    // 1. Click các nút Tab chính trên header
+    document.querySelectorAll('[data-main-tab]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetTabId = btn.getAttribute('data-main-tab');
+        switchMainTab(targetTabId, true, true);
+      });
+    });
+
+    // 2. Click các nút chuyển tab nhanh ở chân từng mục (Quick Tab Nav)
+    document.querySelectorAll('[data-nav-target]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetTabId = btn.getAttribute('data-nav-target');
+        switchMainTab(targetTabId, true, true);
+      });
+    });
+
+    // 3. Phím tắt số 1 - 6 và 0 (Toàn bộ)
+    window.addEventListener('keydown', (e) => {
+      const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+      if (activeTag === 'input' || activeTag === 'select' || activeTag === 'textarea') {
+        return;
+      }
+      if (TAB_KEY_MAP[e.key]) {
+        switchMainTab(TAB_KEY_MAP[e.key], true, true);
+      }
+    });
+
+    // 4. Lắng nghe hashchange
+    window.addEventListener('hashchange', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        switchMainTab(hash, false, false);
+      }
+    });
+
+    // 5. Xác định tab ban đầu
+    let initialTab = 'section-overview';
+    const hash = window.location.hash.replace('#', '');
+    if (hash && (document.getElementById(hash) || hash === 'all' || hash === 'section-scenarios' || hash === 'section-swing-trading')) {
+      initialTab = hash;
+    } else {
+      const stored = sessionStorage.getItem('aurum_active_tab');
+      if (stored && (document.getElementById(stored) || stored === 'all' || stored === 'section-forecast')) {
+        initialTab = stored;
+      }
+    }
+    switchMainTab(initialTab, false, false);
   }
 
   // ==========================================================================
@@ -778,9 +1835,11 @@
       renderMainStockChart();
       renderMacroFactors(data);
       renderForecastScenarios(data);
+      renderSwingTradingCenter(data);
       renderVietnamBrandsTable(data);
       updateInvestorCalculator();
       bindEvents();
+      initMainTabs();
     } catch (err) {
       console.error('Lỗi khởi tạo ứng dụng:', err);
     }
