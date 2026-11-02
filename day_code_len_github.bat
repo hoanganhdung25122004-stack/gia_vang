@@ -8,23 +8,27 @@ echo ========================================================================
 echo.
 cd /d "%~dp0"
 
-echo [1/3] Dang kiem tra va dong goi cac thay doi moi nhat...
+echo [1/4] Dang kiem tra va dong goi cac thay doi moi nhat...
 git add -A
 git diff --staged --quiet
 if %ERRORLEVEL% neq 0 (
-    echo [2/3] Dang tao ban ghi commit du lieu va thuat toan 6 moc du bao...
-    git commit -m "feat(forecast): nang cap 6 moc du bao, tin tuc thoi gian thuc va toi uu bieu do 60fps"
+    echo [2/4] Dang tao ban ghi commit du lieu va chien luoc 3 chan troi...
+    git commit -m "feat: cap nhat chien luoc 3 chan troi dau tu vang va dong bo he thong"
 ) else (
-    echo [2/3] Khong co file moi can commit, tiep tuc kiem tra dong bo...
+    echo [2/4] Khong co file moi can commit, tiep tuc kiem tra dong bo...
 )
 
 echo.
-echo [3/3] Dang day toan bo du lieu va bo hen gio tu dong len GitHub (main)...
+echo [3/4] Dang kiem tra va hop nhat ban ghi tu dong tu GitHub Actions...
+git pull --no-rebase -s ort -X ours origin main --no-edit
+
+echo.
+echo [4/4] Dang day toan bo ma nguon va du lieu len GitHub (main)...
 git push -u origin main
 echo.
 if %ERRORLEVEL% equ 0 (
     echo ========================================================================
-    echo  [THANH CONG] Toan bo ma nguon, 6 moc du bao va bo hen gio 4 lan/ngay
+    echo  [THANH CONG] Toan bo ma nguon, 3 chan troi dau tu va bo hen gio 4 lan/ngay
     echo  da duoc dong bo len GitHub thanh cong!
     echo ========================================================================
 ) else (
