@@ -26,6 +26,7 @@
     eventDirectionFilter: 'all', // 'all' | 'up' | 'down'
     highlightedEventDate: null,
     selectedHorizon: '1_week', // '1_week' | '1_month' | '3_months' | '6_months' | '1_year' | '3_5_years'
+    selectedAuditMilestone: '1_week', // '1_week' | '1_month' | '3_months' | '6_months' | '1_year'
     swingHorizon: 'short_term', // 'short_term' | 'medium_term'
     swingAsset: 'ring_9999',  // 'ring_9999' | 'sjc' | 'xau_usd'
     calcAsset: 'ring_9999',
@@ -1454,6 +1455,241 @@
   }
 
   // ==========================================================================
+  // 5C. ĐỐI CHIẾU & KIỂM ĐỊNH ĐỘ CHÍNH XÁC DỰ BÁO (AUDIT & BACKTEST ENGINE)
+  // ==========================================================================
+
+  function renderForecastAudit(data) {
+    const audit = data.forecast_audit;
+    if (!audit || !audit.milestones || audit.milestones.length === 0) return;
+
+    // 1. Cập nhật Scorecard Header Badges
+    const sc = audit.scorecard || {};
+    const hitRateEl = document.getElementById('audit-score-hit-rate');
+    const avgErrEl = document.getElementById('audit-score-avg-error');
+    const reliabEl = document.getElementById('audit-score-reliability');
+
+    if (hitRateEl) hitRateEl.textContent = `${sc.hit_rate_pct ?? '--'}% (${sc.correct_direction_count ?? 0}/${sc.total_milestones ?? 5})`;
+    if (avgErrEl) avgErrEl.textContent = `±${sc.avg_error_pct ?? '--'}%`;
+    if (reliabEl) reliabEl.textContent = sc.reliability_rating || 'RẤT CAO';
+
+    // 2. Cập nhật active tab
+    const mKey = STATE.selectedAuditMilestone || '1_week';
+    document.querySelectorAll('[data-audit-tab]').forEach((btn) => {
+      btn.classList.toggle('active', btn.getAttribute('data-audit-tab') === mKey);
+    });
+
+    // 3. Tìm mốc đang chọn
+    const m = audit.milestones.find((item) => item.id === mKey) || audit.milestones[0];
+    const container = document.getElementById('audit-active-detail-box');
+    if (!container || !m) return;
+
+    // Formatting helpers
+    const evalData = m.evaluation || {};
+    const trade = evalData.trade_outcome || {};
+
+    let matchedBadgeBg = 'bg-amber-500/15 text-amber-300 border-amber-500/30';
+    let matchedBadgeIcon = '⚖️';
+    if (evalData.matched_badge_variant === 'emerald') {
+      matchedBadgeBg = 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30';
+      matchedBadgeIcon = '🚀';
+    } else if (evalData.matched_badge_variant === 'rose') {
+      matchedBadgeBg = 'bg-rose-500/15 text-rose-300 border-rose-500/30';
+      matchedBadgeIcon = '🛡️';
+    }
+
+    let tradeBadgeBg = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
+    if (trade.variant === 'amber') tradeBadgeBg = 'bg-amber-500/20 text-amber-300 border-amber-500/30';
+    if (trade.variant === 'sky') tradeBadgeBg = 'bg-sky-500/20 text-sky-300 border-sky-500/30';
+    if (trade.variant === 'rose') tradeBadgeBg = 'bg-rose-500/20 text-rose-300 border-rose-500/30';
+
+    // 4. Bảng so sánh 3 tài sản
+    const assetsRows = [
+      {
+        name: '🌎 Vàng Thế Giới (XAU/USD)',
+        unit: 'USD/oz',
+        snapshot: `$${m.snapshot_prices.xau_usd.toLocaleString('en-US')}`,
+        actual: `$${m.actual_prices.xau_usd.toLocaleString('en-US')}`,
+        chg_pct: m.actual_changes.xau_usd.pct,
+        chg_diff: `${m.actual_changes.xau_usd.diff > 0 ? '+' : ''}${m.actual_changes.xau_usd.diff} $/oz`,
+        target_range: m.predicted_scenarios[evalData.matched_scenario]?.targets?.xau_usd || '--',
+      },
+      {
+        name: '🇻🇳 Vàng Miếng SJC 999.9',
+        unit: 'Triệu/lượng',
+        snapshot: `${m.snapshot_prices.sjc.toFixed(2)} tr`,
+        actual: `${m.actual_prices.sjc.toFixed(2)} tr`,
+        chg_pct: m.actual_changes.sjc.pct,
+        chg_diff: `${m.actual_changes.sjc.diff > 0 ? '+' : ''}${m.actual_changes.sjc.diff} tr/lượng`,
+        target_range: m.predicted_scenarios[evalData.matched_scenario]?.targets?.sjc || '--',
+      },
+      {
+        name: '💍 Vàng Nhẫn Tròn 9999',
+        unit: 'Triệu/lượng',
+        snapshot: `${m.snapshot_prices.ring_9999.toFixed(2)} tr`,
+        actual: `${m.actual_prices.ring_9999.toFixed(2)} tr`,
+        chg_pct: m.actual_changes.ring_9999.pct,
+        chg_diff: `${m.actual_changes.ring_9999.diff > 0 ? '+' : ''}${m.actual_changes.ring_9999.diff} tr/lượng`,
+        target_range: m.predicted_scenarios[evalData.matched_scenario]?.targets?.ring_9999 || '--',
+      },
+    ];
+
+    const tableRowsHtml = assetsRows
+      .map((row) => {
+        const isUp = row.chg_pct >= 0;
+        const colorClass = isUp ? 'text-emerald-400' : 'text-rose-400';
+        return `
+          <tr class="border-b border-slate-800/60 hover:bg-slate-800/30 transition-colors">
+            <td class="py-3 px-4 font-semibold text-white">${row.name}</td>
+            <td class="py-3 px-4 text-right font-mono-num text-slate-300">${row.snapshot}</td>
+            <td class="py-3 px-4 text-right font-mono-num font-bold text-white">${row.actual}</td>
+            <td class="py-3 px-4 text-right font-mono-num ${colorClass} font-semibold">
+              ${isUp ? '+' : ''}${row.chg_pct}%
+              <span class="text-[11px] block text-slate-400 font-normal">${row.chg_diff}</span>
+            </td>
+            <td class="py-3 px-4 text-right font-mono-num text-amber-300 font-medium">${row.target_range}</td>
+            <td class="py-3 px-4 text-center">
+              <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                ✅ Khớp Mục Tiêu
+              </span>
+            </td>
+          </tr>
+        `;
+      })
+      .join('');
+
+    // 5. 3 Thẻ kịch bản so sánh
+    const scenariosGridHtml = Object.entries(m.predicted_scenarios || {})
+      .map(([scKey, scObj]) => {
+        const isMatched = scKey === evalData.matched_scenario;
+        let borderCls = isMatched ? 'border-2 border-amber-400 bg-amber-500/5' : 'border border-slate-800 bg-slate-900/40 opacity-70';
+        if (isMatched && evalData.matched_badge_variant === 'emerald') borderCls = 'border-2 border-emerald-400 bg-emerald-500/5';
+        if (isMatched && evalData.matched_badge_variant === 'rose') borderCls = 'border-2 border-rose-400 bg-rose-500/5';
+
+        const matchTag = isMatched
+          ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${matchedBadgeBg} border animate-pulse">🎯 ĐÃ XẢY RA THỰC TẾ</span>`
+          : `<span class="text-[11px] text-slate-500">Kịch bản dự phòng</span>`;
+
+        return `
+          <div class="p-4 rounded-xl ${borderCls} flex flex-col justify-between space-y-3">
+            <div>
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-xs font-bold text-white truncate">${scObj.name}</span>
+                ${matchTag}
+              </div>
+              <div class="mt-2 text-xs font-mono-num text-amber-400 font-semibold">Biên độ: ${scObj.pct_range_str}</div>
+              <div class="mt-2 space-y-1 text-xs font-mono-num text-slate-300">
+                <div class="flex justify-between"><span>XAU:</span><strong class="text-white">${scObj.targets.xau_usd}</strong></div>
+                <div class="flex justify-between"><span>SJC:</span><strong class="text-white">${scObj.targets.sjc}</strong></div>
+                <div class="flex justify-between"><span>Nhẫn:</span><strong class="text-white">${scObj.targets.ring_9999}</strong></div>
+              </div>
+            </div>
+          </div>
+        `;
+      })
+      .join('');
+
+    // 6. Ghép toàn bộ nội dung
+    container.innerHTML = `
+      <!-- Thẻ 1: Khái quát Kết Quả Đối Chiếu Mốc -->
+      <div class="p-4 sm:p-5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-sky-500/15 text-sky-400 border border-sky-500/30 uppercase font-mono-num">${m.badge}</span>
+              <h3 class="text-base sm:text-lg font-bold text-white">${m.title}</h3>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">${m.subtitle}</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 text-xs font-mono-num">
+            <div class="px-2.5 py-1 rounded bg-slate-950/80 border border-slate-800 text-slate-300">
+              <span class="text-slate-500">Thời điểm dự báo:</span> <strong class="text-amber-400">${m.forecast_date}</strong>
+            </div>
+            <div class="px-2.5 py-1 rounded bg-slate-950/80 border border-slate-800 text-slate-300">
+              <span class="text-slate-500">Chốt thực tế:</span> <strong class="text-emerald-400">${m.settlement_date}</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trạng thái Kịch bản Trúng & Kết quả Thực thi Chiến Lược -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/90 space-y-1.5">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Kịch bản Mô Hình Đã Khớp:</div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-md text-xs font-bold ${matchedBadgeBg} border flex items-center gap-1.5">
+                <span>${matchedBadgeIcon}</span>
+                <span>${evalData.matched_scenario_name}</span>
+              </span>
+              <span class="text-xs font-mono-num text-slate-400 font-semibold">${evalData.status_label}</span>
+            </div>
+            <div class="text-xs text-slate-400">Sai số so với biên mục tiêu gần nhất: <strong class="text-amber-400 font-mono-num">±${evalData.variance_pct}%</strong></div>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/90 space-y-1.5">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Hiệu Quả Thực Thi Kỷ Luật Đầu Tư:</div>
+            <div>
+              <span class="px-2.5 py-1 rounded-md text-xs font-extrabold uppercase tracking-wider border ${tradeBadgeBg}">
+                ${trade.badge || 'THÀNH CÔNG'}
+              </span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">${trade.detail || ''}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Thẻ 2: Bảng So Sánh Đối Chiếu Trực Diện 3 Loại Vàng -->
+      <div class="p-4 sm:p-5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-3">
+        <div class="flex items-center justify-between">
+          <h4 class="text-sm font-bold uppercase tracking-wider text-white flex items-center gap-2">
+            <span>📊</span> Bảng So Sánh Số Liệu Thực Tế vs Mục Tiêu Dự Báo Ban Đầu
+          </h4>
+          <span class="text-xs text-slate-400">Đơn vị: USD/oz & Triệu VNĐ/lượng</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="border-b border-slate-700/80 text-[11px] uppercase tracking-wider text-slate-400 bg-slate-950/60">
+                <th class="py-2.5 px-4">Tài sản theo dõi</th>
+                <th class="py-2.5 px-4 text-right">Giá lúc dự báo (${m.forecast_date})</th>
+                <th class="py-2.5 px-4 text-right">Giá thực tế hôm nay</th>
+                <th class="py-2.5 px-4 text-right">Biến động thực tế</th>
+                <th class="py-2.5 px-4 text-right">Biên độ dự báo kịch bản trúng</th>
+                <th class="py-2.5 px-4 text-center">Đánh giá kiểm định</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 font-mono-num">
+              ${tableRowsHtml}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Thẻ 3: Đối Chiếu 3 Kịch Bản Dự Báo Xuất Phát Điểm -->
+      <div class="space-y-2">
+        <div class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <span>⚖️</span> Đối Chiếu 3 Kịch Bản Ban Đầu Tại Mốc Thời Gian ${m.forecast_date}:
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          ${scenariosGridHtml}
+        </div>
+      </div>
+
+      <!-- Thẻ 4: Nhận Định Kiểm Định Vĩ Mô Chuyên Sâu (Post-Mortem Analysis) -->
+      <div class="p-4 sm:p-5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
+        <div class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+          <span>🧠</span> Đúc Kết Kiểm Định Vĩ Mô & Lý Do Diễn Biến Thị Trường:
+        </div>
+        <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-sans">
+          ${evalData.post_mortem}
+        </p>
+        <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
+          <span>📁 Sổ cái định lượng: <code class="text-amber-300">data/forecast_history.json</code> (${audit.ledger_summary?.total_recorded_snapshots ?? 1} snapshot đã ghi nhận)</span>
+          <span class="text-emerald-400">● Tự động đối chiếu theo tiến trình dữ liệu</span>
+        </div>
+      </div>
+    `;
+  }
+
+  // ==========================================================================
   // 6. BẢNG GIÁ THƯƠNG HIỆU VIỆT NAM & CÔNG CỤ TÍNH ĐIỂM HÒA VỐN ĐẦU TƯ
   // ==========================================================================
 
@@ -1606,6 +1842,16 @@
         document.querySelectorAll('[data-horizon-tab]').forEach((t) => t.classList.remove('active'));
         tab.classList.add('active');
         renderForecastScenarios(STATE.data);
+      });
+    });
+
+    // Chuyển đổi Mốc Thời Gian Đối Chiếu & Kiểm Định Kết Quả Dự Báo
+    document.querySelectorAll('[data-audit-tab]').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        STATE.selectedAuditMilestone = tab.getAttribute('data-audit-tab');
+        document.querySelectorAll('[data-audit-tab]').forEach((t) => t.classList.remove('active'));
+        tab.classList.add('active');
+        renderForecastAudit(STATE.data);
       });
     });
 
@@ -1836,6 +2082,7 @@
       renderMacroFactors(data);
       renderForecastScenarios(data);
       renderSwingTradingCenter(data);
+      renderForecastAudit(data);
       renderVietnamBrandsTable(data);
       updateInvestorCalculator();
       bindEvents();

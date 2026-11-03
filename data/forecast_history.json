@@ -1,0 +1,67 @@
+{
+  "updated_at": "2026-11-02",
+  "snapshots": [
+    {
+      "date": "2026-11-02",
+      "timestamp": "2026-11-02 20:48:47",
+      "prices": {
+        "xau_usd": 3943.8,
+        "sjc": 140.0,
+        "ring_9999": 136.8
+      },
+      "macro_score": 95.7,
+      "dominant_driver": "Chính sách Lãi suất FED & Lợi suất Trái phiếu Mỹ 10Y",
+      "horizons_overview": {
+        "1_week": {
+          "title": "1 Tuần (7 Ngày)",
+          "bullish_prob": 57,
+          "base_prob": 33,
+          "bearish_prob": 10,
+          "bullish_target_xau": "$3,991 – 4,054 / oz",
+          "base_target_xau": "$3,912 – 3,991 / oz"
+        },
+        "1_month": {
+          "title": "1 Tháng (30 Ngày)",
+          "bullish_prob": 59,
+          "base_prob": 30,
+          "bearish_prob": 11,
+          "bullish_target_xau": "$4,042 – 4,180 / oz",
+          "base_target_xau": "$3,885 – 4,042 / oz"
+        },
+        "3_months": {
+          "title": "3 Tháng (1 Quý / 90 Ngày)",
+          "bullish_prob": 60,
+          "base_prob": 29,
+          "bearish_prob": 11,
+          "bullish_target_xau": "$4,121 – 4,358 / oz",
+          "base_target_xau": "$3,865 – 4,121 / oz"
+        },
+        "6_months": {
+          "title": "6 Tháng (Nửa Năm / 180 Ngày)",
+          "bullish_prob": 63,
+          "base_prob": 28,
+          "bearish_prob": 9,
+          "bullish_target_xau": "$4,220 – 4,575 / oz",
+          "base_target_xau": "$3,885 – 4,200 / oz"
+        },
+        "1_year": {
+          "title": "1 Năm (12 Tháng / 365 Ngày)",
+          "bullish_prob": 66,
+          "base_prob": 25,
+          "bearish_prob": 9,
+          "bullish_target_xau": "$4,417 – 4,930 / oz",
+          "base_target_xau": "$4,102 – 4,417 / oz"
+        },
+        "3_5_years": {
+          "title": "3 – 5 Năm (Siêu Chu Kỳ Dài Hạn)",
+          "bullish_prob": 71,
+          "base_prob": 22,
+          "bearish_prob": 7,
+          "bullish_target_xau": "$4,811 – 5,837 / oz",
+          "base_target_xau": "$4,338 – 4,811 / oz"
+        }
+      }
+    }
+  ],
+  "total_snapshots": 1
+}

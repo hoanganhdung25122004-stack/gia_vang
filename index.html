@@ -672,6 +672,101 @@
       </div>
     </div> <!-- end section-swing-trading -->
 
+    <!-- 5C: ĐỐI CHIẾU & KIỂM ĐỊNH ĐỘ CHÍNH XÁC DỰ BÁO (FORECAST AUDIT & BACKTEST ENGINE) -->
+    <div id="section-forecast-audit" class="terminal-card p-5 sm:p-6 space-y-6">
+      <!-- Header -->
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
+        <div>
+          <div class="flex items-center gap-2.5">
+            <span class="w-2.5 h-5 rounded-full bg-sky-400"></span>
+            <h2 class="text-lg font-bold text-white">
+              Đối Chiếu & Kiểm Định Độ Chính Xác Dự Báo
+            </h2>
+            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-500/15 border border-sky-500/30 text-sky-400 uppercase tracking-wider">
+              Audit & Backtest Engine
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 mt-1">
+            Hệ thống đối chiếu độc lập giữa kết quả dự báo lượng hóa tại các mốc lịch sử cụ thể (1 Tuần, 1 Tháng, 3 Tháng, 6 Tháng, 1 Năm trước) với giá thực tế chốt phiên hiện tại, đo lường sai số và hiệu quả chiến lược.
+          </p>
+        </div>
+
+        <!-- Scorecard KPI Badges -->
+        <div class="flex flex-wrap items-center gap-2.5">
+          <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center gap-2">
+            <span class="text-xs text-slate-400">Độ chuẩn xác hướng:</span>
+            <span id="audit-score-hit-rate" class="text-sm font-extrabold font-mono-num text-emerald-400">--%</span>
+          </div>
+          <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center gap-2">
+            <span class="text-xs text-slate-400">Sai số bình quân:</span>
+            <span id="audit-score-avg-error" class="text-sm font-extrabold font-mono-num text-amber-400">±--%</span>
+          </div>
+          <div class="p-2.5 rounded-xl bg-sky-500/10 border border-sky-500/30 flex items-center gap-2">
+            <span class="text-xs text-sky-300">Độ tin cậy:</span>
+            <span id="audit-score-reliability" class="text-xs font-bold text-sky-400">--</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5 Tabs Chọn Mốc Thời Gian Đối Chiếu Cụ Thể -->
+      <div>
+        <div class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2.5 flex items-center gap-1.5">
+          <span>⏱️</span> Chọn Mốc Thời Gian Để Đối Chiếu Kết Quả Dự Báo:
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5" id="audit-tabs-container">
+          <button data-audit-tab="1_week" class="audit-tab active">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-sky-400">Mốc 1</span>
+              <span class="text-[10px] font-mono-num px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">7 Ngày trước</span>
+            </div>
+            <div class="text-sm sm:text-base font-bold text-white mt-1">1 Tuần Trước</div>
+            <p class="text-[11px] text-slate-400 mt-0.5 truncate">Lướt sóng T+ & tin tuần</p>
+          </button>
+
+          <button data-audit-tab="1_month" class="audit-tab">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-sky-400">Mốc 2</span>
+              <span class="text-[10px] font-mono-num px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">30 Ngày trước</span>
+            </div>
+            <div class="text-sm sm:text-base font-bold text-white mt-1">1 Tháng Trước</div>
+            <p class="text-[11px] text-slate-400 mt-0.5 truncate">Sóng tháng & họp FED</p>
+          </button>
+
+          <button data-audit-tab="3_months" class="audit-tab">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-sky-400">Mốc 3</span>
+              <span class="text-[10px] font-mono-num px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">90 Ngày trước</span>
+            </div>
+            <div class="text-sm sm:text-base font-bold text-white mt-1">3 Tháng Trước</div>
+            <p class="text-[11px] text-slate-400 mt-0.5 truncate">Chu kỳ vĩ mô quý</p>
+          </button>
+
+          <button data-audit-tab="6_months" class="audit-tab">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-sky-400">Mốc 4</span>
+              <span class="text-[10px] font-mono-num px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">180 Ngày trước</span>
+            </div>
+            <div class="text-sm sm:text-base font-bold text-white mt-1">6 Tháng Trước</div>
+            <p class="text-[11px] text-slate-400 mt-0.5 truncate">Sóng nửa năm & đỉnh MA200</p>
+          </button>
+
+          <button data-audit-tab="1_year" class="audit-tab">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-sky-400">Mốc 5</span>
+              <span class="text-[10px] font-mono-num px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">365 Ngày trước</span>
+            </div>
+            <div class="text-sm sm:text-base font-bold text-white mt-1">1 Năm Trước</div>
+            <p class="text-[11px] text-slate-400 mt-0.5 truncate">Tích sản thường niên</p>
+          </button>
+        </div>
+      </div>
+
+      <!-- Active Milestone Card Details Container -->
+      <div id="audit-active-detail-box" class="space-y-5">
+        <!-- Rendered dynamically by assets/app.js -->
+      </div>
+    </div> <!-- end section-forecast-audit -->
+
       <!-- Bottom Quick Tab Navigator -->
       <div class="tab-footer-nav">
         <button type="button" data-nav-target="section-factors" class="tab-nav-arrow-btn">

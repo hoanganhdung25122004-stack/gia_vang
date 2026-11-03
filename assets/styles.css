@@ -144,6 +144,30 @@ body {
   box-shadow: 0 8px 20px -6px rgba(245, 158, 11, 0.28);
 }
 
+/* Audit Milestone Tabs */
+.audit-tab {
+  padding: 0.75rem 1.1rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(17, 24, 39, 0.75);
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.audit-tab:hover {
+  border-color: rgba(56, 189, 248, 0.35);
+  color: #e2e8f0;
+}
+
+.audit-tab.active {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.16) 0%, rgba(17, 24, 39, 0.95) 100%);
+  border-color: #38bdf8;
+  color: #ffffff;
+  box-shadow: 0 8px 20px -6px rgba(56, 189, 248, 0.28);
+}
+
 /* Factor Progress Bar */
 .impact-bar-track {
   width: 100%;
