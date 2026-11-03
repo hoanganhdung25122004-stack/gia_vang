@@ -6,7 +6,7 @@
     "update_frequency": "Tự động 4 lần/ngày (mỗi 6 giờ) hoặc cập nhật trực tiếp theo thời gian thực",
     "total_trading_days": 1258,
     "total_events_tracked": 143,
-    "history_range": "2021-11-02 -> 2026-11-02",
+    "history_range": "2021-11-02 -> 2026-11-03",
     "data_sources": [
       "Yahoo Finance Global (GC=F, XAUUSD, DXY, ^TNX, ^VIX, CL=F)",
       "Vietcombank Official",
@@ -74,9 +74,9 @@
       }
     },
     "usdvnd": {
-      "buy": 25570.0,
-      "sell": 25980.0,
-      "free_market": 26292.0,
+      "buy": 25560.0,
+      "sell": 25970.0,
+      "free_market": 26282.0,
       "source": "Vietcombank Official"
     },
     "technicals": {
@@ -92,40 +92,40 @@
       {
         "brand": "Vàng miếng SJC (TP.HCM / Hà Nội)",
         "type": "Vàng miếng 999.9 (1 Lượng)",
-        "buy": 137.0,
-        "sell": 140.0,
+        "buy": 138.2,
+        "sell": 141.2,
         "spread_buy_sell": 3.0,
         "vs_world": 17.32
       },
       {
         "brand": "Vàng Nhẫn Tròn Trơn SJC 9999",
         "type": "Nhẫn 99.99% (1 Chỉ - 5 Chỉ)",
-        "buy": 132.8,
-        "sell": 136.8,
+        "buy": 134.0,
+        "sell": 138.0,
         "spread_buy_sell": 4.0,
         "vs_world": 14.12
       },
       {
         "brand": "Vàng Nhẫn Hưng Thịnh Vượng DOJI 9999",
         "type": "Nhẫn tròn 9999",
-        "buy": 132.95,
-        "sell": 136.9,
+        "buy": 134.15,
+        "sell": 138.1,
         "spread_buy_sell": 3.95,
         "vs_world": 14.22
       },
       {
         "brand": "Vàng Nhẫn Tròn Phú Quý / Bảo Tín Minh Châu",
         "type": "Nhẫn Rồng Thăng Long 999.9",
-        "buy": 132.9,
-        "sell": 136.95,
+        "buy": 134.1,
+        "sell": 138.15,
         "spread_buy_sell": 4.05,
         "vs_world": 14.27
       },
       {
         "brand": "Vàng Nhẫn Trơn PNJ 9999",
         "type": "Nhẫn 24K (999.9)",
-        "buy": 132.75,
-        "sell": 136.85,
+        "buy": 133.95,
+        "sell": 138.05,
         "spread_buy_sell": 4.1,
         "vs_world": 14.17
       }
@@ -243,7 +243,7 @@
       "explanation": "Chỉ số sức mạnh tương đối RSI(14) đạt 33.3 và MACD Histogram ở mức -11.99. Các thuật toán giao dịch định lượng (CTA/Algo Funds) trên sàn COMEX sử dụng các ngưỡng quá mua/quá bán và giao cắt đường trung bình động để chốt lời hoặc gia tăng vị thế.",
       "investor_note": "Tránh mua đuổi (FOMO) khi RSI vượt 75; ưu tiên giải ngân từng phần khi RSI điều chỉnh về vùng 45-55.",
       "rank": 6,
-      "weight_pct": 11.5,
+      "weight_pct": 10.7,
       "impact_tier": "Tác động Bổ trợ / Chu kỳ"
     }
   ],
@@ -263,7 +263,7 @@
           {
             "type": "bullish",
             "name": "Kịch bản Tích cực (Bứt phá Theo Tin)",
-            "probability": 57,
+            "probability": 53,
             "expected_change_pct": "+1.2% đến +2.8%",
             "targets": {
               "xau_usd": "$3,991 – 4,054 / oz",
@@ -279,7 +279,7 @@
           {
             "type": "base",
             "name": "Kịch bản Cơ sở (Tích lũy Đi ngang)",
-            "probability": 33,
+            "probability": 36,
             "expected_change_pct": "-0.8% đến +1.2%",
             "targets": {
               "xau_usd": "$3,912 – 3,991 / oz",
@@ -295,7 +295,7 @@
           {
             "type": "bearish",
             "name": "Kịch bản Thận trọng (Rung lắc / Điều chỉnh)",
-            "probability": 10,
+            "probability": 11,
             "expected_change_pct": "-3.0% đến -1.0%",
             "targets": {
               "xau_usd": "$3,825 – 3,904 / oz",
@@ -322,7 +322,7 @@
           {
             "type": "bullish",
             "name": "Kịch bản Tích cực (Tăng Trưởng Bứt Phá)",
-            "probability": 59,
+            "probability": 56,
             "expected_change_pct": "+2.5% đến +6.0%",
             "targets": {
               "xau_usd": "$4,042 – 4,180 / oz",
@@ -338,7 +338,7 @@
           {
             "type": "base",
             "name": "Kịch bản Cơ sở (Tích Lũy Biên Độ Hẹp)",
-            "probability": 30,
+            "probability": 33,
             "expected_change_pct": "-1.5% đến +2.5%",
             "targets": {
               "xau_usd": "$3,885 – 4,042 / oz",
@@ -381,7 +381,7 @@
           {
             "type": "bullish",
             "name": "Kịch bản Tích cực (Xu Hướng Tăng Quý Mới)",
-            "probability": 60,
+            "probability": 59,
             "expected_change_pct": "+4.5% đến +10.5%",
             "targets": {
               "xau_usd": "$4,121 – 4,358 / oz",
@@ -397,7 +397,7 @@
           {
             "type": "base",
             "name": "Kịch bản Cơ sở (Tích Lũy Nền Giá Mới)",
-            "probability": 29,
+            "probability": 30,
             "expected_change_pct": "-2.0% đến +4.5%",
             "targets": {
               "xau_usd": "$3,865 – 4,121 / oz",
@@ -440,7 +440,7 @@
           {
             "type": "bullish",
             "name": "Kịch bản Tích cực (Đón Sóng Mùa Vụ Nửa Năm)",
-            "probability": 63,
+            "probability": 62,
             "expected_change_pct": "+7.0% đến +16.0%",
             "targets": {
               "xau_usd": "$4,220 – 4,575 / oz",
@@ -472,7 +472,7 @@
           {
             "type": "bearish",
             "name": "Kịch bản Thận trọng (Chu Kỳ Điều Chỉnh)",
-            "probability": 9,
+            "probability": 10,
             "expected_change_pct": "-10.0% đến -3.0%",
             "targets": {
               "xau_usd": "$3,549 – 3,825 / oz",
@@ -499,7 +499,7 @@
           {
             "type": "bullish",
             "name": "Kịch bản Tích cực (Tăng Trưởng Bứt Phá Năm)",
-            "probability": 66,
+            "probability": 65,
             "expected_change_pct": "+12.0% đến +25.0%",
             "targets": {
               "xau_usd": "$4,417 – 4,930 / oz",
@@ -516,7 +516,7 @@
           {
             "type": "base",
             "name": "Kịch bản Cơ sở (Tăng Trưởng Bền Vững)",
-            "probability": 25,
+            "probability": 26,
             "expected_change_pct": "+4.0% đến +12.0%",
             "targets": {
               "xau_usd": "$4,102 – 4,417 / oz",
@@ -558,7 +558,7 @@
           {
             "type": "bullish",
             "name": "Kịch bản Tích cực (Siêu Chu Kỳ Tích Sản Vàng)",
-            "probability": 71,
+            "probability": 70,
             "expected_change_pct": "+22.0% đến +48.0%",
             "targets": {
               "xau_usd": "$4,811 – 5,837 / oz",
@@ -591,7 +591,7 @@
           {
             "type": "bearish",
             "name": "Kịch bản Thận trọng (Tăng Trưởng Chậm)",
-            "probability": 7,
+            "probability": 8,
             "expected_change_pct": "-5.0% đến +10.0%",
             "targets": {
               "xau_usd": "$3,747 – 4,338 / oz",
@@ -627,7 +627,7 @@
       "instrument_recommendation": {
         "preferred_asset": "sjc",
         "preferred_asset_name": "Vàng Miếng SJC 999.9",
-        "reason": "Hôm nay tỷ lệ Spread của SJC (3.00 tr ~ 2.14%) thấp hơn Vàng Nhẫn (4.00 tr ~ 2.92%), giúp giảm bớt chi phí trượt giá ban đầu khi lướt ngắn hạn.",
+        "reason": "Hôm nay tỷ lệ Spread của SJC (3.00 tr ~ 2.12%) thấp hơn Vàng Nhẫn (4.00 tr ~ 2.9%), giúp giảm bớt chi phí trượt giá ban đầu khi lướt ngắn hạn.",
         "comparison": {
           "ring_9999": {
             "spread_vnd": 4.0,
@@ -647,14 +647,14 @@
         "ring_9999": {
           "name": "Vàng Nhẫn Tròn Trơn 9999",
           "unit": "Triệu VNĐ/lượng",
-          "current_price": 136.8,
+          "current_price": 138.0,
           "entry_zone": [
-            136.8,
-            137.07
+            138.0,
+            138.28
           ],
-          "stop_loss": 132.14,
+          "stop_loss": 133.33,
           "risk_amount": 5.0,
-          "risk_pct": 3.65,
+          "risk_pct": 3.62,
           "tp1": {
             "target_price": 140.94,
             "net_gain": 4.14,
@@ -676,10 +676,10 @@
         "sjc": {
           "name": "Vàng Miếng SJC 999.9",
           "unit": "Triệu VNĐ/lượng",
-          "current_price": 140.0,
+          "current_price": 141.2,
           "entry_zone": [
-            140.0,
-            140.42
+            141.2,
+            141.62
           ],
           "stop_loss": 136.15,
           "risk_amount": 3.85,
@@ -693,8 +693,8 @@
             "note": "Kháng cự ngắn hạn 5 phiên"
           },
           "tp2": {
-            "target_price": 147.0,
-            "net_gain": 7.0,
+            "target_price": 148.26,
+            "net_gain": 7.06,
             "net_pct": 5.0,
             "rr_ratio": 1.82,
             "timeframe": "7 – 10 Ngày (1 – 2 Tuần)",
@@ -796,14 +796,14 @@
         "ring_9999": {
           "name": "Vàng Nhẫn Tròn Trơn 9999",
           "unit": "Triệu VNĐ/lượng",
-          "current_price": 136.8,
+          "current_price": 138.0,
           "entry_zone": [
-            136.8,
-            137.35
+            138.0,
+            138.55
           ],
-          "stop_loss": 131.47,
+          "stop_loss": 132.66,
           "risk_amount": 6.0,
-          "risk_pct": 4.39,
+          "risk_pct": 4.35,
           "tp1": {
             "target_price": 145.54,
             "net_gain": 8.74,
@@ -825,10 +825,10 @@
         "sjc": {
           "name": "Vàng Miếng SJC 999.9",
           "unit": "Triệu VNĐ/lượng",
-          "current_price": 140.0,
+          "current_price": 141.2,
           "entry_zone": [
-            140.0,
-            140.7
+            141.2,
+            141.91
           ],
           "stop_loss": 135.46,
           "risk_amount": 4.54,
@@ -945,27 +945,27 @@
         "ring_9999": {
           "name": "Vàng Nhẫn Tròn Trơn 9999",
           "unit": "Triệu VNĐ/lượng",
-          "current_price": 136.8,
+          "current_price": 138.0,
           "entry_zone": [
-            136.8,
-            138.85
+            138.0,
+            140.07
           ],
           "stop_loss": 128.64,
-          "risk_amount": 8.16,
-          "risk_pct": 5.96,
+          "risk_amount": 9.36,
+          "risk_pct": 6.78,
           "tp1": {
             "target_price": 193.73,
-            "net_gain": 56.93,
-            "net_pct": 41.62,
-            "rr_ratio": 6.98,
+            "net_gain": 55.73,
+            "net_pct": 40.38,
+            "rr_ratio": 5.95,
             "timeframe": "1 Năm (12 Tháng)",
             "note": "Kỳ vọng +18% (Vượt trội lãi suất tiền gửi ngân hàng)"
           },
           "tp2": {
             "target_price": 233.19,
-            "net_gain": 96.39,
-            "net_pct": 70.46,
-            "rr_ratio": 11.81,
+            "net_gain": 95.19,
+            "net_pct": 68.98,
+            "rr_ratio": 10.17,
             "timeframe": "2 – 3 Năm (Siêu Chu Kỳ)",
             "note": "Mục tiêu đỉnh chu kỳ vĩ mô & bảo toàn sức mua"
           },
@@ -974,27 +974,27 @@
         "sjc": {
           "name": "Vàng Miếng SJC 999.9",
           "unit": "Triệu VNĐ/lượng",
-          "current_price": 140.0,
+          "current_price": 141.2,
           "entry_zone": [
-            140.0,
-            142.1
+            141.2,
+            143.32
           ],
           "stop_loss": 131.32,
-          "risk_amount": 8.68,
-          "risk_pct": 6.2,
+          "risk_amount": 9.88,
+          "risk_pct": 7.0,
           "tp1": {
             "target_price": 195.09,
-            "net_gain": 55.09,
-            "net_pct": 39.35,
-            "rr_ratio": 6.35,
+            "net_gain": 53.89,
+            "net_pct": 38.17,
+            "rr_ratio": 5.45,
             "timeframe": "1 Năm (12 Tháng)",
             "note": "Kỳ vọng +16% (Thương hiệu quốc gia)"
           },
           "tp2": {
             "target_price": 227.91,
-            "net_gain": 87.91,
-            "net_pct": 62.79,
-            "rr_ratio": 10.13,
+            "net_gain": 86.71,
+            "net_pct": 61.41,
+            "rr_ratio": 8.78,
             "timeframe": "2 – 3 Năm (Siêu Chu Kỳ)",
             "note": "Kháng cự chu kỳ dài hạn"
           },
@@ -1070,7 +1070,7 @@
     "instrument_recommendation": {
       "preferred_asset": "sjc",
       "preferred_asset_name": "Vàng Miếng SJC 999.9",
-      "reason": "Hôm nay tỷ lệ Spread của SJC (3.00 tr ~ 2.14%) thấp hơn Vàng Nhẫn (4.00 tr ~ 2.92%), giúp giảm bớt chi phí trượt giá ban đầu khi lướt ngắn hạn.",
+      "reason": "Hôm nay tỷ lệ Spread của SJC (3.00 tr ~ 2.12%) thấp hơn Vàng Nhẫn (4.00 tr ~ 2.9%), giúp giảm bớt chi phí trượt giá ban đầu khi lướt ngắn hạn.",
       "comparison": {
         "ring_9999": {
           "spread_vnd": 4.0,
@@ -1090,14 +1090,14 @@
       "ring_9999": {
         "name": "Vàng Nhẫn Tròn Trơn 9999",
         "unit": "Triệu VNĐ/lượng",
-        "current_price": 136.8,
+        "current_price": 138.0,
         "entry_zone": [
-          136.8,
-          137.07
+          138.0,
+          138.28
         ],
-        "stop_loss": 132.14,
+        "stop_loss": 133.33,
         "risk_amount": 5.0,
-        "risk_pct": 3.65,
+        "risk_pct": 3.62,
         "tp1": {
           "target_price": 140.94,
           "net_gain": 4.14,
@@ -1119,10 +1119,10 @@
       "sjc": {
         "name": "Vàng Miếng SJC 999.9",
         "unit": "Triệu VNĐ/lượng",
-        "current_price": 140.0,
+        "current_price": 141.2,
         "entry_zone": [
-          140.0,
-          140.42
+          141.2,
+          141.62
         ],
         "stop_loss": 136.15,
         "risk_amount": 3.85,
@@ -1136,8 +1136,8 @@
           "note": "Kháng cự ngắn hạn 5 phiên"
         },
         "tp2": {
-          "target_price": 147.0,
-          "net_gain": 7.0,
+          "target_price": 148.26,
+          "net_gain": 7.06,
           "net_pct": 5.0,
           "rr_ratio": 1.82,
           "timeframe": "7 – 10 Ngày (1 – 2 Tuần)",
@@ -1894,8 +1894,8 @@
       "title": "Giá vàng hôm nay (2/11): Vàng miếng, vàng nhẫn tiếp tục dò đáy — Giá vàng thế giới hồi phục +1.15% lên $3,943.8/oz (SJC: 140.00 tr/lượng)",
       "summary": "Ghi nhận lúc 02/11/2026 07:04 GMT+7 từ Facebook. Kết thúc phiên 2026-11-02, giá vàng thế giới (XAU/USD) đóng cửa tại $3,943.80/oz (+1.15%), vàng miếng SJC niêm yết 140.00 triệu/lượng (+1.75%) và Nhẫn 9999 ở mức 136.80 triệu/lượng (DXY 101.52 (-0.35%) | Lợi suất US10Y 4.92% (-0.20%)).",
       "category": "Tin tức Vàng Việt Nam & Quốc tế",
-      "source": "Facebook",
-      "url": "https://news.google.com/rss/articles/CBMinAJBVV95cUxQZkxCaDhIRXREalJIVUlnSzFuYlNMVVRJY3dGN19lWFpwUkdjbUo3QUtjOTk5b2lydm1kbnhPTzZtNUZ2YUwzRGJYZ3Ewc1JFclYycjd2OHJiNFd2SVBqNmNVc1F3TDNIdXJ3RlpPUFc4dHhha2RJNjZPcGFEMWNITnFtczVOUDFRMFB4QWF0WWlPQWRtX2FFWk50YVFyS3RSM2ZNTGR3Yy1QbmNpaHFzQWd6QTVseC1OMlROYjFMNWxGdlB6REVzemNkWUhCaFo1LTZMTUFoOE1xQWRZMHZGQzRhMjNLUS13QVhtWkxaWm54V0dVREVaTy1LVUtFS3oxdnFjbVJwNlliaU5VTC15YnhZeWtnSWxXQ3NTUg?oc=5",
+      "source": "Laodong.vn",
+      "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxPcko2bGtlWF9CUThhWFQ0enJiLVNNWGZNUlpTY3Z6Z1IxZ3U3ZVhGdzg3TTRIcVNjYlJGc0o4TFBrR1lVaXdYM3hwVnlSYWlPUi1fYUhqbkU2MTEzRjVrckpwQnd2UHJWcFFhUzBkR01DQk83ZVVpWEFBWm1veWZOQ2hOSDJzbkJrbTkwQXBuTkpwOGU0YW45SkFncFZFUXFnUFM2ZFRoUHZzckp5ZXAxSnl5TVcyWkltZ1lFMWFiRlg?oc=5",
       "direction": "up",
       "direction_label": "Tác động Tăng giá",
       "color_code": "#10b981",
@@ -2023,7 +2023,7 @@
       "sjc_change_pct": 0.26,
       "ring_price": 138.99,
       "is_verified_milestone": false,
-      "is_live_news": false
+      "is_live_news": true
     },
     {
       "id": "evt_2026-10-23",
@@ -2056,7 +2056,7 @@
       "summary": "Ghi nhận lúc 22/10/2026 14:00 GMT+7 từ Laodong.vn. Kết thúc phiên 2026-10-22, giá vàng thế giới (XAU/USD) đóng cửa tại $4,060.40/oz (-2.16%), vàng miếng SJC niêm yết 142.23 triệu/lượng (-1.89%) và Nhẫn 9999 ở mức 139.67 triệu/lượng (DXY 101.61 (-0.17%) | Lợi suất US10Y 4.95% (-3.88%)).",
       "category": "Tin tức Vàng Việt Nam & Quốc tế",
       "source": "Laodong.vn",
-      "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxQeVQzRGJKWVNDbW1Ja3pqbWx3aGhiZ0tpZ0Vja05za21TaHF1d1c1ZGJzRVRNSmw0Mm9ZNC1Vd1lBQmVzY2xfRlhFbHk5X0dnM3NUVEU4NjJDWEtDenA2dDEwa0E5TldFSTRleWJFY1NJNkk2N0VwbjdMZ1ZuX0ZmLThMeXJ6eWFnSGlfRUJwVXVGVExTVXlJ?oc=5",
+      "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxPLTdIQTF2R0hUNTRiRWlHd1plRG1mR2RMbmJXVktSUzFXaG5RWHhSQWxHaUpSVk01YWhjRmFreHF1b2NIRWUzdXVjR3huTnh2QUNfWGktdkttTXdjSmZmalVMVDRLaU5RakFZODdRbHRHSTY1WWxTMDRidGhpU1hyRDFmYVk5Zmh3ZFpXck5aQWFYYnM?oc=5",
       "direction": "down",
       "direction_label": "Tác động Giảm giá",
       "color_code": "#f43f5e",
@@ -3837,7 +3837,7 @@
       "xau_price": 4019.7,
       "xau_change_pct": -2.85,
       "sjc_price": 133.68,
-      "sjc_change_pct": -1.62,
+      "sjc_change_pct": -1.58,
       "ring_price": 131.09,
       "is_verified_milestone": false,
       "is_live_news": false
@@ -3906,7 +3906,7 @@
       "xau_price": 4359.4,
       "xau_change_pct": 3.47,
       "sjc_price": 144.5,
-      "sjc_change_pct": 4.66,
+      "sjc_change_pct": 4.7,
       "ring_price": 141.95,
       "is_verified_milestone": false,
       "is_live_news": false
@@ -3952,7 +3952,7 @@
       "xau_price": 4133.0,
       "xau_change_pct": 3.31,
       "sjc_price": 137.23,
-      "sjc_change_pct": 4.47,
+      "sjc_change_pct": 4.5,
       "ring_price": 134.64,
       "is_verified_milestone": false,
       "is_live_news": false
@@ -3998,7 +3998,7 @@
       "xau_price": 3404.7,
       "xau_change_pct": -2.48,
       "sjc_price": 113.83,
-      "sjc_change_pct": -1.43,
+      "sjc_change_pct": -1.39,
       "ring_price": 111.51,
       "is_verified_milestone": false,
       "is_live_news": false
@@ -4007,8 +4007,8 @@
       "id": "evt_2025-08-01",
       "date": "2025-08-01",
       "timestamp_display": "01/08/2025 (Đóng cửa phiên Mỹ COMEX)",
-      "title": "Lực mua kỹ thuật & nhu cầu tích trữ đẩy giá vàng thế giới tăng +3.24% lên mốc $3,399.8/oz (SJC: 112.54 tr/lượng)",
-      "summary": "Lực cầu bắt đáy và mua ròng từ các quỹ định lượng giúp giá vàng tăng từ vùng đáy $3,331.4 lên đóng cửa tại $3,399.80/oz; vàng nhẫn 9999 giao dịch ở mức 110.10 triệu/lượng.",
+      "title": "Lực mua kỹ thuật & nhu cầu tích trữ đẩy giá vàng thế giới tăng +3.24% lên mốc $3,399.8/oz (SJC: 112.50 tr/lượng)",
+      "summary": "Lực cầu bắt đáy và mua ròng từ các quỹ định lượng giúp giá vàng tăng từ vùng đáy $3,331.4 lên đóng cửa tại $3,399.80/oz; vàng nhẫn 9999 giao dịch ở mức 110.06 triệu/lượng.",
       "category": "Dòng tiền & Động lượng Kỹ thuật",
       "source": "Yahoo Finance / COMEX Quantitative Attribution",
       "url": "",
@@ -4020,9 +4020,9 @@
       "impact_rank": 3,
       "xau_price": 3399.8,
       "xau_change_pct": 3.24,
-      "sjc_price": 112.54,
-      "sjc_change_pct": 2.24,
-      "ring_price": 110.1,
+      "sjc_price": 112.5,
+      "sjc_change_pct": 2.21,
+      "ring_price": 110.06,
       "is_verified_milestone": false,
       "is_live_news": false
     },
@@ -4044,7 +4044,7 @@
       "xau_price": 3397.2,
       "xau_change_pct": 3.29,
       "sjc_price": 112.78,
-      "sjc_change_pct": 3.3,
+      "sjc_change_pct": 3.34,
       "ring_price": 110.66,
       "is_verified_milestone": false,
       "is_live_news": false
@@ -4067,7 +4067,7 @@
       "xau_price": 3228.0,
       "xau_change_pct": -3.47,
       "sjc_price": 107.25,
-      "sjc_change_pct": -3.39,
+      "sjc_change_pct": -3.35,
       "ring_price": 104.62,
       "is_verified_milestone": false,
       "is_live_news": false
@@ -4136,7 +4136,7 @@
       "xau_price": 3322.3,
       "xau_change_pct": 2.44,
       "sjc_price": 110.39,
-      "sjc_change_pct": 2.09,
+      "sjc_change_pct": 2.13,
       "ring_price": 107.39,
       "is_verified_milestone": false,
       "is_live_news": false
@@ -4205,7 +4205,7 @@
       "xau_price": 3425.3,
       "xau_change_pct": 2.91,
       "sjc_price": 113.76,
-      "sjc_change_pct": 2.3,
+      "sjc_change_pct": 2.35,
       "ring_price": 110.38,
       "is_verified_milestone": false,
       "is_live_news": false
@@ -4296,9 +4296,9 @@
       "impact_rank": 3,
       "xau_price": 3035.4,
       "xau_change_pct": -2.76,
-      "sjc_price": 101.86,
-      "sjc_change_pct": -1.19,
-      "ring_price": 98.97,
+      "sjc_price": 101.82,
+      "sjc_change_pct": -1.23,
+      "ring_price": 98.93,
       "is_verified_milestone": false,
       "is_live_news": false
     },
@@ -19007,7 +19007,7 @@
         "ma200": 4519.32
       },
       {
-        "date": "2026-11-02",
+        "date": "2026-11-03",
         "open": 3890.0,
         "high": 3945.7,
         "low": 3889.0,
@@ -19021,13 +19021,13 @@
     "sjc": [
       {
         "date": "2021-11-02",
-        "open": 58.73,
-        "high": 58.96,
-        "low": 58.38,
-        "close": 58.58,
-        "buy": 56.58,
-        "sell": 58.58,
-        "world_converted": 49.08,
+        "open": 59.38,
+        "high": 59.61,
+        "low": 59.02,
+        "close": 59.23,
+        "buy": 57.23,
+        "sell": 59.23,
+        "world_converted": 49.73,
         "spread": 9.5,
         "ma20": null,
         "ma50": null,
@@ -19295,7 +19295,7 @@
         "sell": 58.89,
         "world_converted": 48.52,
         "spread": 10.37,
-        "ma20": 59.77,
+        "ma20": 59.8,
         "ma50": null,
         "ma200": null
       },
@@ -19716,7 +19716,7 @@
         "world_converted": 50.01,
         "spread": 12.61,
         "ma20": 61.14,
-        "ma50": 60.29,
+        "ma50": 60.3,
         "ma200": null
       },
       {
@@ -31061,15 +31061,15 @@
       },
       {
         "date": "2025-04-04",
-        "open": 105.07,
-        "high": 105.92,
-        "low": 101.62,
-        "close": 101.86,
-        "buy": 99.86,
-        "sell": 101.86,
-        "world_converted": 95.08,
+        "open": 105.03,
+        "high": 105.88,
+        "low": 101.59,
+        "close": 101.82,
+        "buy": 99.82,
+        "sell": 101.82,
+        "world_converted": 95.04,
         "spread": 6.78,
-        "ma20": 99.91,
+        "ma20": 99.9,
         "ma50": 96.92,
         "ma200": 88.03
       },
@@ -31131,15 +31131,15 @@
       },
       {
         "date": "2025-04-11",
-        "open": 106.98,
-        "high": 109.29,
-        "low": 106.81,
-        "close": 108.56,
-        "buy": 106.56,
-        "sell": 108.56,
-        "world_converted": 101.63,
+        "open": 106.94,
+        "high": 109.25,
+        "low": 106.77,
+        "close": 108.52,
+        "buy": 106.52,
+        "sell": 108.52,
+        "world_converted": 101.59,
         "spread": 6.93,
-        "ma20": 101.58,
+        "ma20": 101.57,
         "ma50": 98.19,
         "ma200": 88.66
       },
@@ -31181,21 +31181,21 @@
         "sell": 111.16,
         "world_converted": 104.21,
         "spread": 6.95,
-        "ma20": 103.0,
+        "ma20": 102.99,
         "ma50": 99.12,
         "ma200": 89.11
       },
       {
         "date": "2025-04-17",
-        "open": 112.11,
-        "high": 112.71,
-        "low": 110.04,
-        "close": 111.2,
-        "buy": 109.2,
-        "sell": 111.2,
-        "world_converted": 104.26,
+        "open": 112.07,
+        "high": 112.67,
+        "low": 110.0,
+        "close": 111.15,
+        "buy": 109.15,
+        "sell": 111.15,
+        "world_converted": 104.21,
         "spread": 6.94,
-        "ma20": 103.56,
+        "ma20": 103.55,
         "ma50": 99.44,
         "ma200": 89.28
       },
@@ -31223,7 +31223,7 @@
         "sell": 113.81,
         "world_converted": 106.91,
         "spread": 6.9,
-        "ma20": 105.01,
+        "ma20": 105.0,
         "ma50": 100.21,
         "ma200": 89.62
       },
@@ -31238,7 +31238,7 @@
         "world_converted": 103.12,
         "spread": 6.87,
         "ma20": 105.51,
-        "ma50": 100.49,
+        "ma50": 100.48,
         "ma200": 89.77
       },
       {
@@ -31253,20 +31253,20 @@
         "spread": 6.83,
         "ma20": 106.12,
         "ma50": 100.79,
-        "ma200": 89.94
+        "ma200": 89.93
       },
       {
         "date": "2025-04-25",
-        "open": 112.1,
-        "high": 112.94,
-        "low": 109.22,
-        "close": 110.11,
-        "buy": 108.11,
-        "sell": 110.11,
-        "world_converted": 103.32,
+        "open": 112.06,
+        "high": 112.9,
+        "low": 109.18,
+        "close": 110.07,
+        "buy": 108.07,
+        "sell": 110.07,
+        "world_converted": 103.28,
         "spread": 6.79,
-        "ma20": 106.59,
-        "ma50": 101.06,
+        "ma20": 106.58,
+        "ma50": 101.05,
         "ma200": 90.09
       },
       {
@@ -31279,7 +31279,7 @@
         "sell": 111.57,
         "world_converted": 104.82,
         "spread": 6.75,
-        "ma20": 107.09,
+        "ma20": 107.08,
         "ma50": 101.34,
         "ma200": 90.24
       },
@@ -31293,7 +31293,7 @@
         "sell": 111.12,
         "world_converted": 104.42,
         "spread": 6.7,
-        "ma20": 107.5,
+        "ma20": 107.49,
         "ma50": 101.65,
         "ma200": 90.4
       },
@@ -31307,8 +31307,8 @@
         "sell": 110.61,
         "world_converted": 103.96,
         "spread": 6.65,
-        "ma20": 107.84,
-        "ma50": 101.92,
+        "ma20": 107.83,
+        "ma50": 101.91,
         "ma200": 90.54
       },
       {
@@ -31321,23 +31321,23 @@
         "sell": 107.52,
         "world_converted": 100.93,
         "spread": 6.59,
-        "ma20": 108.0,
+        "ma20": 107.99,
         "ma50": 102.13,
         "ma200": 90.67
       },
       {
         "date": "2025-05-02",
-        "open": 108.26,
-        "high": 109.34,
-        "low": 107.55,
-        "close": 108.13,
-        "buy": 106.13,
-        "sell": 108.13,
-        "world_converted": 101.59,
+        "open": 108.22,
+        "high": 109.3,
+        "low": 107.51,
+        "close": 108.09,
+        "buy": 106.09,
+        "sell": 108.09,
+        "world_converted": 101.55,
         "spread": 6.54,
-        "ma20": 108.25,
+        "ma20": 108.24,
         "ma50": 102.34,
-        "ma200": 90.81
+        "ma200": 90.8
       },
       {
         "date": "2025-05-05",
@@ -31350,7 +31350,7 @@
         "world_converted": 103.91,
         "spread": 6.48,
         "ma20": 108.67,
-        "ma50": 102.61,
+        "ma50": 102.6,
         "ma200": 90.95
       },
       {
@@ -31363,8 +31363,8 @@
         "sell": 113.5,
         "world_converted": 107.08,
         "spread": 6.42,
-        "ma20": 109.39,
-        "ma50": 102.93,
+        "ma20": 109.38,
+        "ma50": 102.92,
         "ma200": 91.12
       },
       {
@@ -31377,8 +31377,8 @@
         "sell": 112.5,
         "world_converted": 106.13,
         "spread": 6.37,
-        "ma20": 109.98,
-        "ma50": 103.26,
+        "ma20": 109.97,
+        "ma50": 103.25,
         "ma200": 91.29
       },
       {
@@ -31391,21 +31391,21 @@
         "sell": 109.79,
         "world_converted": 103.47,
         "spread": 6.32,
-        "ma20": 110.31,
+        "ma20": 110.3,
         "ma50": 103.52,
         "ma200": 91.44
       },
       {
         "date": "2025-05-09",
-        "open": 109.95,
-        "high": 111.44,
-        "low": 108.82,
-        "close": 111.01,
-        "buy": 109.01,
-        "sell": 111.01,
-        "world_converted": 104.74,
+        "open": 109.92,
+        "high": 111.4,
+        "low": 108.79,
+        "close": 110.97,
+        "buy": 108.97,
+        "sell": 110.97,
+        "world_converted": 104.7,
         "spread": 6.27,
-        "ma20": 110.59,
+        "ma20": 110.58,
         "ma50": 103.83,
         "ma200": 91.59
       },
@@ -31419,7 +31419,7 @@
         "sell": 107.25,
         "world_converted": 101.03,
         "spread": 6.22,
-        "ma20": 110.52,
+        "ma20": 110.51,
         "ma50": 104.1,
         "ma200": 91.74
       },
@@ -31433,9 +31433,9 @@
         "sell": 107.8,
         "world_converted": 101.62,
         "spread": 6.18,
-        "ma20": 110.54,
-        "ma50": 104.35,
-        "ma200": 91.89
+        "ma20": 110.53,
+        "ma50": 104.34,
+        "ma200": 91.88
       },
       {
         "date": "2025-05-14",
@@ -31447,7 +31447,7 @@
         "sell": 105.79,
         "world_converted": 99.65,
         "spread": 6.14,
-        "ma20": 110.45,
+        "ma20": 110.44,
         "ma50": 104.54,
         "ma200": 92.02
       },
@@ -31462,20 +31462,20 @@
         "world_converted": 100.83,
         "spread": 6.11,
         "ma20": 110.23,
-        "ma50": 104.76,
+        "ma50": 104.75,
         "ma200": 92.16
       },
       {
         "date": "2025-05-16",
-        "open": 107.69,
-        "high": 108.22,
-        "low": 104.81,
-        "close": 105.92,
-        "buy": 103.92,
-        "sell": 105.92,
-        "world_converted": 99.83,
+        "open": 107.65,
+        "high": 108.18,
+        "low": 104.77,
+        "close": 105.88,
+        "buy": 103.88,
+        "sell": 105.88,
+        "world_converted": 99.79,
         "spread": 6.09,
-        "ma20": 109.97,
+        "ma20": 109.96,
         "ma50": 104.95,
         "ma200": 92.29
       },
@@ -31489,8 +31489,8 @@
         "sell": 107.17,
         "world_converted": 101.1,
         "spread": 6.07,
-        "ma20": 109.64,
-        "ma50": 105.19,
+        "ma20": 109.63,
+        "ma50": 105.18,
         "ma200": 92.42
       },
       {
@@ -31503,8 +31503,8 @@
         "sell": 108.82,
         "world_converted": 102.76,
         "spread": 6.06,
-        "ma20": 109.39,
-        "ma50": 105.46,
+        "ma20": 109.38,
+        "ma50": 105.45,
         "ma200": 92.56
       },
       {
@@ -31517,7 +31517,7 @@
         "sell": 109.72,
         "world_converted": 103.67,
         "spread": 6.05,
-        "ma20": 109.38,
+        "ma20": 109.37,
         "ma50": 105.73,
         "ma200": 92.71
       },
@@ -31532,18 +31532,18 @@
         "world_converted": 103.18,
         "spread": 6.05,
         "ma20": 109.24,
-        "ma50": 105.99,
+        "ma50": 105.98,
         "ma200": 92.85
       },
       {
         "date": "2025-05-23",
-        "open": 109.27,
-        "high": 111.66,
-        "low": 108.82,
-        "close": 111.49,
-        "buy": 109.49,
-        "sell": 111.49,
-        "world_converted": 105.43,
+        "open": 109.23,
+        "high": 111.62,
+        "low": 108.78,
+        "close": 111.45,
+        "buy": 109.45,
+        "sell": 111.45,
+        "world_converted": 105.39,
         "spread": 6.06,
         "ma20": 109.31,
         "ma50": 106.26,
@@ -31559,8 +31559,8 @@
         "sell": 109.15,
         "world_converted": 103.07,
         "spread": 6.08,
-        "ma20": 109.19,
-        "ma50": 106.48,
+        "ma20": 109.18,
+        "ma50": 106.47,
         "ma200": 93.15
       },
       {
@@ -31573,7 +31573,7 @@
         "sell": 109.19,
         "world_converted": 103.09,
         "spread": 6.1,
-        "ma20": 109.1,
+        "ma20": 109.09,
         "ma50": 106.69,
         "ma200": 93.29
       },
@@ -31587,22 +31587,22 @@
         "sell": 110.1,
         "world_converted": 103.97,
         "spread": 6.13,
-        "ma20": 109.07,
+        "ma20": 109.06,
         "ma50": 106.9,
-        "ma200": 93.44
+        "ma200": 93.43
       },
       {
         "date": "2025-05-30",
-        "open": 110.0,
-        "high": 110.24,
-        "low": 108.46,
-        "close": 109.18,
-        "buy": 107.18,
-        "sell": 109.18,
-        "world_converted": 103.02,
+        "open": 109.96,
+        "high": 110.2,
+        "low": 108.42,
+        "close": 109.14,
+        "buy": 107.14,
+        "sell": 109.14,
+        "world_converted": 102.98,
         "spread": 6.16,
-        "ma20": 109.15,
-        "ma50": 107.09,
+        "ma20": 109.14,
+        "ma50": 107.08,
         "ma200": 93.57
       },
       {
@@ -31615,8 +31615,8 @@
         "sell": 112.78,
         "world_converted": 106.58,
         "spread": 6.2,
-        "ma20": 109.39,
-        "ma50": 107.35,
+        "ma20": 109.38,
+        "ma50": 107.34,
         "ma200": 93.73
       },
       {
@@ -31629,8 +31629,8 @@
         "sell": 112.27,
         "world_converted": 106.02,
         "spread": 6.25,
-        "ma20": 109.48,
-        "ma50": 107.61,
+        "ma20": 109.47,
+        "ma50": 107.6,
         "ma200": 93.88
       },
       {
@@ -31643,7 +31643,7 @@
         "sell": 113.15,
         "world_converted": 106.85,
         "spread": 6.3,
-        "ma20": 109.46,
+        "ma20": 109.45,
         "ma50": 107.88,
         "ma200": 94.03
       },
@@ -31657,22 +31657,22 @@
         "sell": 112.38,
         "world_converted": 106.03,
         "spread": 6.35,
-        "ma20": 109.46,
-        "ma50": 108.14,
+        "ma20": 109.45,
+        "ma50": 108.13,
         "ma200": 94.18
       },
       {
         "date": "2025-06-06",
-        "open": 112.19,
-        "high": 112.99,
-        "low": 110.52,
-        "close": 111.23,
-        "buy": 109.23,
-        "sell": 111.23,
-        "world_converted": 104.83,
+        "open": 112.15,
+        "high": 112.95,
+        "low": 110.48,
+        "close": 111.18,
+        "buy": 109.18,
+        "sell": 111.18,
+        "world_converted": 104.78,
         "spread": 6.4,
-        "ma20": 109.53,
-        "ma50": 108.37,
+        "ma20": 109.52,
+        "ma50": 108.36,
         "ma200": 94.32
       },
       {
@@ -31699,8 +31699,8 @@
         "sell": 111.28,
         "world_converted": 104.77,
         "spread": 6.51,
-        "ma20": 109.77,
-        "ma50": 108.78,
+        "ma20": 109.76,
+        "ma50": 108.77,
         "ma200": 94.61
       },
       {
@@ -31713,9 +31713,9 @@
         "sell": 111.43,
         "world_converted": 104.86,
         "spread": 6.57,
-        "ma20": 109.95,
-        "ma50": 108.95,
-        "ma200": 94.75
+        "ma20": 109.94,
+        "ma50": 108.94,
+        "ma200": 94.74
       },
       {
         "date": "2025-06-12",
@@ -31727,23 +31727,23 @@
         "sell": 113.36,
         "world_converted": 106.74,
         "spread": 6.62,
-        "ma20": 110.33,
-        "ma50": 109.14,
-        "ma200": 94.9
+        "ma20": 110.32,
+        "ma50": 109.13,
+        "ma200": 94.89
       },
       {
         "date": "2025-06-13",
-        "open": 113.39,
-        "high": 115.46,
-        "low": 113.02,
-        "close": 114.83,
-        "buy": 112.83,
-        "sell": 114.83,
-        "world_converted": 108.15,
+        "open": 113.35,
+        "high": 115.42,
+        "low": 112.97,
+        "close": 114.79,
+        "buy": 112.79,
+        "sell": 114.79,
+        "world_converted": 108.11,
         "spread": 6.68,
-        "ma20": 110.72,
-        "ma50": 109.35,
-        "ma200": 95.06
+        "ma20": 110.71,
+        "ma50": 109.34,
+        "ma200": 95.05
       },
       {
         "date": "2025-06-16",
@@ -31755,8 +31755,8 @@
         "sell": 113.98,
         "world_converted": 107.25,
         "spread": 6.73,
-        "ma20": 111.12,
-        "ma50": 109.57,
+        "ma20": 111.11,
+        "ma50": 109.56,
         "ma200": 95.21
       },
       {
@@ -31769,8 +31769,8 @@
         "sell": 113.86,
         "world_converted": 107.09,
         "spread": 6.77,
-        "ma20": 111.46,
-        "ma50": 109.81,
+        "ma20": 111.45,
+        "ma50": 109.8,
         "ma200": 95.36
       },
       {
@@ -31783,23 +31783,23 @@
         "sell": 114.03,
         "world_converted": 107.21,
         "spread": 6.82,
-        "ma20": 111.72,
-        "ma50": 110.1,
+        "ma20": 111.71,
+        "ma50": 110.09,
         "ma200": 95.51
       },
       {
         "date": "2025-06-20",
-        "open": 112.94,
-        "high": 113.66,
-        "low": 111.83,
-        "close": 112.9,
-        "buy": 110.9,
-        "sell": 112.9,
-        "world_converted": 106.05,
+        "open": 112.9,
+        "high": 113.62,
+        "low": 111.79,
+        "close": 112.86,
+        "buy": 110.86,
+        "sell": 112.86,
+        "world_converted": 106.01,
         "spread": 6.85,
-        "ma20": 111.88,
-        "ma50": 110.35,
-        "ma200": 95.67
+        "ma20": 111.87,
+        "ma50": 110.34,
+        "ma200": 95.66
       },
       {
         "date": "2025-06-23",
@@ -31811,7 +31811,7 @@
         "sell": 114.09,
         "world_converted": 107.2,
         "spread": 6.89,
-        "ma20": 112.12,
+        "ma20": 112.11,
         "ma50": 110.56,
         "ma200": 95.82
       },
@@ -31825,8 +31825,8 @@
         "sell": 112.02,
         "world_converted": 105.11,
         "spread": 6.91,
-        "ma20": 112.15,
-        "ma50": 110.7,
+        "ma20": 112.14,
+        "ma50": 110.69,
         "ma200": 95.97
       },
       {
@@ -31839,8 +31839,8 @@
         "sell": 112.33,
         "world_converted": 105.4,
         "spread": 6.93,
-        "ma20": 112.31,
-        "ma50": 110.77,
+        "ma20": 112.3,
+        "ma50": 110.76,
         "ma200": 96.11
       },
       {
@@ -31853,22 +31853,22 @@
         "sell": 112.29,
         "world_converted": 105.35,
         "spread": 6.94,
-        "ma20": 112.46,
-        "ma50": 110.87,
+        "ma20": 112.45,
+        "ma50": 110.86,
         "ma200": 96.26
       },
       {
         "date": "2025-06-27",
-        "open": 111.61,
-        "high": 111.76,
-        "low": 109.12,
-        "close": 109.93,
-        "buy": 107.93,
-        "sell": 109.93,
-        "world_converted": 102.98,
+        "open": 111.57,
+        "high": 111.72,
+        "low": 109.08,
+        "close": 109.89,
+        "buy": 107.89,
+        "sell": 109.89,
+        "world_converted": 102.94,
         "spread": 6.95,
-        "ma20": 112.45,
-        "ma50": 110.91,
+        "ma20": 112.44,
+        "ma50": 110.9,
         "ma200": 96.4
       },
       {
@@ -31881,9 +31881,9 @@
         "sell": 111.11,
         "world_converted": 104.16,
         "spread": 6.95,
-        "ma20": 112.55,
-        "ma50": 110.91,
-        "ma200": 96.55
+        "ma20": 112.54,
+        "ma50": 110.9,
+        "ma200": 96.54
       },
       {
         "date": "2025-07-01",
@@ -31895,8 +31895,8 @@
         "sell": 112.39,
         "world_converted": 105.45,
         "spread": 6.94,
-        "ma20": 112.53,
-        "ma50": 110.94,
+        "ma20": 112.52,
+        "ma50": 110.93,
         "ma200": 96.69
       },
       {
@@ -31909,9 +31909,9 @@
         "sell": 112.85,
         "world_converted": 105.92,
         "spread": 6.93,
-        "ma20": 112.56,
-        "ma50": 110.92,
-        "ma200": 96.83
+        "ma20": 112.55,
+        "ma50": 110.91,
+        "ma200": 96.82
       },
       {
         "date": "2025-07-03",
@@ -31923,23 +31923,23 @@
         "sell": 112.4,
         "world_converted": 105.5,
         "spread": 6.9,
-        "ma20": 112.52,
-        "ma50": 110.89,
-        "ma200": 96.97
+        "ma20": 112.51,
+        "ma50": 110.88,
+        "ma200": 96.96
       },
       {
         "date": "2025-07-04",
-        "open": 111.34,
-        "high": 112.12,
-        "low": 111.12,
-        "close": 111.7,
-        "buy": 109.7,
-        "sell": 111.7,
-        "world_converted": 104.82,
+        "open": 111.3,
+        "high": 112.08,
+        "low": 111.08,
+        "close": 111.66,
+        "buy": 109.66,
+        "sell": 111.66,
+        "world_converted": 104.78,
         "spread": 6.88,
-        "ma20": 112.49,
+        "ma20": 112.48,
         "ma50": 110.92,
-        "ma200": 97.11
+        "ma200": 97.1
       },
       {
         "date": "2025-07-07",
@@ -31951,9 +31951,9 @@
         "sell": 112.11,
         "world_converted": 105.27,
         "spread": 6.84,
-        "ma20": 112.53,
-        "ma50": 110.93,
-        "ma200": 97.25
+        "ma20": 112.52,
+        "ma50": 110.92,
+        "ma200": 97.24
       },
       {
         "date": "2025-07-08",
@@ -31966,7 +31966,7 @@
         "world_converted": 104.41,
         "spread": 6.8,
         "ma20": 112.5,
-        "ma50": 110.95,
+        "ma50": 110.94,
         "ma200": 97.38
       },
       {
@@ -31979,9 +31979,9 @@
         "sell": 111.42,
         "world_converted": 104.66,
         "spread": 6.76,
-        "ma20": 112.51,
-        "ma50": 110.95,
-        "ma200": 97.51
+        "ma20": 112.5,
+        "ma50": 110.94,
+        "ma200": 97.5
       },
       {
         "date": "2025-07-10",
@@ -31993,23 +31993,23 @@
         "sell": 111.36,
         "world_converted": 104.65,
         "spread": 6.71,
-        "ma20": 112.51,
-        "ma50": 110.95,
-        "ma200": 97.64
+        "ma20": 112.5,
+        "ma50": 110.94,
+        "ma200": 97.63
       },
       {
         "date": "2025-07-11",
-        "open": 111.06,
-        "high": 112.73,
-        "low": 110.89,
-        "close": 112.03,
-        "buy": 110.03,
-        "sell": 112.03,
-        "world_converted": 105.37,
+        "open": 111.02,
+        "high": 112.69,
+        "low": 110.85,
+        "close": 111.99,
+        "buy": 109.99,
+        "sell": 111.99,
+        "world_converted": 105.33,
         "spread": 6.66,
-        "ma20": 112.44,
-        "ma50": 110.98,
-        "ma200": 97.77
+        "ma20": 112.43,
+        "ma50": 110.97,
+        "ma200": 97.76
       },
       {
         "date": "2025-07-14",
@@ -32021,9 +32021,9 @@
         "sell": 112.31,
         "world_converted": 105.7,
         "spread": 6.61,
-        "ma20": 112.32,
-        "ma50": 111.08,
-        "ma200": 97.9
+        "ma20": 112.31,
+        "ma50": 111.07,
+        "ma200": 97.89
       },
       {
         "date": "2025-07-15",
@@ -32035,8 +32035,8 @@
         "sell": 111.63,
         "world_converted": 105.08,
         "spread": 6.55,
-        "ma20": 112.2,
-        "ma50": 111.15,
+        "ma20": 112.19,
+        "ma50": 111.14,
         "ma200": 98.02
       },
       {
@@ -32050,8 +32050,8 @@
         "world_converted": 105.86,
         "spread": 6.5,
         "ma20": 112.12,
-        "ma50": 111.19,
-        "ma200": 98.15
+        "ma50": 111.18,
+        "ma200": 98.14
       },
       {
         "date": "2025-07-17",
@@ -32064,20 +32064,20 @@
         "world_converted": 105.41,
         "spread": 6.44,
         "ma20": 112.01,
-        "ma50": 111.15,
+        "ma50": 111.14,
         "ma200": 98.28
       },
       {
         "date": "2025-07-18",
-        "open": 111.23,
-        "high": 112.03,
-        "low": 110.76,
-        "close": 111.57,
-        "buy": 109.57,
-        "sell": 111.57,
-        "world_converted": 105.19,
+        "open": 111.19,
+        "high": 111.98,
+        "low": 110.72,
+        "close": 111.53,
+        "buy": 109.53,
+        "sell": 111.53,
+        "world_converted": 105.15,
         "spread": 6.38,
-        "ma20": 111.95,
+        "ma20": 111.94,
         "ma50": 111.13,
         "ma200": 98.41
       },
@@ -32091,8 +32091,8 @@
         "sell": 113.64,
         "world_converted": 107.31,
         "spread": 6.33,
-        "ma20": 111.93,
-        "ma50": 111.21,
+        "ma20": 111.92,
+        "ma50": 111.2,
         "ma200": 98.55
       },
       {
@@ -32105,8 +32105,8 @@
         "sell": 114.73,
         "world_converted": 108.45,
         "spread": 6.28,
-        "ma20": 112.06,
-        "ma50": 111.29,
+        "ma20": 112.05,
+        "ma50": 111.28,
         "ma200": 98.69
       },
       {
@@ -32119,8 +32119,8 @@
         "sell": 113.23,
         "world_converted": 107.0,
         "spread": 6.23,
-        "ma20": 112.11,
-        "ma50": 111.41,
+        "ma20": 112.1,
+        "ma50": 111.4,
         "ma200": 98.82
       },
       {
@@ -32133,22 +32133,22 @@
         "sell": 112.39,
         "world_converted": 106.2,
         "spread": 6.19,
-        "ma20": 112.11,
-        "ma50": 111.5,
+        "ma20": 112.1,
+        "ma50": 111.49,
         "ma200": 98.95
       },
       {
         "date": "2025-07-25",
-        "open": 111.77,
-        "high": 112.06,
-        "low": 110.16,
-        "close": 110.63,
-        "buy": 108.63,
-        "sell": 110.63,
-        "world_converted": 104.48,
+        "open": 111.73,
+        "high": 112.02,
+        "low": 110.12,
+        "close": 110.59,
+        "buy": 108.59,
+        "sell": 110.59,
+        "world_converted": 104.44,
         "spread": 6.15,
-        "ma20": 112.15,
-        "ma50": 111.59,
+        "ma20": 112.14,
+        "ma50": 111.58,
         "ma200": 99.08
       },
       {
@@ -32161,8 +32161,8 @@
         "sell": 110.54,
         "world_converted": 104.42,
         "spread": 6.12,
-        "ma20": 112.12,
-        "ma50": 111.67,
+        "ma20": 112.11,
+        "ma50": 111.66,
         "ma200": 99.21
       },
       {
@@ -32175,8 +32175,8 @@
         "sell": 111.07,
         "world_converted": 104.98,
         "spread": 6.09,
-        "ma20": 112.05,
-        "ma50": 111.77,
+        "ma20": 112.04,
+        "ma50": 111.76,
         "ma200": 99.34
       },
       {
@@ -32189,9 +32189,9 @@
         "sell": 110.18,
         "world_converted": 104.11,
         "spread": 6.07,
-        "ma20": 111.92,
-        "ma50": 111.83,
-        "ma200": 99.46
+        "ma20": 111.91,
+        "ma50": 111.82,
+        "ma200": 99.45
       },
       {
         "date": "2025-07-31",
@@ -32203,23 +32203,23 @@
         "sell": 110.07,
         "world_converted": 104.01,
         "spread": 6.06,
-        "ma20": 111.8,
+        "ma20": 111.79,
         "ma50": 111.85,
-        "ma200": 99.58
+        "ma200": 99.57
       },
       {
         "date": "2025-08-01",
-        "open": 110.75,
-        "high": 113.23,
-        "low": 110.25,
-        "close": 112.54,
-        "buy": 110.54,
-        "sell": 112.54,
-        "world_converted": 106.49,
+        "open": 110.71,
+        "high": 113.19,
+        "low": 110.21,
+        "close": 112.5,
+        "buy": 110.5,
+        "sell": 112.5,
+        "world_converted": 106.45,
         "spread": 6.05,
         "ma20": 111.84,
-        "ma50": 111.91,
-        "ma200": 99.71
+        "ma50": 111.9,
+        "ma200": 99.7
       },
       {
         "date": "2025-08-04",
@@ -32231,8 +32231,8 @@
         "sell": 114.18,
         "world_converted": 108.13,
         "spread": 6.05,
-        "ma20": 111.95,
-        "ma50": 112.01,
+        "ma20": 111.94,
+        "ma50": 112.0,
         "ma200": 99.84
       },
       {
@@ -32245,8 +32245,8 @@
         "sell": 114.66,
         "world_converted": 108.6,
         "spread": 6.06,
-        "ma20": 112.12,
-        "ma50": 112.07,
+        "ma20": 112.11,
+        "ma50": 112.06,
         "ma200": 99.97
       },
       {
@@ -32260,7 +32260,7 @@
         "world_converted": 108.45,
         "spread": 6.07,
         "ma20": 112.27,
-        "ma50": 112.18,
+        "ma50": 112.17,
         "ma200": 100.1
       },
       {
@@ -32274,21 +32274,21 @@
         "world_converted": 109.05,
         "spread": 6.09,
         "ma20": 112.46,
-        "ma50": 112.3,
+        "ma50": 112.29,
         "ma200": 100.23
       },
       {
         "date": "2025-08-08",
-        "open": 115.37,
-        "high": 116.97,
-        "low": 113.88,
-        "close": 115.48,
-        "buy": 113.48,
-        "sell": 115.48,
-        "world_converted": 109.36,
+        "open": 115.33,
+        "high": 116.93,
+        "low": 113.84,
+        "close": 115.44,
+        "buy": 113.44,
+        "sell": 115.44,
+        "world_converted": 109.32,
         "spread": 6.12,
-        "ma20": 112.64,
-        "ma50": 112.41,
+        "ma20": 112.63,
+        "ma50": 112.4,
         "ma200": 100.35
       },
       {
@@ -32301,8 +32301,8 @@
         "sell": 113.83,
         "world_converted": 107.68,
         "spread": 6.15,
-        "ma20": 112.71,
-        "ma50": 112.5,
+        "ma20": 112.7,
+        "ma50": 112.49,
         "ma200": 100.47
       },
       {
@@ -32315,8 +32315,8 @@
         "sell": 113.74,
         "world_converted": 107.55,
         "spread": 6.19,
-        "ma20": 112.82,
-        "ma50": 112.52,
+        "ma20": 112.81,
+        "ma50": 112.51,
         "ma200": 100.59
       },
       {
@@ -32329,8 +32329,8 @@
         "sell": 114.16,
         "world_converted": 107.93,
         "spread": 6.23,
-        "ma20": 112.91,
-        "ma50": 112.56,
+        "ma20": 112.9,
+        "ma50": 112.55,
         "ma200": 100.71
       },
       {
@@ -32343,22 +32343,22 @@
         "sell": 113.27,
         "world_converted": 106.99,
         "spread": 6.28,
-        "ma20": 112.98,
-        "ma50": 112.56,
-        "ma200": 100.83
+        "ma20": 112.97,
+        "ma50": 112.55,
+        "ma200": 100.82
       },
       {
         "date": "2025-08-15",
-        "open": 112.3,
-        "high": 112.81,
-        "low": 111.98,
-        "close": 112.28,
-        "buy": 110.28,
-        "sell": 112.28,
-        "world_converted": 105.95,
+        "open": 112.26,
+        "high": 112.77,
+        "low": 111.94,
+        "close": 112.24,
+        "buy": 110.24,
+        "sell": 112.24,
+        "world_converted": 105.91,
         "spread": 6.33,
         "ma20": 113.01,
-        "ma50": 112.56,
+        "ma50": 112.55,
         "ma200": 100.93
       },
       {
@@ -32371,9 +32371,9 @@
         "sell": 113.4,
         "world_converted": 107.01,
         "spread": 6.39,
-        "ma20": 113.0,
-        "ma50": 112.6,
-        "ma200": 101.04
+        "ma20": 112.99,
+        "ma50": 112.59,
+        "ma200": 101.03
       },
       {
         "date": "2025-08-19",
@@ -32385,7 +32385,7 @@
         "sell": 112.9,
         "world_converted": 106.46,
         "spread": 6.44,
-        "ma20": 112.91,
+        "ma20": 112.9,
         "ma50": 112.62,
         "ma200": 101.15
       },
@@ -32399,7 +32399,7 @@
         "sell": 114.23,
         "world_converted": 107.73,
         "spread": 6.5,
-        "ma20": 112.96,
+        "ma20": 112.95,
         "ma50": 112.68,
         "ma200": 101.27
       },
@@ -32413,23 +32413,23 @@
         "sell": 114.2,
         "world_converted": 107.65,
         "spread": 6.55,
-        "ma20": 113.05,
-        "ma50": 112.74,
+        "ma20": 113.04,
+        "ma50": 112.73,
         "ma200": 101.39
       },
       {
         "date": "2025-08-22",
-        "open": 112.58,
-        "high": 113.99,
-        "low": 111.79,
-        "close": 113.69,
-        "buy": 111.69,
-        "sell": 113.69,
-        "world_converted": 107.08,
+        "open": 112.54,
+        "high": 113.95,
+        "low": 111.75,
+        "close": 113.65,
+        "buy": 111.65,
+        "sell": 113.65,
+        "world_converted": 107.04,
         "spread": 6.61,
         "ma20": 113.2,
-        "ma50": 112.75,
-        "ma200": 101.51
+        "ma50": 112.74,
+        "ma200": 101.5
       },
       {
         "date": "2025-08-25",
@@ -32441,9 +32441,9 @@
         "sell": 115.02,
         "world_converted": 108.36,
         "spread": 6.66,
-        "ma20": 113.43,
-        "ma50": 112.75,
-        "ma200": 101.64
+        "ma20": 113.42,
+        "ma50": 112.74,
+        "ma200": 101.63
       },
       {
         "date": "2025-08-26",
@@ -32455,7 +32455,7 @@
         "sell": 115.73,
         "world_converted": 109.02,
         "spread": 6.71,
-        "ma20": 113.66,
+        "ma20": 113.65,
         "ma50": 112.78,
         "ma200": 101.77
       },
@@ -32469,9 +32469,9 @@
         "sell": 116.42,
         "world_converted": 109.66,
         "spread": 6.76,
-        "ma20": 113.97,
-        "ma50": 112.84,
-        "ma200": 101.91
+        "ma20": 113.96,
+        "ma50": 112.83,
+        "ma200": 101.9
       },
       {
         "date": "2025-08-28",
@@ -32483,22 +32483,22 @@
         "sell": 117.22,
         "world_converted": 110.42,
         "spread": 6.8,
-        "ma20": 114.33,
-        "ma50": 112.9,
+        "ma20": 114.32,
+        "ma50": 112.89,
         "ma200": 102.06
       },
       {
         "date": "2025-08-29",
-        "open": 115.76,
-        "high": 117.2,
-        "low": 115.16,
-        "close": 116.97,
-        "buy": 114.97,
-        "sell": 116.97,
-        "world_converted": 110.13,
+        "open": 115.71,
+        "high": 117.16,
+        "low": 115.12,
+        "close": 116.93,
+        "buy": 114.93,
+        "sell": 116.93,
+        "world_converted": 110.09,
         "spread": 6.84,
-        "ma20": 114.55,
-        "ma50": 112.98,
+        "ma20": 114.54,
+        "ma50": 112.97,
         "ma200": 102.21
       },
       {
@@ -32511,9 +32511,9 @@
         "sell": 120.96,
         "world_converted": 114.08,
         "spread": 6.88,
-        "ma20": 114.89,
-        "ma50": 113.12,
-        "ma200": 102.39
+        "ma20": 114.88,
+        "ma50": 113.11,
+        "ma200": 102.38
       },
       {
         "date": "2025-09-03",
@@ -32525,8 +32525,8 @@
         "sell": 122.46,
         "world_converted": 115.56,
         "spread": 6.9,
-        "ma20": 115.28,
-        "ma50": 113.33,
+        "ma20": 115.27,
+        "ma50": 113.32,
         "ma200": 102.57
       },
       {
@@ -32539,22 +32539,22 @@
         "sell": 121.55,
         "world_converted": 114.62,
         "spread": 6.93,
-        "ma20": 115.63,
-        "ma50": 113.51,
+        "ma20": 115.62,
+        "ma50": 113.5,
         "ma200": 102.75
       },
       {
         "date": "2025-09-05",
-        "open": 119.76,
-        "high": 121.59,
-        "low": 119.41,
-        "close": 121.37,
-        "buy": 119.37,
-        "sell": 121.37,
-        "world_converted": 114.43,
+        "open": 119.72,
+        "high": 121.55,
+        "low": 119.36,
+        "close": 121.33,
+        "buy": 119.33,
+        "sell": 121.33,
+        "world_converted": 114.39,
         "spread": 6.94,
-        "ma20": 115.94,
-        "ma50": 113.69,
+        "ma20": 115.93,
+        "ma50": 113.68,
         "ma200": 102.92
       },
       {
@@ -32567,9 +32567,9 @@
         "sell": 123.93,
         "world_converted": 116.98,
         "spread": 6.95,
-        "ma20": 116.37,
-        "ma50": 113.97,
-        "ma200": 103.11
+        "ma20": 116.36,
+        "ma50": 113.96,
+        "ma200": 103.1
       },
       {
         "date": "2025-09-09",
@@ -32582,8 +32582,8 @@
         "world_converted": 117.02,
         "spread": 6.95,
         "ma20": 116.87,
-        "ma50": 114.23,
-        "ma200": 103.29
+        "ma50": 114.22,
+        "ma200": 103.28
       },
       {
         "date": "2025-09-10",
@@ -32595,8 +32595,8 @@
         "sell": 124.0,
         "world_converted": 117.06,
         "spread": 6.94,
-        "ma20": 117.39,
-        "ma50": 114.46,
+        "ma20": 117.38,
+        "ma50": 114.45,
         "ma200": 103.46
       },
       {
@@ -32609,23 +32609,23 @@
         "sell": 123.75,
         "world_converted": 116.82,
         "spread": 6.93,
-        "ma20": 117.87,
-        "ma50": 114.68,
-        "ma200": 103.63
+        "ma20": 117.86,
+        "ma50": 114.67,
+        "ma200": 103.62
       },
       {
         "date": "2025-09-12",
-        "open": 121.95,
-        "high": 122.81,
-        "low": 121.63,
-        "close": 122.38,
-        "buy": 120.38,
-        "sell": 122.38,
-        "world_converted": 115.47,
+        "open": 121.91,
+        "high": 122.77,
+        "low": 121.59,
+        "close": 122.33,
+        "buy": 120.33,
+        "sell": 122.33,
+        "world_converted": 115.42,
         "spread": 6.91,
-        "ma20": 118.32,
-        "ma50": 114.88,
-        "ma200": 103.81
+        "ma20": 118.31,
+        "ma50": 114.87,
+        "ma200": 103.8
       },
       {
         "date": "2025-09-15",
@@ -32637,9 +32637,9 @@
         "sell": 125.05,
         "world_converted": 118.17,
         "spread": 6.88,
-        "ma20": 118.96,
-        "ma50": 115.15,
-        "ma200": 104.0
+        "ma20": 118.95,
+        "ma50": 115.14,
+        "ma200": 103.99
       },
       {
         "date": "2025-09-16",
@@ -32651,8 +32651,8 @@
         "sell": 125.33,
         "world_converted": 118.48,
         "spread": 6.85,
-        "ma20": 119.56,
-        "ma50": 115.41,
+        "ma20": 119.55,
+        "ma50": 115.4,
         "ma200": 104.18
       },
       {
@@ -32665,9 +32665,9 @@
         "sell": 124.88,
         "world_converted": 118.07,
         "spread": 6.81,
-        "ma20": 120.16,
+        "ma20": 120.15,
         "ma50": 115.68,
-        "ma200": 104.37
+        "ma200": 104.36
       },
       {
         "date": "2025-09-18",
@@ -32679,23 +32679,23 @@
         "sell": 123.65,
         "world_converted": 116.88,
         "spread": 6.77,
-        "ma20": 120.63,
-        "ma50": 115.93,
-        "ma200": 104.55
+        "ma20": 120.62,
+        "ma50": 115.92,
+        "ma200": 104.54
       },
       {
         "date": "2025-09-19",
-        "open": 121.92,
-        "high": 123.38,
-        "low": 121.35,
-        "close": 122.8,
-        "buy": 120.8,
-        "sell": 122.8,
-        "world_converted": 116.08,
+        "open": 121.87,
+        "high": 123.33,
+        "low": 121.31,
+        "close": 122.75,
+        "buy": 120.75,
+        "sell": 122.75,
+        "world_converted": 116.03,
         "spread": 6.72,
-        "ma20": 121.06,
-        "ma50": 116.16,
-        "ma200": 104.72
+        "ma20": 121.05,
+        "ma50": 116.15,
+        "ma200": 104.71
       },
       {
         "date": "2025-09-22",
@@ -32707,8 +32707,8 @@
         "sell": 126.81,
         "world_converted": 120.14,
         "spread": 6.67,
-        "ma20": 121.71,
-        "ma50": 116.45,
+        "ma20": 121.7,
+        "ma50": 116.44,
         "ma200": 104.91
       },
       {
@@ -32721,8 +32721,8 @@
         "sell": 128.05,
         "world_converted": 121.43,
         "spread": 6.62,
-        "ma20": 122.36,
-        "ma50": 116.77,
+        "ma20": 122.35,
+        "ma50": 116.76,
         "ma200": 105.11
       },
       {
@@ -32735,9 +32735,9 @@
         "sell": 126.48,
         "world_converted": 119.91,
         "spread": 6.57,
-        "ma20": 122.9,
-        "ma50": 117.07,
-        "ma200": 105.31
+        "ma20": 122.89,
+        "ma50": 117.06,
+        "ma200": 105.3
       },
       {
         "date": "2025-09-25",
@@ -32749,23 +32749,23 @@
         "sell": 126.45,
         "world_converted": 119.94,
         "spread": 6.51,
-        "ma20": 123.4,
-        "ma50": 117.35,
+        "ma20": 123.39,
+        "ma50": 117.34,
         "ma200": 105.49
       },
       {
         "date": "2025-09-26",
-        "open": 124.9,
-        "high": 126.08,
-        "low": 124.2,
-        "close": 125.76,
-        "buy": 123.76,
-        "sell": 125.76,
-        "world_converted": 119.31,
+        "open": 124.85,
+        "high": 126.03,
+        "low": 124.15,
+        "close": 125.71,
+        "buy": 123.71,
+        "sell": 125.71,
+        "world_converted": 119.26,
         "spread": 6.45,
-        "ma20": 123.83,
-        "ma50": 117.63,
-        "ma200": 105.68
+        "ma20": 123.82,
+        "ma50": 117.62,
+        "ma200": 105.67
       },
       {
         "date": "2025-09-29",
@@ -32777,9 +32777,9 @@
         "sell": 129.17,
         "world_converted": 122.77,
         "spread": 6.4,
-        "ma20": 124.44,
-        "ma50": 117.98,
-        "ma200": 105.87
+        "ma20": 124.43,
+        "ma50": 117.97,
+        "ma200": 105.86
       },
       {
         "date": "2025-09-30",
@@ -32791,8 +32791,8 @@
         "sell": 129.74,
         "world_converted": 123.4,
         "spread": 6.34,
-        "ma20": 124.88,
-        "ma50": 118.3,
+        "ma20": 124.87,
+        "ma50": 118.29,
         "ma200": 106.07
       },
       {
@@ -32805,8 +32805,8 @@
         "sell": 130.37,
         "world_converted": 124.08,
         "spread": 6.29,
-        "ma20": 125.27,
-        "ma50": 118.61,
+        "ma20": 125.26,
+        "ma50": 118.6,
         "ma200": 106.28
       },
       {
@@ -32819,22 +32819,22 @@
         "sell": 129.33,
         "world_converted": 123.09,
         "spread": 6.24,
-        "ma20": 125.66,
+        "ma20": 125.65,
         "ma50": 118.93,
-        "ma200": 106.49
+        "ma200": 106.48
       },
       {
         "date": "2025-10-03",
-        "open": 127.75,
-        "high": 129.04,
-        "low": 126.99,
-        "close": 128.64,
-        "buy": 126.64,
-        "sell": 128.64,
-        "world_converted": 122.44,
+        "open": 127.7,
+        "high": 128.99,
+        "low": 126.94,
+        "close": 128.59,
+        "buy": 126.59,
+        "sell": 128.59,
+        "world_converted": 122.39,
         "spread": 6.2,
-        "ma20": 126.03,
-        "ma50": 119.26,
+        "ma20": 126.02,
+        "ma50": 119.25,
         "ma200": 106.69
       },
       {
@@ -32847,9 +32847,9 @@
         "sell": 132.43,
         "world_converted": 126.27,
         "spread": 6.16,
-        "ma20": 126.45,
+        "ma20": 126.44,
         "ma50": 119.69,
-        "ma200": 106.92
+        "ma200": 106.91
       },
       {
         "date": "2025-10-07",
@@ -32861,8 +32861,8 @@
         "sell": 133.3,
         "world_converted": 127.17,
         "spread": 6.13,
-        "ma20": 126.92,
-        "ma50": 120.15,
+        "ma20": 126.91,
+        "ma50": 120.14,
         "ma200": 107.15
       },
       {
@@ -32875,8 +32875,8 @@
         "sell": 135.34,
         "world_converted": 129.24,
         "spread": 6.1,
-        "ma20": 127.49,
-        "ma50": 120.64,
+        "ma20": 127.48,
+        "ma50": 120.63,
         "ma200": 107.39
       },
       {
@@ -32889,23 +32889,23 @@
         "sell": 132.27,
         "world_converted": 126.19,
         "spread": 6.08,
-        "ma20": 127.91,
-        "ma50": 121.08,
+        "ma20": 127.9,
+        "ma50": 121.07,
         "ma200": 107.62
       },
       {
         "date": "2025-10-10",
-        "open": 131.04,
-        "high": 132.71,
-        "low": 129.99,
-        "close": 131.36,
-        "buy": 129.36,
-        "sell": 131.36,
-        "world_converted": 125.3,
+        "open": 130.99,
+        "high": 132.66,
+        "low": 129.94,
+        "close": 131.32,
+        "buy": 129.32,
+        "sell": 131.32,
+        "world_converted": 125.26,
         "spread": 6.06,
-        "ma20": 128.36,
-        "ma50": 121.5,
-        "ma200": 107.85
+        "ma20": 128.35,
+        "ma50": 121.49,
+        "ma200": 107.84
       },
       {
         "date": "2025-10-13",
@@ -32917,8 +32917,8 @@
         "sell": 137.23,
         "world_converted": 131.18,
         "spread": 6.05,
-        "ma20": 128.97,
-        "ma50": 122.0,
+        "ma20": 128.96,
+        "ma50": 121.99,
         "ma200": 108.09
       },
       {
@@ -32931,8 +32931,8 @@
         "sell": 138.28,
         "world_converted": 132.23,
         "spread": 6.05,
-        "ma20": 129.62,
-        "ma50": 122.48,
+        "ma20": 129.61,
+        "ma50": 122.47,
         "ma200": 108.35
       },
       {
@@ -32945,9 +32945,9 @@
         "sell": 139.36,
         "world_converted": 133.3,
         "spread": 6.06,
-        "ma20": 130.34,
-        "ma50": 122.97,
-        "ma200": 108.62
+        "ma20": 130.33,
+        "ma50": 122.96,
+        "ma200": 108.61
       },
       {
         "date": "2025-10-16",
@@ -32959,22 +32959,22 @@
         "sell": 142.62,
         "world_converted": 136.55,
         "spread": 6.07,
-        "ma20": 131.29,
+        "ma20": 131.28,
         "ma50": 123.53,
         "ma200": 108.89
       },
       {
         "date": "2025-10-17",
-        "open": 142.28,
-        "high": 143.81,
-        "low": 137.37,
-        "close": 138.06,
-        "buy": 136.06,
-        "sell": 138.06,
-        "world_converted": 131.97,
+        "open": 142.23,
+        "high": 143.76,
+        "low": 137.32,
+        "close": 138.01,
+        "buy": 136.01,
+        "sell": 138.01,
+        "world_converted": 131.92,
         "spread": 6.09,
-        "ma20": 132.05,
-        "ma50": 123.99,
+        "ma20": 132.04,
+        "ma50": 123.98,
         "ma200": 109.14
       },
       {
@@ -32987,9 +32987,9 @@
         "sell": 144.5,
         "world_converted": 138.39,
         "spread": 6.11,
-        "ma20": 132.94,
-        "ma50": 124.57,
-        "ma200": 109.43
+        "ma20": 132.93,
+        "ma50": 124.56,
+        "ma200": 109.42
       },
       {
         "date": "2025-10-21",
@@ -33001,9 +33001,9 @@
         "sell": 136.6,
         "world_converted": 130.46,
         "spread": 6.14,
-        "ma20": 133.36,
-        "ma50": 125.03,
-        "ma200": 109.68
+        "ma20": 133.35,
+        "ma50": 125.02,
+        "ma200": 109.67
       },
       {
         "date": "2025-10-22",
@@ -33015,8 +33015,8 @@
         "sell": 135.31,
         "world_converted": 129.13,
         "spread": 6.18,
-        "ma20": 133.81,
-        "ma50": 125.46,
+        "ma20": 133.8,
+        "ma50": 125.45,
         "ma200": 109.91
       },
       {
@@ -33029,23 +33029,23 @@
         "sell": 137.73,
         "world_converted": 131.51,
         "spread": 6.22,
-        "ma20": 134.37,
-        "ma50": 125.93,
+        "ma20": 134.36,
+        "ma50": 125.92,
         "ma200": 110.16
       },
       {
         "date": "2025-10-24",
-        "open": 136.07,
-        "high": 136.69,
-        "low": 133.16,
-        "close": 135.88,
-        "buy": 133.88,
-        "sell": 135.88,
-        "world_converted": 129.61,
+        "open": 136.02,
+        "high": 136.64,
+        "low": 133.11,
+        "close": 135.83,
+        "buy": 133.83,
+        "sell": 135.83,
+        "world_converted": 129.56,
         "spread": 6.27,
-        "ma20": 134.88,
-        "ma50": 126.38,
-        "ma200": 110.4
+        "ma20": 134.87,
+        "ma50": 126.37,
+        "ma200": 110.39
       },
       {
         "date": "2025-10-27",
@@ -33057,9 +33057,9 @@
         "sell": 133.68,
         "world_converted": 127.36,
         "spread": 6.32,
-        "ma20": 135.1,
-        "ma50": 126.81,
-        "ma200": 110.62
+        "ma20": 135.09,
+        "ma50": 126.8,
+        "ma200": 110.61
       },
       {
         "date": "2025-10-28",
@@ -33071,9 +33071,9 @@
         "sell": 132.57,
         "world_converted": 126.2,
         "spread": 6.37,
-        "ma20": 135.24,
-        "ma50": 127.2,
-        "ma200": 110.84
+        "ma20": 135.23,
+        "ma50": 127.19,
+        "ma200": 110.83
       },
       {
         "date": "2025-10-29",
@@ -33085,8 +33085,8 @@
         "sell": 133.33,
         "world_converted": 126.9,
         "spread": 6.43,
-        "ma20": 135.39,
-        "ma50": 127.6,
+        "ma20": 135.38,
+        "ma50": 127.59,
         "ma200": 111.06
       },
       {
@@ -33099,9 +33099,9 @@
         "sell": 133.99,
         "world_converted": 127.51,
         "spread": 6.48,
-        "ma20": 135.62,
-        "ma50": 128.0,
-        "ma200": 111.29
+        "ma20": 135.61,
+        "ma50": 127.99,
+        "ma200": 111.28
       },
       {
         "date": "2025-10-31",
@@ -33113,9 +33113,9 @@
         "sell": 133.34,
         "world_converted": 126.8,
         "spread": 6.54,
-        "ma20": 135.86,
-        "ma50": 128.38,
-        "ma200": 111.5
+        "ma20": 135.85,
+        "ma50": 128.37,
+        "ma200": 111.49
       },
       {
         "date": "2025-11-03",
@@ -33128,7 +33128,7 @@
         "world_converted": 127.33,
         "spread": 6.59,
         "ma20": 135.93,
-        "ma50": 128.79,
+        "ma50": 128.78,
         "ma200": 111.71
       },
       {
@@ -33142,8 +33142,8 @@
         "world_converted": 125.63,
         "spread": 6.65,
         "ma20": 135.88,
-        "ma50": 129.13,
-        "ma200": 111.92
+        "ma50": 129.12,
+        "ma200": 111.91
       },
       {
         "date": "2025-11-05",
@@ -33155,8 +33155,8 @@
         "sell": 133.29,
         "world_converted": 126.59,
         "spread": 6.7,
-        "ma20": 135.78,
-        "ma50": 129.48,
+        "ma20": 135.77,
+        "ma50": 129.47,
         "ma200": 112.13
       },
       {
@@ -33169,9 +33169,9 @@
         "sell": 133.3,
         "world_converted": 126.55,
         "spread": 6.75,
-        "ma20": 135.83,
-        "ma50": 129.82,
-        "ma200": 112.35
+        "ma20": 135.82,
+        "ma50": 129.81,
+        "ma200": 112.34
       },
       {
         "date": "2025-11-07",
@@ -33183,7 +33183,7 @@
         "sell": 133.86,
         "world_converted": 127.07,
         "spread": 6.79,
-        "ma20": 135.96,
+        "ma20": 135.95,
         "ma50": 130.15,
         "ma200": 112.56
       },
@@ -33197,9 +33197,9 @@
         "sell": 137.43,
         "world_converted": 130.6,
         "spread": 6.83,
-        "ma20": 135.97,
+        "ma20": 135.96,
         "ma50": 130.56,
-        "ma200": 112.8
+        "ma200": 112.79
       },
       {
         "date": "2025-11-11",
@@ -33212,7 +33212,7 @@
         "world_converted": 130.37,
         "spread": 6.87,
         "ma20": 135.91,
-        "ma50": 130.89,
+        "ma50": 130.88,
         "ma200": 113.03
       },
       {
@@ -33225,8 +33225,8 @@
         "sell": 140.41,
         "world_converted": 133.51,
         "spread": 6.9,
-        "ma20": 135.97,
-        "ma50": 131.25,
+        "ma20": 135.96,
+        "ma50": 131.24,
         "ma200": 113.28
       },
       {
@@ -33239,9 +33239,9 @@
         "sell": 139.82,
         "world_converted": 132.9,
         "spread": 6.92,
-        "ma20": 135.83,
+        "ma20": 135.82,
         "ma50": 131.61,
-        "ma200": 113.52
+        "ma200": 113.51
       },
       {
         "date": "2025-11-14",
@@ -33253,9 +33253,9 @@
         "sell": 136.86,
         "world_converted": 129.92,
         "spread": 6.94,
-        "ma20": 135.77,
+        "ma20": 135.76,
         "ma50": 131.92,
-        "ma200": 113.75
+        "ma200": 113.74
       },
       {
         "date": "2025-11-17",
@@ -33267,9 +33267,9 @@
         "sell": 136.27,
         "world_converted": 129.32,
         "spread": 6.95,
-        "ma20": 135.36,
-        "ma50": 132.17,
-        "ma200": 113.96
+        "ma20": 135.35,
+        "ma50": 132.16,
+        "ma200": 113.95
       },
       {
         "date": "2025-11-18",
@@ -33282,8 +33282,8 @@
         "world_converted": 129.11,
         "spread": 6.95,
         "ma20": 135.33,
-        "ma50": 132.41,
-        "ma200": 114.17
+        "ma50": 132.4,
+        "ma200": 114.16
       },
       {
         "date": "2025-11-19",
@@ -33296,8 +33296,8 @@
         "world_converted": 129.84,
         "spread": 6.95,
         "ma20": 135.4,
-        "ma50": 132.67,
-        "ma200": 114.38
+        "ma50": 132.66,
+        "ma200": 114.37
       },
       {
         "date": "2025-11-20",
@@ -33311,7 +33311,7 @@
         "spread": 6.93,
         "ma20": 135.32,
         "ma50": 132.91,
-        "ma200": 114.59
+        "ma200": 114.58
       },
       {
         "date": "2025-11-21",
@@ -33324,8 +33324,8 @@
         "world_converted": 129.68,
         "spread": 6.92,
         "ma20": 135.35,
-        "ma50": 133.2,
-        "ma200": 114.8
+        "ma50": 133.19,
+        "ma200": 114.79
       },
       {
         "date": "2025-11-24",
@@ -33338,8 +33338,8 @@
         "world_converted": 130.06,
         "spread": 6.89,
         "ma20": 135.52,
-        "ma50": 133.44,
-        "ma200": 115.0
+        "ma50": 133.43,
+        "ma200": 114.99
       },
       {
         "date": "2025-11-25",
@@ -33352,8 +33352,8 @@
         "world_converted": 131.52,
         "spread": 6.86,
         "ma20": 135.81,
-        "ma50": 133.7,
-        "ma200": 115.21
+        "ma50": 133.69,
+        "ma200": 115.2
       },
       {
         "date": "2025-11-26",
@@ -33366,8 +33366,8 @@
         "world_converted": 132.29,
         "spread": 6.82,
         "ma20": 136.1,
-        "ma50": 133.98,
-        "ma200": 115.42
+        "ma50": 133.97,
+        "ma200": 115.41
       },
       {
         "date": "2025-11-28",
@@ -33380,8 +33380,8 @@
         "world_converted": 135.29,
         "spread": 6.78,
         "ma20": 136.5,
-        "ma50": 134.35,
-        "ma200": 115.64
+        "ma50": 134.34,
+        "ma200": 115.63
       },
       {
         "date": "2025-12-01",
@@ -33395,7 +33395,7 @@
         "spread": 6.74,
         "ma20": 136.96,
         "ma50": 134.74,
-        "ma200": 115.88
+        "ma200": 115.87
       },
       {
         "date": "2025-12-02",
@@ -33436,7 +33436,7 @@
         "world_converted": 134.77,
         "spread": 6.58,
         "ma20": 138.14,
-        "ma50": 135.58,
+        "ma50": 135.57,
         "ma200": 116.53
       },
       {
@@ -33465,7 +33465,7 @@
         "spread": 6.47,
         "ma20": 138.86,
         "ma50": 136.16,
-        "ma200": 116.97
+        "ma200": 116.96
       },
       {
         "date": "2025-12-09",
@@ -33478,7 +33478,7 @@
         "world_converted": 134.43,
         "spread": 6.41,
         "ma20": 139.03,
-        "ma50": 136.4,
+        "ma50": 136.39,
         "ma200": 117.19
       },
       {
@@ -33520,8 +33520,8 @@
         "world_converted": 137.24,
         "spread": 6.26,
         "ma20": 139.52,
-        "ma50": 137.16,
-        "ma200": 117.9
+        "ma50": 137.15,
+        "ma200": 117.89
       },
       {
         "date": "2025-12-15",
@@ -33535,7 +33535,7 @@
         "spread": 6.21,
         "ma20": 139.87,
         "ma50": 137.46,
-        "ma200": 118.14
+        "ma200": 118.13
       },
       {
         "date": "2025-12-16",
@@ -33549,7 +33549,7 @@
         "spread": 6.17,
         "ma20": 140.23,
         "ma50": 137.68,
-        "ma200": 118.38
+        "ma200": 118.37
       },
       {
         "date": "2025-12-17",
@@ -33563,7 +33563,7 @@
         "spread": 6.14,
         "ma20": 140.67,
         "ma50": 137.91,
-        "ma200": 118.62
+        "ma200": 118.61
       },
       {
         "date": "2025-12-18",
@@ -33591,7 +33591,7 @@
         "spread": 6.08,
         "ma20": 141.51,
         "ma50": 138.35,
-        "ma200": 119.11
+        "ma200": 119.1
       },
       {
         "date": "2025-12-22",
@@ -33604,7 +33604,7 @@
         "world_converted": 141.53,
         "spread": 6.06,
         "ma20": 142.06,
-        "ma50": 138.68,
+        "ma50": 138.67,
         "ma200": 119.37
       },
       {
@@ -33619,7 +33619,7 @@
         "spread": 6.05,
         "ma20": 142.66,
         "ma50": 138.91,
-        "ma200": 119.64
+        "ma200": 119.63
       },
       {
         "date": "2025-12-24",
@@ -33633,7 +33633,7 @@
         "spread": 6.05,
         "ma20": 143.18,
         "ma50": 139.12,
-        "ma200": 119.9
+        "ma200": 119.89
       },
       {
         "date": "2025-12-26",
@@ -33661,7 +33661,7 @@
         "spread": 6.06,
         "ma20": 143.82,
         "ma50": 139.36,
-        "ma200": 120.39
+        "ma200": 120.38
       },
       {
         "date": "2025-12-30",
@@ -33675,7 +33675,7 @@
         "spread": 6.08,
         "ma20": 143.94,
         "ma50": 139.5,
-        "ma200": 120.62
+        "ma200": 120.61
       },
       {
         "date": "2025-12-31",
@@ -33689,7 +33689,7 @@
         "spread": 6.1,
         "ma20": 144.07,
         "ma50": 139.47,
-        "ma200": 120.84
+        "ma200": 120.83
       },
       {
         "date": "2026-01-02",
@@ -33703,7 +33703,7 @@
         "spread": 6.13,
         "ma20": 144.19,
         "ma50": 139.61,
-        "ma200": 121.06
+        "ma200": 121.05
       },
       {
         "date": "2026-01-05",
@@ -33731,7 +33731,7 @@
         "spread": 6.21,
         "ma20": 144.85,
         "ma50": 140.07,
-        "ma200": 121.54
+        "ma200": 121.53
       },
       {
         "date": "2026-01-07",
@@ -33759,7 +33759,7 @@
         "spread": 6.31,
         "ma20": 145.56,
         "ma50": 140.58,
-        "ma200": 122.02
+        "ma200": 122.01
       },
       {
         "date": "2026-01-09",
@@ -33773,7 +33773,7 @@
         "spread": 6.36,
         "ma20": 145.96,
         "ma50": 140.9,
-        "ma200": 122.27
+        "ma200": 122.26
       },
       {
         "date": "2026-01-12",
@@ -33801,7 +33801,7 @@
         "spread": 6.47,
         "ma20": 146.84,
         "ma50": 141.65,
-        "ma200": 122.78
+        "ma200": 122.77
       },
       {
         "date": "2026-01-14",
@@ -33815,7 +33815,7 @@
         "spread": 6.52,
         "ma20": 147.32,
         "ma50": 142.04,
-        "ma200": 123.03
+        "ma200": 123.02
       },
       {
         "date": "2026-01-15",
@@ -33843,7 +33843,7 @@
         "spread": 6.63,
         "ma20": 148.14,
         "ma50": 142.81,
-        "ma200": 123.51
+        "ma200": 123.5
       },
       {
         "date": "2026-01-20",
@@ -33885,7 +33885,7 @@
         "spread": 6.78,
         "ma20": 150.25,
         "ma50": 144.39,
-        "ma200": 124.39
+        "ma200": 124.38
       },
       {
         "date": "2026-01-23",
@@ -33899,7 +33899,7 @@
         "spread": 6.82,
         "ma20": 151.03,
         "ma50": 144.94,
-        "ma200": 124.71
+        "ma200": 124.7
       },
       {
         "date": "2026-01-26",
@@ -33913,7 +33913,7 @@
         "spread": 6.86,
         "ma20": 151.96,
         "ma50": 145.54,
-        "ma200": 125.03
+        "ma200": 125.02
       },
       {
         "date": "2026-01-27",
@@ -33927,7 +33927,7 @@
         "spread": 6.89,
         "ma20": 152.81,
         "ma50": 146.08,
-        "ma200": 125.34
+        "ma200": 125.33
       },
       {
         "date": "2026-01-28",
@@ -33955,7 +33955,7 @@
         "spread": 6.93,
         "ma20": 155.77,
         "ma50": 147.5,
-        "ma200": 126.0
+        "ma200": 125.99
       },
       {
         "date": "2026-01-30",
@@ -33983,7 +33983,7 @@
         "spread": 6.95,
         "ma20": 156.81,
         "ma50": 148.2,
-        "ma200": 126.44
+        "ma200": 126.43
       },
       {
         "date": "2026-02-03",
@@ -33997,7 +33997,7 @@
         "spread": 6.95,
         "ma20": 157.52,
         "ma50": 148.7,
-        "ma200": 126.69
+        "ma200": 126.68
       },
       {
         "date": "2026-02-04",
@@ -34039,7 +34039,7 @@
         "spread": 6.9,
         "ma20": 159.57,
         "ma50": 150.2,
-        "ma200": 127.43
+        "ma200": 127.42
       },
       {
         "date": "2026-02-09",
@@ -34095,7 +34095,7 @@
         "spread": 6.75,
         "ma20": 162.07,
         "ma50": 152.09,
-        "ma200": 128.49
+        "ma200": 128.48
       },
       {
         "date": "2026-02-13",
@@ -34123,7 +34123,7 @@
         "spread": 6.65,
         "ma20": 163.05,
         "ma50": 152.94,
-        "ma200": 129.02
+        "ma200": 129.01
       },
       {
         "date": "2026-02-18",
@@ -34193,7 +34193,7 @@
         "spread": 6.65,
         "ma20": 164.02,
         "ma50": 155.47,
-        "ma200": 130.4
+        "ma200": 130.39
       },
       {
         "date": "2026-02-25",
@@ -34221,7 +34221,7 @@
         "spread": 6.66,
         "ma20": 164.04,
         "ma50": 156.57,
-        "ma200": 131.02
+        "ma200": 131.01
       },
       {
         "date": "2026-02-27",
@@ -34263,7 +34263,7 @@
         "spread": 6.7,
         "ma20": 165.63,
         "ma50": 158.19,
-        "ma200": 131.98
+        "ma200": 131.97
       },
       {
         "date": "2026-03-04",
@@ -36635,13 +36635,13 @@
     "ring_9999": [
       {
         "date": "2021-11-02",
-        "open": 51.03,
-        "high": 51.23,
-        "low": 50.71,
-        "close": 50.88,
-        "buy": 49.58,
-        "sell": 50.88,
-        "world_converted": 49.08,
+        "open": 51.68,
+        "high": 51.88,
+        "low": 51.35,
+        "close": 51.53,
+        "buy": 50.23,
+        "sell": 51.53,
+        "world_converted": 49.73,
         "spread": 1.8,
         "ma20": null,
         "ma50": null,
@@ -36909,7 +36909,7 @@
         "sell": 50.65,
         "world_converted": 48.52,
         "spread": 2.13,
-        "ma20": 51.76,
+        "ma20": 51.8,
         "ma50": null,
         "ma200": null
       },
@@ -37330,7 +37330,7 @@
         "world_converted": 50.01,
         "spread": 1.74,
         "ma20": 51.75,
-        "ma50": 51.67,
+        "ma50": 51.68,
         "ma200": null
       },
       {
@@ -39431,7 +39431,7 @@
         "spread": 2.23,
         "ma20": 52.26,
         "ma50": 52.19,
-        "ma200": 53.22
+        "ma200": 53.23
       },
       {
         "date": "2022-08-19",
@@ -48675,13 +48675,13 @@
       },
       {
         "date": "2025-04-04",
-        "open": 102.18,
-        "high": 103.0,
-        "low": 98.76,
-        "close": 98.97,
-        "buy": 97.67,
-        "sell": 98.97,
-        "world_converted": 95.08,
+        "open": 102.14,
+        "high": 102.96,
+        "low": 98.73,
+        "close": 98.93,
+        "buy": 97.63,
+        "sell": 98.93,
+        "world_converted": 95.04,
         "spread": 3.89,
         "ma20": 97.64,
         "ma50": 94.23,
@@ -48745,13 +48745,13 @@
       },
       {
         "date": "2025-04-11",
-        "open": 103.75,
-        "high": 106.03,
-        "low": 103.61,
-        "close": 105.33,
-        "buy": 104.03,
-        "sell": 105.33,
-        "world_converted": 101.63,
+        "open": 103.71,
+        "high": 105.99,
+        "low": 103.57,
+        "close": 105.29,
+        "buy": 103.99,
+        "sell": 105.29,
+        "world_converted": 101.59,
         "spread": 3.7,
         "ma20": 99.03,
         "ma50": 95.52,
@@ -48767,8 +48767,8 @@
         "sell": 104.11,
         "world_converted": 100.45,
         "spread": 3.66,
-        "ma20": 99.41,
-        "ma50": 95.84,
+        "ma20": 99.4,
+        "ma50": 95.83,
         "ma200": 86.13
       },
       {
@@ -48801,15 +48801,15 @@
       },
       {
         "date": "2025-04-17",
-        "open": 108.73,
-        "high": 109.3,
-        "low": 106.69,
-        "close": 107.82,
-        "buy": 106.52,
-        "sell": 107.82,
-        "world_converted": 104.26,
+        "open": 108.69,
+        "high": 109.26,
+        "low": 106.65,
+        "close": 107.77,
+        "buy": 106.47,
+        "sell": 107.77,
+        "world_converted": 104.21,
         "spread": 3.56,
-        "ma20": 100.75,
+        "ma20": 100.74,
         "ma50": 96.78,
         "ma200": 86.6
       },
@@ -48823,7 +48823,7 @@
         "sell": 110.38,
         "world_converted": 106.84,
         "spread": 3.54,
-        "ma20": 101.41,
+        "ma20": 101.4,
         "ma50": 97.18,
         "ma200": 86.77
       },
@@ -48837,7 +48837,7 @@
         "sell": 110.42,
         "world_converted": 106.91,
         "spread": 3.51,
-        "ma20": 102.07,
+        "ma20": 102.06,
         "ma50": 97.56,
         "ma200": 86.94
       },
@@ -48865,21 +48865,21 @@
         "sell": 108.55,
         "world_converted": 105.07,
         "spread": 3.48,
-        "ma20": 103.08,
+        "ma20": 103.07,
         "ma50": 98.14,
         "ma200": 87.25
       },
       {
         "date": "2025-04-25",
-        "open": 108.77,
-        "high": 109.58,
-        "low": 105.92,
-        "close": 106.78,
-        "buy": 105.48,
-        "sell": 106.78,
-        "world_converted": 103.32,
+        "open": 108.73,
+        "high": 109.54,
+        "low": 105.88,
+        "close": 106.74,
+        "buy": 105.44,
+        "sell": 106.74,
+        "world_converted": 103.28,
         "spread": 3.46,
-        "ma20": 103.5,
+        "ma20": 103.49,
         "ma50": 98.4,
         "ma200": 87.4
       },
@@ -48921,9 +48921,9 @@
         "sell": 107.41,
         "world_converted": 103.96,
         "spread": 3.45,
-        "ma20": 104.65,
-        "ma50": 99.26,
-        "ma200": 87.85
+        "ma20": 104.64,
+        "ma50": 99.25,
+        "ma200": 87.84
       },
       {
         "date": "2025-05-01",
@@ -48935,22 +48935,22 @@
         "sell": 104.38,
         "world_converted": 100.93,
         "spread": 3.45,
-        "ma20": 104.78,
-        "ma50": 99.47,
+        "ma20": 104.77,
+        "ma50": 99.46,
         "ma200": 87.97
       },
       {
         "date": "2025-05-02",
-        "open": 105.18,
-        "high": 106.23,
-        "low": 104.5,
-        "close": 105.05,
-        "buy": 103.75,
-        "sell": 105.05,
-        "world_converted": 101.59,
+        "open": 105.14,
+        "high": 106.19,
+        "low": 104.46,
+        "close": 105.01,
+        "buy": 103.71,
+        "sell": 105.01,
+        "world_converted": 101.55,
         "spread": 3.46,
-        "ma20": 105.02,
-        "ma50": 99.68,
+        "ma20": 105.01,
+        "ma50": 99.67,
         "ma200": 88.1
       },
       {
@@ -48963,8 +48963,8 @@
         "sell": 107.39,
         "world_converted": 103.91,
         "spread": 3.48,
-        "ma20": 105.44,
-        "ma50": 99.94,
+        "ma20": 105.43,
+        "ma50": 99.93,
         "ma200": 88.24
       },
       {
@@ -48991,8 +48991,8 @@
         "sell": 109.64,
         "world_converted": 106.13,
         "spread": 3.51,
-        "ma20": 106.76,
-        "ma50": 100.58,
+        "ma20": 106.75,
+        "ma50": 100.57,
         "ma200": 88.57
       },
       {
@@ -49005,22 +49005,22 @@
         "sell": 107.01,
         "world_converted": 103.47,
         "spread": 3.54,
-        "ma20": 107.1,
+        "ma20": 107.09,
         "ma50": 100.84,
         "ma200": 88.72
       },
       {
         "date": "2025-05-09",
-        "open": 107.24,
-        "high": 108.7,
-        "low": 106.14,
-        "close": 108.3,
-        "buy": 107.0,
-        "sell": 108.3,
-        "world_converted": 104.74,
+        "open": 107.21,
+        "high": 108.66,
+        "low": 106.11,
+        "close": 108.26,
+        "buy": 106.96,
+        "sell": 108.26,
+        "world_converted": 104.7,
         "spread": 3.56,
-        "ma20": 107.4,
-        "ma50": 101.15,
+        "ma20": 107.39,
+        "ma50": 101.14,
         "ma200": 88.87
       },
       {
@@ -49033,8 +49033,8 @@
         "sell": 104.62,
         "world_converted": 101.03,
         "spread": 3.59,
-        "ma20": 107.37,
-        "ma50": 101.41,
+        "ma20": 107.36,
+        "ma50": 101.4,
         "ma200": 89.01
       },
       {
@@ -49047,7 +49047,7 @@
         "sell": 105.25,
         "world_converted": 101.62,
         "spread": 3.63,
-        "ma20": 107.43,
+        "ma20": 107.42,
         "ma50": 101.65,
         "ma200": 89.16
       },
@@ -49061,8 +49061,8 @@
         "sell": 103.31,
         "world_converted": 99.65,
         "spread": 3.66,
-        "ma20": 107.37,
-        "ma50": 101.84,
+        "ma20": 107.36,
+        "ma50": 101.83,
         "ma200": 89.29
       },
       {
@@ -49075,22 +49075,22 @@
         "sell": 104.53,
         "world_converted": 100.83,
         "spread": 3.7,
-        "ma20": 107.21,
-        "ma50": 102.05,
+        "ma20": 107.2,
+        "ma50": 102.04,
         "ma200": 89.43
       },
       {
         "date": "2025-05-16",
-        "open": 105.34,
-        "high": 105.84,
-        "low": 102.49,
-        "close": 103.57,
-        "buy": 102.27,
-        "sell": 103.57,
-        "world_converted": 99.83,
+        "open": 105.3,
+        "high": 105.8,
+        "low": 102.45,
+        "close": 103.53,
+        "buy": 102.23,
+        "sell": 103.53,
+        "world_converted": 99.79,
         "spread": 3.74,
-        "ma20": 107.0,
-        "ma50": 102.24,
+        "ma20": 106.99,
+        "ma50": 102.23,
         "ma200": 89.56
       },
       {
@@ -49103,8 +49103,8 @@
         "sell": 104.88,
         "world_converted": 101.1,
         "spread": 3.78,
-        "ma20": 106.72,
-        "ma50": 102.47,
+        "ma20": 106.71,
+        "ma50": 102.46,
         "ma200": 89.68
       },
       {
@@ -49117,8 +49117,8 @@
         "sell": 106.57,
         "world_converted": 102.76,
         "spread": 3.81,
-        "ma20": 106.53,
-        "ma50": 102.74,
+        "ma20": 106.52,
+        "ma50": 102.73,
         "ma200": 89.82
       },
       {
@@ -49132,7 +49132,7 @@
         "world_converted": 103.67,
         "spread": 3.85,
         "ma20": 106.57,
-        "ma50": 103.01,
+        "ma50": 103.0,
         "ma200": 89.97
       },
       {
@@ -49145,22 +49145,22 @@
         "sell": 107.07,
         "world_converted": 103.18,
         "spread": 3.89,
-        "ma20": 106.5,
-        "ma50": 103.26,
+        "ma20": 106.49,
+        "ma50": 103.25,
         "ma200": 90.12
       },
       {
         "date": "2025-05-23",
-        "open": 107.14,
-        "high": 109.5,
-        "low": 106.72,
-        "close": 109.36,
-        "buy": 108.06,
-        "sell": 109.36,
-        "world_converted": 105.43,
+        "open": 107.1,
+        "high": 109.46,
+        "low": 106.68,
+        "close": 109.32,
+        "buy": 108.02,
+        "sell": 109.32,
+        "world_converted": 105.39,
         "spread": 3.93,
-        "ma20": 106.63,
-        "ma50": 103.53,
+        "ma20": 106.62,
+        "ma50": 103.52,
         "ma200": 90.28
       },
       {
@@ -49173,7 +49173,7 @@
         "sell": 107.03,
         "world_converted": 103.07,
         "spread": 3.96,
-        "ma20": 106.57,
+        "ma20": 106.56,
         "ma50": 103.74,
         "ma200": 90.42
       },
@@ -49187,9 +49187,9 @@
         "sell": 107.09,
         "world_converted": 103.09,
         "spread": 4.0,
-        "ma20": 106.53,
+        "ma20": 106.52,
         "ma50": 103.95,
-        "ma200": 90.57
+        "ma200": 90.56
       },
       {
         "date": "2025-05-29",
@@ -49201,23 +49201,23 @@
         "sell": 108.0,
         "world_converted": 103.97,
         "spread": 4.03,
-        "ma20": 106.56,
-        "ma50": 104.16,
+        "ma20": 106.55,
+        "ma50": 104.15,
         "ma200": 90.71
       },
       {
         "date": "2025-05-30",
-        "open": 107.9,
-        "high": 108.11,
-        "low": 106.39,
-        "close": 107.08,
-        "buy": 105.78,
-        "sell": 107.08,
-        "world_converted": 103.02,
+        "open": 107.86,
+        "high": 108.07,
+        "low": 106.35,
+        "close": 107.04,
+        "buy": 105.74,
+        "sell": 107.04,
+        "world_converted": 102.98,
         "spread": 4.06,
-        "ma20": 106.69,
-        "ma50": 104.35,
-        "ma200": 90.85
+        "ma20": 106.68,
+        "ma50": 104.34,
+        "ma200": 90.84
       },
       {
         "date": "2025-06-02",
@@ -49229,7 +49229,7 @@
         "sell": 110.66,
         "world_converted": 106.58,
         "spread": 4.08,
-        "ma20": 106.97,
+        "ma20": 106.96,
         "ma50": 104.6,
         "ma200": 91.01
       },
@@ -49243,8 +49243,8 @@
         "sell": 110.12,
         "world_converted": 106.02,
         "spread": 4.1,
-        "ma20": 107.11,
-        "ma50": 104.86,
+        "ma20": 107.1,
+        "ma50": 104.85,
         "ma200": 91.16
       },
       {
@@ -49257,9 +49257,9 @@
         "sell": 110.97,
         "world_converted": 106.85,
         "spread": 4.12,
-        "ma20": 107.13,
-        "ma50": 105.14,
-        "ma200": 91.32
+        "ma20": 107.12,
+        "ma50": 105.13,
+        "ma200": 91.31
       },
       {
         "date": "2025-06-05",
@@ -49271,22 +49271,22 @@
         "sell": 110.16,
         "world_converted": 106.03,
         "spread": 4.13,
-        "ma20": 107.16,
-        "ma50": 105.39,
+        "ma20": 107.15,
+        "ma50": 105.38,
         "ma200": 91.47
       },
       {
         "date": "2025-06-06",
-        "open": 109.93,
-        "high": 110.7,
-        "low": 108.29,
-        "close": 108.97,
-        "buy": 107.67,
-        "sell": 108.97,
-        "world_converted": 104.83,
+        "open": 109.89,
+        "high": 110.66,
+        "low": 108.25,
+        "close": 108.92,
+        "buy": 107.62,
+        "sell": 108.92,
+        "world_converted": 104.78,
         "spread": 4.14,
-        "ma20": 107.25,
-        "ma50": 105.62,
+        "ma20": 107.24,
+        "ma50": 105.61,
         "ma200": 91.61
       },
       {
@@ -49299,8 +49299,8 @@
         "sell": 109.42,
         "world_converted": 105.27,
         "spread": 4.15,
-        "ma20": 107.31,
-        "ma50": 105.84,
+        "ma20": 107.3,
+        "ma50": 105.83,
         "ma200": 91.76
       },
       {
@@ -49314,8 +49314,8 @@
         "world_converted": 104.77,
         "spread": 4.15,
         "ma20": 107.52,
-        "ma50": 106.04,
-        "ma200": 91.91
+        "ma50": 106.03,
+        "ma200": 91.9
       },
       {
         "date": "2025-06-11",
@@ -49327,8 +49327,8 @@
         "sell": 109.01,
         "world_converted": 104.86,
         "spread": 4.15,
-        "ma20": 107.71,
-        "ma50": 106.21,
+        "ma20": 107.7,
+        "ma50": 106.2,
         "ma200": 92.05
       },
       {
@@ -49341,23 +49341,23 @@
         "sell": 110.88,
         "world_converted": 106.74,
         "spread": 4.14,
-        "ma20": 108.09,
+        "ma20": 108.08,
         "ma50": 106.4,
         "ma200": 92.2
       },
       {
         "date": "2025-06-13",
-        "open": 110.84,
-        "high": 112.88,
-        "low": 110.5,
-        "close": 112.28,
-        "buy": 110.98,
-        "sell": 112.28,
-        "world_converted": 108.15,
+        "open": 110.8,
+        "high": 112.84,
+        "low": 110.45,
+        "close": 112.24,
+        "buy": 110.94,
+        "sell": 112.24,
+        "world_converted": 108.11,
         "spread": 4.13,
-        "ma20": 108.48,
-        "ma50": 106.62,
-        "ma200": 92.37
+        "ma20": 108.47,
+        "ma50": 106.61,
+        "ma200": 92.36
       },
       {
         "date": "2025-06-16",
@@ -49369,8 +49369,8 @@
         "sell": 111.36,
         "world_converted": 107.25,
         "spread": 4.11,
-        "ma20": 108.87,
-        "ma50": 106.84,
+        "ma20": 108.86,
+        "ma50": 106.83,
         "ma200": 92.52
       },
       {
@@ -49383,8 +49383,8 @@
         "sell": 111.18,
         "world_converted": 107.09,
         "spread": 4.09,
-        "ma20": 109.18,
-        "ma50": 107.08,
+        "ma20": 109.17,
+        "ma50": 107.07,
         "ma200": 92.68
       },
       {
@@ -49397,22 +49397,22 @@
         "sell": 111.28,
         "world_converted": 107.21,
         "spread": 4.07,
-        "ma20": 109.42,
-        "ma50": 107.38,
+        "ma20": 109.41,
+        "ma50": 107.37,
         "ma200": 92.83
       },
       {
         "date": "2025-06-20",
-        "open": 110.13,
-        "high": 110.82,
-        "low": 109.05,
-        "close": 110.09,
-        "buy": 108.79,
-        "sell": 110.09,
-        "world_converted": 106.05,
+        "open": 110.09,
+        "high": 110.78,
+        "low": 109.01,
+        "close": 110.05,
+        "buy": 108.75,
+        "sell": 110.05,
+        "world_converted": 106.01,
         "spread": 4.04,
-        "ma20": 109.55,
-        "ma50": 107.63,
+        "ma20": 109.54,
+        "ma50": 107.62,
         "ma200": 92.99
       },
       {
@@ -49425,7 +49425,7 @@
         "sell": 111.21,
         "world_converted": 107.2,
         "spread": 4.01,
-        "ma20": 109.75,
+        "ma20": 109.74,
         "ma50": 107.85,
         "ma200": 93.15
       },
@@ -49439,8 +49439,8 @@
         "sell": 109.09,
         "world_converted": 105.11,
         "spread": 3.98,
-        "ma20": 109.74,
-        "ma50": 107.99,
+        "ma20": 109.73,
+        "ma50": 107.98,
         "ma200": 93.3
       },
       {
@@ -49453,8 +49453,8 @@
         "sell": 109.35,
         "world_converted": 105.4,
         "spread": 3.95,
-        "ma20": 109.86,
-        "ma50": 108.07,
+        "ma20": 109.85,
+        "ma50": 108.06,
         "ma200": 93.44
       },
       {
@@ -49469,20 +49469,20 @@
         "spread": 3.91,
         "ma20": 109.96,
         "ma50": 108.17,
-        "ma200": 93.6
+        "ma200": 93.59
       },
       {
         "date": "2025-06-27",
-        "open": 108.53,
-        "high": 108.65,
-        "low": 106.07,
-        "close": 106.85,
-        "buy": 105.55,
-        "sell": 106.85,
-        "world_converted": 102.98,
+        "open": 108.49,
+        "high": 108.61,
+        "low": 106.03,
+        "close": 106.81,
+        "buy": 105.51,
+        "sell": 106.81,
+        "world_converted": 102.94,
         "spread": 3.87,
-        "ma20": 109.91,
-        "ma50": 108.22,
+        "ma20": 109.9,
+        "ma50": 108.21,
         "ma200": 93.73
       },
       {
@@ -49495,8 +49495,8 @@
         "sell": 108.0,
         "world_converted": 104.16,
         "spread": 3.84,
-        "ma20": 109.95,
-        "ma50": 108.23,
+        "ma20": 109.94,
+        "ma50": 108.22,
         "ma200": 93.88
       },
       {
@@ -49509,8 +49509,8 @@
         "sell": 109.25,
         "world_converted": 105.45,
         "spread": 3.8,
-        "ma20": 109.88,
-        "ma50": 108.26,
+        "ma20": 109.87,
+        "ma50": 108.25,
         "ma200": 94.02
       },
       {
@@ -49523,8 +49523,8 @@
         "sell": 109.68,
         "world_converted": 105.92,
         "spread": 3.76,
-        "ma20": 109.86,
-        "ma50": 108.24,
+        "ma20": 109.85,
+        "ma50": 108.23,
         "ma200": 94.16
       },
       {
@@ -49537,23 +49537,23 @@
         "sell": 109.22,
         "world_converted": 105.5,
         "spread": 3.72,
-        "ma20": 109.77,
-        "ma50": 108.22,
+        "ma20": 109.76,
+        "ma50": 108.21,
         "ma200": 94.3
       },
       {
         "date": "2025-07-04",
-        "open": 108.14,
-        "high": 108.89,
-        "low": 107.95,
-        "close": 108.5,
-        "buy": 107.2,
-        "sell": 108.5,
-        "world_converted": 104.82,
+        "open": 108.1,
+        "high": 108.85,
+        "low": 107.91,
+        "close": 108.46,
+        "buy": 107.16,
+        "sell": 108.46,
+        "world_converted": 104.78,
         "spread": 3.68,
-        "ma20": 109.69,
-        "ma50": 108.26,
-        "ma200": 94.44
+        "ma20": 109.68,
+        "ma50": 108.25,
+        "ma200": 94.43
       },
       {
         "date": "2025-07-07",
@@ -49565,9 +49565,9 @@
         "sell": 108.92,
         "world_converted": 105.27,
         "spread": 3.65,
-        "ma20": 109.69,
-        "ma50": 108.26,
-        "ma200": 94.58
+        "ma20": 109.68,
+        "ma50": 108.25,
+        "ma200": 94.57
       },
       {
         "date": "2025-07-08",
@@ -49579,8 +49579,8 @@
         "sell": 108.02,
         "world_converted": 104.41,
         "spread": 3.61,
-        "ma20": 109.62,
-        "ma50": 108.29,
+        "ma20": 109.61,
+        "ma50": 108.28,
         "ma200": 94.71
       },
       {
@@ -49594,7 +49594,7 @@
         "world_converted": 104.66,
         "spread": 3.58,
         "ma20": 109.58,
-        "ma50": 108.29,
+        "ma50": 108.28,
         "ma200": 94.83
       },
       {
@@ -49613,17 +49613,17 @@
       },
       {
         "date": "2025-07-11",
-        "open": 107.93,
-        "high": 109.57,
-        "low": 107.79,
-        "close": 108.9,
-        "buy": 107.6,
-        "sell": 108.9,
-        "world_converted": 105.37,
+        "open": 107.89,
+        "high": 109.53,
+        "low": 107.75,
+        "close": 108.86,
+        "buy": 107.56,
+        "sell": 108.86,
+        "world_converted": 105.33,
         "spread": 3.53,
-        "ma20": 109.44,
+        "ma20": 109.43,
         "ma50": 108.32,
-        "ma200": 95.09
+        "ma200": 95.08
       },
       {
         "date": "2025-07-14",
@@ -49635,8 +49635,8 @@
         "sell": 109.2,
         "world_converted": 105.7,
         "spread": 3.5,
-        "ma20": 109.29,
-        "ma50": 108.42,
+        "ma20": 109.28,
+        "ma50": 108.41,
         "ma200": 95.21
       },
       {
@@ -49649,9 +49649,9 @@
         "sell": 108.56,
         "world_converted": 105.08,
         "spread": 3.48,
-        "ma20": 109.15,
-        "ma50": 108.49,
-        "ma200": 95.34
+        "ma20": 109.14,
+        "ma50": 108.48,
+        "ma200": 95.33
       },
       {
         "date": "2025-07-16",
@@ -49663,8 +49663,8 @@
         "sell": 109.33,
         "world_converted": 105.86,
         "spread": 3.47,
-        "ma20": 109.06,
-        "ma50": 108.53,
+        "ma20": 109.05,
+        "ma50": 108.52,
         "ma200": 95.46
       },
       {
@@ -49677,22 +49677,22 @@
         "sell": 108.87,
         "world_converted": 105.41,
         "spread": 3.46,
-        "ma20": 108.94,
-        "ma50": 108.5,
+        "ma20": 108.93,
+        "ma50": 108.49,
         "ma200": 95.59
       },
       {
         "date": "2025-07-18",
-        "open": 108.3,
-        "high": 109.07,
-        "low": 107.86,
-        "close": 108.64,
-        "buy": 107.34,
-        "sell": 108.64,
-        "world_converted": 105.19,
+        "open": 108.26,
+        "high": 109.02,
+        "low": 107.82,
+        "close": 108.6,
+        "buy": 107.3,
+        "sell": 108.6,
+        "world_converted": 105.15,
         "spread": 3.45,
         "ma20": 108.86,
-        "ma50": 108.48,
+        "ma50": 108.47,
         "ma200": 95.71
       },
       {
@@ -49705,8 +49705,8 @@
         "sell": 110.76,
         "world_converted": 107.31,
         "spread": 3.45,
-        "ma20": 108.84,
-        "ma50": 108.55,
+        "ma20": 108.83,
+        "ma50": 108.54,
         "ma200": 95.85
       },
       {
@@ -49719,9 +49719,9 @@
         "sell": 111.9,
         "world_converted": 108.45,
         "spread": 3.45,
-        "ma20": 108.98,
-        "ma50": 108.62,
-        "ma200": 95.99
+        "ma20": 108.97,
+        "ma50": 108.61,
+        "ma200": 95.98
       },
       {
         "date": "2025-07-23",
@@ -49733,8 +49733,8 @@
         "sell": 110.46,
         "world_converted": 107.0,
         "spread": 3.46,
-        "ma20": 109.04,
-        "ma50": 108.74,
+        "ma20": 109.03,
+        "ma50": 108.73,
         "ma200": 96.11
       },
       {
@@ -49747,23 +49747,23 @@
         "sell": 109.67,
         "world_converted": 106.2,
         "spread": 3.47,
-        "ma20": 109.06,
-        "ma50": 108.83,
+        "ma20": 109.05,
+        "ma50": 108.82,
         "ma200": 96.24
       },
       {
         "date": "2025-07-25",
-        "open": 109.1,
-        "high": 109.36,
-        "low": 107.52,
-        "close": 107.96,
-        "buy": 106.66,
-        "sell": 107.96,
-        "world_converted": 104.48,
+        "open": 109.06,
+        "high": 109.32,
+        "low": 107.48,
+        "close": 107.92,
+        "buy": 106.62,
+        "sell": 107.92,
+        "world_converted": 104.44,
         "spread": 3.48,
         "ma20": 109.11,
-        "ma50": 108.92,
-        "ma200": 96.37
+        "ma50": 108.91,
+        "ma200": 96.36
       },
       {
         "date": "2025-07-28",
@@ -49775,8 +49775,8 @@
         "sell": 107.92,
         "world_converted": 104.42,
         "spread": 3.5,
-        "ma20": 109.11,
-        "ma50": 108.99,
+        "ma20": 109.1,
+        "ma50": 108.98,
         "ma200": 96.49
       },
       {
@@ -49789,8 +49789,8 @@
         "sell": 108.5,
         "world_converted": 104.98,
         "spread": 3.52,
-        "ma20": 109.07,
-        "ma50": 109.09,
+        "ma20": 109.06,
+        "ma50": 109.08,
         "ma200": 96.62
       },
       {
@@ -49803,8 +49803,8 @@
         "sell": 107.66,
         "world_converted": 104.11,
         "spread": 3.55,
-        "ma20": 108.97,
-        "ma50": 109.14,
+        "ma20": 108.96,
+        "ma50": 109.13,
         "ma200": 96.73
       },
       {
@@ -49817,21 +49817,21 @@
         "sell": 107.59,
         "world_converted": 104.01,
         "spread": 3.58,
-        "ma20": 108.89,
+        "ma20": 108.88,
         "ma50": 109.16,
         "ma200": 96.85
       },
       {
         "date": "2025-08-01",
-        "open": 108.31,
-        "high": 110.76,
-        "low": 107.84,
-        "close": 110.1,
-        "buy": 108.8,
-        "sell": 110.1,
-        "world_converted": 106.49,
+        "open": 108.27,
+        "high": 110.72,
+        "low": 107.8,
+        "close": 110.06,
+        "buy": 108.76,
+        "sell": 110.06,
+        "world_converted": 106.45,
         "spread": 3.61,
-        "ma20": 108.97,
+        "ma20": 108.96,
         "ma50": 109.21,
         "ma200": 96.98
       },
@@ -49845,8 +49845,8 @@
         "sell": 111.77,
         "world_converted": 108.13,
         "spread": 3.64,
-        "ma20": 109.11,
-        "ma50": 109.31,
+        "ma20": 109.1,
+        "ma50": 109.3,
         "ma200": 97.11
       },
       {
@@ -49859,8 +49859,8 @@
         "sell": 112.28,
         "world_converted": 108.6,
         "spread": 3.68,
-        "ma20": 109.33,
-        "ma50": 109.37,
+        "ma20": 109.32,
+        "ma50": 109.36,
         "ma200": 97.24
       },
       {
@@ -49873,8 +49873,8 @@
         "sell": 112.17,
         "world_converted": 108.45,
         "spread": 3.72,
-        "ma20": 109.52,
-        "ma50": 109.47,
+        "ma20": 109.51,
+        "ma50": 109.46,
         "ma200": 97.37
       },
       {
@@ -49887,22 +49887,22 @@
         "sell": 112.8,
         "world_converted": 109.05,
         "spread": 3.75,
-        "ma20": 109.75,
+        "ma20": 109.74,
         "ma50": 109.58,
-        "ma200": 97.5
+        "ma200": 97.49
       },
       {
         "date": "2025-08-08",
-        "open": 113.04,
-        "high": 114.61,
-        "low": 111.58,
-        "close": 113.15,
-        "buy": 111.85,
-        "sell": 113.15,
-        "world_converted": 109.36,
+        "open": 113.0,
+        "high": 114.57,
+        "low": 111.54,
+        "close": 113.11,
+        "buy": 111.81,
+        "sell": 113.11,
+        "world_converted": 109.32,
         "spread": 3.79,
         "ma20": 109.96,
-        "ma50": 109.69,
+        "ma50": 109.68,
         "ma200": 97.62
       },
       {
@@ -49915,8 +49915,8 @@
         "sell": 111.51,
         "world_converted": 107.68,
         "spread": 3.83,
-        "ma20": 110.08,
-        "ma50": 109.78,
+        "ma20": 110.07,
+        "ma50": 109.77,
         "ma200": 97.74
       },
       {
@@ -49930,8 +49930,8 @@
         "world_converted": 107.55,
         "spread": 3.87,
         "ma20": 110.22,
-        "ma50": 109.79,
-        "ma200": 97.86
+        "ma50": 109.78,
+        "ma200": 97.85
       },
       {
         "date": "2025-08-13",
@@ -49943,8 +49943,8 @@
         "sell": 111.84,
         "world_converted": 107.93,
         "spread": 3.91,
-        "ma20": 110.35,
-        "ma50": 109.83,
+        "ma20": 110.34,
+        "ma50": 109.82,
         "ma200": 97.98
       },
       {
@@ -49957,22 +49957,22 @@
         "sell": 110.93,
         "world_converted": 106.99,
         "spread": 3.94,
-        "ma20": 110.45,
+        "ma20": 110.44,
         "ma50": 109.82,
-        "ma200": 98.1
+        "ma200": 98.09
       },
       {
         "date": "2025-08-15",
-        "open": 109.95,
-        "high": 110.43,
-        "low": 109.66,
-        "close": 109.93,
-        "buy": 108.63,
-        "sell": 109.93,
-        "world_converted": 105.95,
+        "open": 109.91,
+        "high": 110.39,
+        "low": 109.62,
+        "close": 109.89,
+        "buy": 108.59,
+        "sell": 109.89,
+        "world_converted": 105.91,
         "spread": 3.98,
-        "ma20": 110.52,
-        "ma50": 109.82,
+        "ma20": 110.51,
+        "ma50": 109.81,
         "ma200": 98.2
       },
       {
@@ -49985,8 +49985,8 @@
         "sell": 111.02,
         "world_converted": 107.01,
         "spread": 4.01,
-        "ma20": 110.53,
-        "ma50": 109.86,
+        "ma20": 110.52,
+        "ma50": 109.85,
         "ma200": 98.31
       },
       {
@@ -49999,9 +49999,9 @@
         "sell": 110.5,
         "world_converted": 106.46,
         "spread": 4.04,
-        "ma20": 110.46,
-        "ma50": 109.88,
-        "ma200": 98.43
+        "ma20": 110.45,
+        "ma50": 109.87,
+        "ma200": 98.42
       },
       {
         "date": "2025-08-20",
@@ -50013,8 +50013,8 @@
         "sell": 111.8,
         "world_converted": 107.73,
         "spread": 4.07,
-        "ma20": 110.53,
-        "ma50": 109.94,
+        "ma20": 110.52,
+        "ma50": 109.93,
         "ma200": 98.55
       },
       {
@@ -50027,22 +50027,22 @@
         "sell": 111.74,
         "world_converted": 107.65,
         "spread": 4.09,
-        "ma20": 110.63,
+        "ma20": 110.62,
         "ma50": 109.99,
         "ma200": 98.67
       },
       {
         "date": "2025-08-22",
-        "open": 110.08,
-        "high": 111.46,
-        "low": 109.32,
-        "close": 111.19,
-        "buy": 109.89,
-        "sell": 111.19,
-        "world_converted": 107.08,
+        "open": 110.04,
+        "high": 111.42,
+        "low": 109.28,
+        "close": 111.15,
+        "buy": 109.85,
+        "sell": 111.15,
+        "world_converted": 107.04,
         "spread": 4.11,
-        "ma20": 110.79,
-        "ma50": 110.0,
+        "ma20": 110.78,
+        "ma50": 109.99,
         "ma200": 98.79
       },
       {
@@ -50055,9 +50055,9 @@
         "sell": 112.49,
         "world_converted": 108.36,
         "spread": 4.13,
-        "ma20": 111.02,
-        "ma50": 110.01,
-        "ma200": 98.93
+        "ma20": 111.01,
+        "ma50": 110.0,
+        "ma200": 98.92
       },
       {
         "date": "2025-08-26",
@@ -50069,8 +50069,8 @@
         "sell": 113.16,
         "world_converted": 109.02,
         "spread": 4.14,
-        "ma20": 111.25,
-        "ma50": 110.04,
+        "ma20": 111.24,
+        "ma50": 110.03,
         "ma200": 99.06
       },
       {
@@ -50083,7 +50083,7 @@
         "sell": 113.81,
         "world_converted": 109.66,
         "spread": 4.15,
-        "ma20": 111.56,
+        "ma20": 111.55,
         "ma50": 110.09,
         "ma200": 99.2
       },
@@ -50097,21 +50097,21 @@
         "sell": 114.57,
         "world_converted": 110.42,
         "spread": 4.15,
-        "ma20": 111.91,
-        "ma50": 110.16,
-        "ma200": 99.36
+        "ma20": 111.9,
+        "ma50": 110.15,
+        "ma200": 99.35
       },
       {
         "date": "2025-08-29",
-        "open": 113.07,
-        "high": 114.48,
-        "low": 112.5,
-        "close": 114.28,
-        "buy": 112.98,
-        "sell": 114.28,
-        "world_converted": 110.13,
+        "open": 113.02,
+        "high": 114.44,
+        "low": 112.46,
+        "close": 114.24,
+        "buy": 112.94,
+        "sell": 114.24,
+        "world_converted": 110.09,
         "spread": 4.15,
-        "ma20": 112.12,
+        "ma20": 112.11,
         "ma50": 110.24,
         "ma200": 99.51
       },
@@ -50125,7 +50125,7 @@
         "sell": 118.22,
         "world_converted": 114.08,
         "spread": 4.14,
-        "ma20": 112.44,
+        "ma20": 112.43,
         "ma50": 110.38,
         "ma200": 99.69
       },
@@ -50139,8 +50139,8 @@
         "sell": 119.69,
         "world_converted": 115.56,
         "spread": 4.13,
-        "ma20": 112.81,
-        "ma50": 110.6,
+        "ma20": 112.8,
+        "ma50": 110.59,
         "ma200": 99.88
       },
       {
@@ -50153,22 +50153,22 @@
         "sell": 118.74,
         "world_converted": 114.62,
         "spread": 4.12,
-        "ma20": 113.14,
+        "ma20": 113.13,
         "ma50": 110.78,
-        "ma200": 100.07
+        "ma200": 100.06
       },
       {
         "date": "2025-09-05",
-        "open": 116.92,
-        "high": 118.72,
-        "low": 116.6,
-        "close": 118.53,
-        "buy": 117.23,
-        "sell": 118.53,
-        "world_converted": 114.43,
+        "open": 116.88,
+        "high": 118.68,
+        "low": 116.55,
+        "close": 118.49,
+        "buy": 117.19,
+        "sell": 118.49,
+        "world_converted": 114.39,
         "spread": 4.1,
-        "ma20": 113.43,
-        "ma50": 110.97,
+        "ma20": 113.42,
+        "ma50": 110.96,
         "ma200": 100.24
       },
       {
@@ -50181,9 +50181,9 @@
         "sell": 121.06,
         "world_converted": 116.98,
         "spread": 4.08,
-        "ma20": 113.82,
+        "ma20": 113.81,
         "ma50": 111.25,
-        "ma200": 100.43
+        "ma200": 100.42
       },
       {
         "date": "2025-09-09",
@@ -50195,9 +50195,9 @@
         "sell": 121.08,
         "world_converted": 117.02,
         "spread": 4.06,
-        "ma20": 114.3,
+        "ma20": 114.29,
         "ma50": 111.51,
-        "ma200": 100.61
+        "ma200": 100.6
       },
       {
         "date": "2025-09-10",
@@ -50210,8 +50210,8 @@
         "world_converted": 117.06,
         "spread": 4.03,
         "ma20": 114.78,
-        "ma50": 111.75,
-        "ma200": 100.79
+        "ma50": 111.74,
+        "ma200": 100.78
       },
       {
         "date": "2025-09-11",
@@ -50223,22 +50223,22 @@
         "sell": 120.82,
         "world_converted": 116.82,
         "spread": 4.0,
-        "ma20": 115.23,
+        "ma20": 115.22,
         "ma50": 111.97,
-        "ma200": 100.96
+        "ma200": 100.95
       },
       {
         "date": "2025-09-12",
-        "open": 119.01,
-        "high": 119.84,
-        "low": 118.72,
-        "close": 119.44,
-        "buy": 118.14,
-        "sell": 119.44,
-        "world_converted": 115.47,
+        "open": 118.97,
+        "high": 119.8,
+        "low": 118.68,
+        "close": 119.39,
+        "buy": 118.09,
+        "sell": 119.39,
+        "world_converted": 115.42,
         "spread": 3.97,
-        "ma20": 115.66,
-        "ma50": 112.18,
+        "ma20": 115.65,
+        "ma50": 112.17,
         "ma200": 101.13
       },
       {
@@ -50251,9 +50251,9 @@
         "sell": 122.1,
         "world_converted": 118.17,
         "spread": 3.93,
-        "ma20": 116.27,
-        "ma50": 112.45,
-        "ma200": 101.33
+        "ma20": 116.26,
+        "ma50": 112.44,
+        "ma200": 101.32
       },
       {
         "date": "2025-09-16",
@@ -50266,7 +50266,7 @@
         "world_converted": 118.48,
         "spread": 3.89,
         "ma20": 116.83,
-        "ma50": 112.72,
+        "ma50": 112.71,
         "ma200": 101.51
       },
       {
@@ -50279,9 +50279,9 @@
         "sell": 121.93,
         "world_converted": 118.07,
         "spread": 3.86,
-        "ma20": 117.41,
-        "ma50": 113.0,
-        "ma200": 101.7
+        "ma20": 117.4,
+        "ma50": 112.99,
+        "ma200": 101.69
       },
       {
         "date": "2025-09-18",
@@ -50293,22 +50293,22 @@
         "sell": 120.7,
         "world_converted": 116.88,
         "spread": 3.82,
-        "ma20": 117.85,
-        "ma50": 113.25,
-        "ma200": 101.88
+        "ma20": 117.84,
+        "ma50": 113.24,
+        "ma200": 101.87
       },
       {
         "date": "2025-09-19",
-        "open": 118.98,
-        "high": 120.41,
-        "low": 118.44,
-        "close": 119.86,
-        "buy": 118.56,
-        "sell": 119.86,
-        "world_converted": 116.08,
+        "open": 118.93,
+        "high": 120.36,
+        "low": 118.4,
+        "close": 119.81,
+        "buy": 118.51,
+        "sell": 119.81,
+        "world_converted": 116.03,
         "spread": 3.78,
-        "ma20": 118.26,
-        "ma50": 113.48,
+        "ma20": 118.25,
+        "ma50": 113.47,
         "ma200": 102.05
       },
       {
@@ -50321,8 +50321,8 @@
         "sell": 123.88,
         "world_converted": 120.14,
         "spread": 3.74,
-        "ma20": 118.89,
-        "ma50": 113.78,
+        "ma20": 118.88,
+        "ma50": 113.77,
         "ma200": 102.24
       },
       {
@@ -50335,8 +50335,8 @@
         "sell": 125.13,
         "world_converted": 121.43,
         "spread": 3.7,
-        "ma20": 119.52,
-        "ma50": 114.1,
+        "ma20": 119.51,
+        "ma50": 114.09,
         "ma200": 102.44
       },
       {
@@ -50350,7 +50350,7 @@
         "world_converted": 119.91,
         "spread": 3.67,
         "ma20": 120.04,
-        "ma50": 114.4,
+        "ma50": 114.39,
         "ma200": 102.63
       },
       {
@@ -50363,21 +50363,21 @@
         "sell": 123.57,
         "world_converted": 119.94,
         "spread": 3.63,
-        "ma20": 120.53,
+        "ma20": 120.52,
         "ma50": 114.68,
         "ma200": 102.82
       },
       {
         "date": "2025-09-26",
-        "open": 122.05,
-        "high": 123.2,
-        "low": 121.38,
-        "close": 122.91,
-        "buy": 121.61,
-        "sell": 122.91,
-        "world_converted": 119.31,
+        "open": 122.0,
+        "high": 123.15,
+        "low": 121.33,
+        "close": 122.86,
+        "buy": 121.56,
+        "sell": 122.86,
+        "world_converted": 119.26,
         "spread": 3.6,
-        "ma20": 120.95,
+        "ma20": 120.94,
         "ma50": 114.96,
         "ma200": 103.0
       },
@@ -50391,8 +50391,8 @@
         "sell": 126.34,
         "world_converted": 122.77,
         "spread": 3.57,
-        "ma20": 121.55,
-        "ma50": 115.32,
+        "ma20": 121.54,
+        "ma50": 115.31,
         "ma200": 103.19
       },
       {
@@ -50405,8 +50405,8 @@
         "sell": 126.94,
         "world_converted": 123.4,
         "spread": 3.54,
-        "ma20": 121.99,
-        "ma50": 115.64,
+        "ma20": 121.98,
+        "ma50": 115.63,
         "ma200": 103.39
       },
       {
@@ -50419,9 +50419,9 @@
         "sell": 127.6,
         "world_converted": 124.08,
         "spread": 3.52,
-        "ma20": 122.38,
-        "ma50": 115.96,
-        "ma200": 103.6
+        "ma20": 122.37,
+        "ma50": 115.95,
+        "ma200": 103.59
       },
       {
         "date": "2025-10-02",
@@ -50433,23 +50433,23 @@
         "sell": 126.58,
         "world_converted": 123.09,
         "spread": 3.49,
-        "ma20": 122.78,
-        "ma50": 116.28,
+        "ma20": 122.77,
+        "ma50": 116.27,
         "ma200": 103.8
       },
       {
         "date": "2025-10-03",
-        "open": 125.03,
-        "high": 126.29,
-        "low": 124.3,
-        "close": 125.92,
-        "buy": 124.62,
-        "sell": 125.92,
-        "world_converted": 122.44,
+        "open": 124.98,
+        "high": 126.24,
+        "low": 124.25,
+        "close": 125.87,
+        "buy": 124.57,
+        "sell": 125.87,
+        "world_converted": 122.39,
         "spread": 3.48,
-        "ma20": 123.15,
-        "ma50": 116.6,
-        "ma200": 104.01
+        "ma20": 123.14,
+        "ma50": 116.59,
+        "ma200": 104.0
       },
       {
         "date": "2025-10-06",
@@ -50461,9 +50461,9 @@
         "sell": 129.73,
         "world_converted": 126.27,
         "spread": 3.46,
-        "ma20": 123.58,
-        "ma50": 117.04,
-        "ma200": 104.23
+        "ma20": 123.57,
+        "ma50": 117.03,
+        "ma200": 104.22
       },
       {
         "date": "2025-10-07",
@@ -50475,9 +50475,9 @@
         "sell": 130.63,
         "world_converted": 127.17,
         "spread": 3.46,
-        "ma20": 124.06,
-        "ma50": 117.49,
-        "ma200": 104.46
+        "ma20": 124.05,
+        "ma50": 117.48,
+        "ma200": 104.45
       },
       {
         "date": "2025-10-08",
@@ -50489,9 +50489,9 @@
         "sell": 132.69,
         "world_converted": 129.24,
         "spread": 3.45,
-        "ma20": 124.64,
-        "ma50": 117.98,
-        "ma200": 104.7
+        "ma20": 124.63,
+        "ma50": 117.97,
+        "ma200": 104.69
       },
       {
         "date": "2025-10-09",
@@ -50503,23 +50503,23 @@
         "sell": 129.64,
         "world_converted": 126.19,
         "spread": 3.45,
-        "ma20": 125.08,
-        "ma50": 118.42,
+        "ma20": 125.07,
+        "ma50": 118.41,
         "ma200": 104.92
       },
       {
         "date": "2025-10-10",
-        "open": 128.43,
-        "high": 130.07,
-        "low": 127.41,
-        "close": 128.75,
-        "buy": 127.45,
-        "sell": 128.75,
-        "world_converted": 125.3,
+        "open": 128.38,
+        "high": 130.02,
+        "low": 127.36,
+        "close": 128.71,
+        "buy": 127.41,
+        "sell": 128.71,
+        "world_converted": 125.26,
         "spread": 3.45,
-        "ma20": 125.54,
-        "ma50": 118.84,
-        "ma200": 105.14
+        "ma20": 125.53,
+        "ma50": 118.83,
+        "ma200": 105.13
       },
       {
         "date": "2025-10-13",
@@ -50531,9 +50531,9 @@
         "sell": 134.64,
         "world_converted": 131.18,
         "spread": 3.46,
-        "ma20": 126.17,
-        "ma50": 119.33,
-        "ma200": 105.39
+        "ma20": 126.16,
+        "ma50": 119.32,
+        "ma200": 105.38
       },
       {
         "date": "2025-10-14",
@@ -50545,9 +50545,9 @@
         "sell": 135.7,
         "world_converted": 132.23,
         "spread": 3.47,
-        "ma20": 126.84,
-        "ma50": 119.81,
-        "ma200": 105.64
+        "ma20": 126.83,
+        "ma50": 119.8,
+        "ma200": 105.63
       },
       {
         "date": "2025-10-15",
@@ -50559,8 +50559,8 @@
         "sell": 136.79,
         "world_converted": 133.3,
         "spread": 3.49,
-        "ma20": 127.58,
-        "ma50": 120.3,
+        "ma20": 127.57,
+        "ma50": 120.29,
         "ma200": 105.9
       },
       {
@@ -50573,22 +50573,22 @@
         "sell": 140.06,
         "world_converted": 136.55,
         "spread": 3.51,
-        "ma20": 128.55,
-        "ma50": 120.86,
-        "ma200": 106.18
+        "ma20": 128.54,
+        "ma50": 120.85,
+        "ma200": 106.17
       },
       {
         "date": "2025-10-17",
-        "open": 139.72,
-        "high": 141.22,
-        "low": 134.84,
-        "close": 135.5,
-        "buy": 134.2,
-        "sell": 135.5,
-        "world_converted": 131.97,
+        "open": 139.67,
+        "high": 141.17,
+        "low": 134.79,
+        "close": 135.45,
+        "buy": 134.15,
+        "sell": 135.45,
+        "world_converted": 131.92,
         "spread": 3.53,
-        "ma20": 129.33,
-        "ma50": 121.31,
+        "ma20": 129.32,
+        "ma50": 121.3,
         "ma200": 106.42
       },
       {
@@ -50601,8 +50601,8 @@
         "sell": 141.95,
         "world_converted": 138.39,
         "spread": 3.56,
-        "ma20": 130.23,
-        "ma50": 121.89,
+        "ma20": 130.22,
+        "ma50": 121.88,
         "ma200": 106.7
       },
       {
@@ -50615,9 +50615,9 @@
         "sell": 134.05,
         "world_converted": 130.46,
         "spread": 3.59,
-        "ma20": 130.68,
-        "ma50": 122.34,
-        "ma200": 106.95
+        "ma20": 130.67,
+        "ma50": 122.33,
+        "ma200": 106.94
       },
       {
         "date": "2025-10-22",
@@ -50629,9 +50629,9 @@
         "sell": 132.75,
         "world_converted": 129.13,
         "spread": 3.62,
-        "ma20": 131.14,
+        "ma20": 131.13,
         "ma50": 122.76,
-        "ma200": 107.19
+        "ma200": 107.18
       },
       {
         "date": "2025-10-23",
@@ -50643,23 +50643,23 @@
         "sell": 135.17,
         "world_converted": 131.51,
         "spread": 3.66,
-        "ma20": 131.72,
-        "ma50": 123.23,
+        "ma20": 131.71,
+        "ma50": 123.22,
         "ma200": 107.43
       },
       {
         "date": "2025-10-24",
-        "open": 133.5,
-        "high": 134.09,
-        "low": 130.62,
-        "close": 133.31,
-        "buy": 132.01,
-        "sell": 133.31,
-        "world_converted": 129.61,
+        "open": 133.45,
+        "high": 134.04,
+        "low": 130.57,
+        "close": 133.26,
+        "buy": 131.96,
+        "sell": 133.26,
+        "world_converted": 129.56,
         "spread": 3.7,
-        "ma20": 132.24,
-        "ma50": 123.68,
-        "ma200": 107.67
+        "ma20": 132.23,
+        "ma50": 123.67,
+        "ma200": 107.66
       },
       {
         "date": "2025-10-27",
@@ -50672,8 +50672,8 @@
         "world_converted": 127.36,
         "spread": 3.73,
         "ma20": 132.47,
-        "ma50": 124.1,
-        "ma200": 107.89
+        "ma50": 124.09,
+        "ma200": 107.88
       },
       {
         "date": "2025-10-28",
@@ -50685,9 +50685,9 @@
         "sell": 129.97,
         "world_converted": 126.2,
         "spread": 3.77,
-        "ma20": 132.63,
-        "ma50": 124.48,
-        "ma200": 108.11
+        "ma20": 132.62,
+        "ma50": 124.47,
+        "ma200": 108.1
       },
       {
         "date": "2025-10-29",
@@ -50699,8 +50699,8 @@
         "sell": 130.71,
         "world_converted": 126.9,
         "spread": 3.81,
-        "ma20": 132.78,
-        "ma50": 124.89,
+        "ma20": 132.77,
+        "ma50": 124.88,
         "ma200": 108.33
       },
       {
@@ -50713,8 +50713,8 @@
         "sell": 131.36,
         "world_converted": 127.51,
         "spread": 3.85,
-        "ma20": 133.02,
-        "ma50": 125.28,
+        "ma20": 133.01,
+        "ma50": 125.27,
         "ma200": 108.55
       },
       {
@@ -50727,9 +50727,9 @@
         "sell": 130.69,
         "world_converted": 126.8,
         "spread": 3.89,
-        "ma20": 133.26,
-        "ma50": 125.66,
-        "ma200": 108.77
+        "ma20": 133.25,
+        "ma50": 125.65,
+        "ma200": 108.76
       },
       {
         "date": "2025-11-03",
@@ -50741,8 +50741,8 @@
         "sell": 131.25,
         "world_converted": 127.33,
         "spread": 3.92,
-        "ma20": 133.34,
-        "ma50": 126.06,
+        "ma20": 133.33,
+        "ma50": 126.05,
         "ma200": 108.98
       },
       {
@@ -50756,7 +50756,7 @@
         "world_converted": 125.63,
         "spread": 3.96,
         "ma20": 133.28,
-        "ma50": 126.4,
+        "ma50": 126.39,
         "ma200": 109.19
       },
       {
@@ -50769,9 +50769,9 @@
         "sell": 130.58,
         "world_converted": 126.59,
         "spread": 3.99,
-        "ma20": 133.18,
-        "ma50": 126.75,
-        "ma200": 109.41
+        "ma20": 133.17,
+        "ma50": 126.74,
+        "ma200": 109.4
       },
       {
         "date": "2025-11-06",
@@ -50784,7 +50784,7 @@
         "world_converted": 126.55,
         "spread": 4.02,
         "ma20": 133.22,
-        "ma50": 127.08,
+        "ma50": 127.07,
         "ma200": 109.62
       },
       {
@@ -50798,8 +50798,8 @@
         "world_converted": 127.07,
         "spread": 4.05,
         "ma20": 133.34,
-        "ma50": 127.41,
-        "ma200": 109.84
+        "ma50": 127.4,
+        "ma200": 109.83
       },
       {
         "date": "2025-11-10",
@@ -50812,7 +50812,7 @@
         "world_converted": 130.6,
         "spread": 4.08,
         "ma20": 133.34,
-        "ma50": 127.82,
+        "ma50": 127.81,
         "ma200": 110.08
       },
       {
@@ -50826,8 +50826,8 @@
         "world_converted": 130.37,
         "spread": 4.1,
         "ma20": 133.28,
-        "ma50": 128.15,
-        "ma200": 110.32
+        "ma50": 128.14,
+        "ma200": 110.31
       },
       {
         "date": "2025-11-12",
@@ -50839,9 +50839,9 @@
         "sell": 137.63,
         "world_converted": 133.51,
         "spread": 4.12,
-        "ma20": 133.33,
+        "ma20": 133.32,
         "ma50": 128.5,
-        "ma200": 110.57
+        "ma200": 110.56
       },
       {
         "date": "2025-11-13",
@@ -50854,7 +50854,7 @@
         "world_converted": 132.9,
         "spread": 4.13,
         "ma20": 133.17,
-        "ma50": 128.87,
+        "ma50": 128.86,
         "ma200": 110.81
       },
       {
@@ -50868,8 +50868,8 @@
         "world_converted": 129.92,
         "spread": 4.14,
         "ma20": 133.1,
-        "ma50": 129.18,
-        "ma200": 111.04
+        "ma50": 129.17,
+        "ma200": 111.03
       },
       {
         "date": "2025-11-17",
@@ -50882,8 +50882,8 @@
         "world_converted": 129.32,
         "spread": 4.15,
         "ma20": 132.68,
-        "ma50": 129.43,
-        "ma200": 111.26
+        "ma50": 129.42,
+        "ma200": 111.25
       },
       {
         "date": "2025-11-18",
@@ -50897,7 +50897,7 @@
         "spread": 4.15,
         "ma20": 132.64,
         "ma50": 129.67,
-        "ma200": 111.47
+        "ma200": 111.46
       },
       {
         "date": "2025-11-19",
@@ -50910,8 +50910,8 @@
         "world_converted": 129.84,
         "spread": 4.15,
         "ma20": 132.7,
-        "ma50": 129.93,
-        "ma200": 111.68
+        "ma50": 129.92,
+        "ma200": 111.67
       },
       {
         "date": "2025-11-20",
@@ -50924,7 +50924,7 @@
         "world_converted": 129.11,
         "spread": 4.14,
         "ma20": 132.6,
-        "ma50": 130.18,
+        "ma50": 130.17,
         "ma200": 111.89
       },
       {
@@ -50938,8 +50938,8 @@
         "world_converted": 129.68,
         "spread": 4.13,
         "ma20": 132.63,
-        "ma50": 130.47,
-        "ma200": 112.11
+        "ma50": 130.46,
+        "ma200": 112.1
       },
       {
         "date": "2025-11-24",
@@ -50952,7 +50952,7 @@
         "world_converted": 130.06,
         "spread": 4.11,
         "ma20": 132.78,
-        "ma50": 130.71,
+        "ma50": 130.7,
         "ma200": 112.31
       },
       {
@@ -50981,7 +50981,7 @@
         "spread": 4.07,
         "ma20": 133.35,
         "ma50": 131.26,
-        "ma200": 112.74
+        "ma200": 112.73
       },
       {
         "date": "2025-11-28",
@@ -51009,7 +51009,7 @@
         "spread": 4.02,
         "ma20": 134.2,
         "ma50": 132.03,
-        "ma200": 113.2
+        "ma200": 113.19
       },
       {
         "date": "2025-12-02",
@@ -51023,7 +51023,7 @@
         "spread": 3.99,
         "ma20": 134.54,
         "ma50": 132.31,
-        "ma200": 113.42
+        "ma200": 113.41
       },
       {
         "date": "2025-12-03",
@@ -51036,7 +51036,7 @@
         "world_converted": 134.41,
         "spread": 3.95,
         "ma20": 134.98,
-        "ma50": 132.58,
+        "ma50": 132.57,
         "ma200": 113.64
       },
       {
@@ -51078,8 +51078,8 @@
         "world_converted": 133.84,
         "spread": 3.84,
         "ma20": 136.11,
-        "ma50": 133.48,
-        "ma200": 114.3
+        "ma50": 133.47,
+        "ma200": 114.29
       },
       {
         "date": "2025-12-09",
@@ -51092,7 +51092,7 @@
         "world_converted": 134.43,
         "spread": 3.8,
         "ma20": 136.29,
-        "ma50": 133.72,
+        "ma50": 133.71,
         "ma200": 114.52
       },
       {
@@ -51106,7 +51106,7 @@
         "world_converted": 134.16,
         "spread": 3.76,
         "ma20": 136.46,
-        "ma50": 133.94,
+        "ma50": 133.93,
         "ma200": 114.74
       },
       {
@@ -51121,7 +51121,7 @@
         "spread": 3.72,
         "ma20": 136.62,
         "ma50": 134.2,
-        "ma200": 114.98
+        "ma200": 114.97
       },
       {
         "date": "2025-12-12",
@@ -51134,8 +51134,8 @@
         "world_converted": 137.24,
         "spread": 3.69,
         "ma20": 136.81,
-        "ma50": 134.49,
-        "ma200": 115.23
+        "ma50": 134.48,
+        "ma200": 115.22
       },
       {
         "date": "2025-12-15",
@@ -51149,7 +51149,7 @@
         "spread": 3.65,
         "ma20": 137.17,
         "ma50": 134.79,
-        "ma200": 115.47
+        "ma200": 115.46
       },
       {
         "date": "2025-12-16",
@@ -51205,7 +51205,7 @@
         "spread": 3.53,
         "ma20": 138.86,
         "ma50": 135.69,
-        "ma200": 116.43
+        "ma200": 116.42
       },
       {
         "date": "2025-12-22",
@@ -51219,7 +51219,7 @@
         "spread": 3.51,
         "ma20": 139.42,
         "ma50": 136.02,
-        "ma200": 116.69
+        "ma200": 116.68
       },
       {
         "date": "2025-12-23",
@@ -51233,7 +51233,7 @@
         "spread": 3.49,
         "ma20": 140.03,
         "ma50": 136.25,
-        "ma200": 116.95
+        "ma200": 116.94
       },
       {
         "date": "2025-12-24",
@@ -51246,8 +51246,8 @@
         "world_converted": 142.92,
         "spread": 3.47,
         "ma20": 140.57,
-        "ma50": 136.47,
-        "ma200": 117.21
+        "ma50": 136.46,
+        "ma200": 117.2
       },
       {
         "date": "2025-12-26",
@@ -51261,7 +51261,7 @@
         "spread": 3.46,
         "ma20": 141.13,
         "ma50": 136.68,
-        "ma200": 117.47
+        "ma200": 117.46
       },
       {
         "date": "2025-12-29",
@@ -51289,7 +51289,7 @@
         "spread": 3.45,
         "ma20": 141.34,
         "ma50": 136.84,
-        "ma200": 117.92
+        "ma200": 117.91
       },
       {
         "date": "2025-12-31",
@@ -51303,7 +51303,7 @@
         "spread": 3.45,
         "ma20": 141.47,
         "ma50": 136.81,
-        "ma200": 118.14
+        "ma200": 118.13
       },
       {
         "date": "2026-01-02",
@@ -51317,7 +51317,7 @@
         "spread": 3.46,
         "ma20": 141.59,
         "ma50": 136.94,
-        "ma200": 118.35
+        "ma200": 118.34
       },
       {
         "date": "2026-01-05",
@@ -51344,8 +51344,8 @@
         "world_converted": 142.4,
         "spread": 3.48,
         "ma20": 142.25,
-        "ma50": 137.4,
-        "ma200": 118.83
+        "ma50": 137.39,
+        "ma200": 118.82
       },
       {
         "date": "2026-01-07",
@@ -51359,7 +51359,7 @@
         "spread": 3.5,
         "ma20": 142.61,
         "ma50": 137.63,
-        "ma200": 119.07
+        "ma200": 119.06
       },
       {
         "date": "2026-01-08",
@@ -51387,7 +51387,7 @@
         "spread": 3.55,
         "ma20": 143.34,
         "ma50": 138.22,
-        "ma200": 119.55
+        "ma200": 119.54
       },
       {
         "date": "2026-01-12",
@@ -51401,7 +51401,7 @@
         "spread": 3.57,
         "ma20": 143.77,
         "ma50": 138.59,
-        "ma200": 119.8
+        "ma200": 119.79
       },
       {
         "date": "2026-01-13",
@@ -51415,7 +51415,7 @@
         "spread": 3.61,
         "ma20": 144.19,
         "ma50": 138.95,
-        "ma200": 120.05
+        "ma200": 120.04
       },
       {
         "date": "2026-01-14",
@@ -51443,7 +51443,7 @@
         "spread": 3.67,
         "ma20": 145.1,
         "ma50": 139.72,
-        "ma200": 120.55
+        "ma200": 120.54
       },
       {
         "date": "2026-01-16",
@@ -51499,7 +51499,7 @@
         "spread": 3.83,
         "ma20": 147.49,
         "ma50": 141.67,
-        "ma200": 121.66
+        "ma200": 121.65
       },
       {
         "date": "2026-01-23",
@@ -51513,7 +51513,7 @@
         "spread": 3.87,
         "ma20": 148.25,
         "ma50": 142.21,
-        "ma200": 121.98
+        "ma200": 121.97
       },
       {
         "date": "2026-01-26",
@@ -51527,7 +51527,7 @@
         "spread": 3.9,
         "ma20": 149.15,
         "ma50": 142.81,
-        "ma200": 122.3
+        "ma200": 122.29
       },
       {
         "date": "2026-01-27",
@@ -51541,7 +51541,7 @@
         "spread": 3.94,
         "ma20": 149.98,
         "ma50": 143.35,
-        "ma200": 122.61
+        "ma200": 122.6
       },
       {
         "date": "2026-01-28",
@@ -51555,7 +51555,7 @@
         "spread": 3.98,
         "ma20": 151.49,
         "ma50": 144.03,
-        "ma200": 122.94
+        "ma200": 122.93
       },
       {
         "date": "2026-01-29",
@@ -51597,7 +51597,7 @@
         "spread": 4.06,
         "ma20": 153.94,
         "ma50": 145.46,
-        "ma200": 123.72
+        "ma200": 123.71
       },
       {
         "date": "2026-02-03",
@@ -51625,7 +51625,7 @@
         "spread": 4.11,
         "ma20": 155.31,
         "ma50": 146.48,
-        "ma200": 124.22
+        "ma200": 124.21
       },
       {
         "date": "2026-02-05",
@@ -51653,7 +51653,7 @@
         "spread": 4.14,
         "ma20": 156.68,
         "ma50": 147.46,
-        "ma200": 124.72
+        "ma200": 124.71
       },
       {
         "date": "2026-02-09",
@@ -51667,7 +51667,7 @@
         "spread": 4.15,
         "ma20": 157.53,
         "ma50": 148.0,
-        "ma200": 124.99
+        "ma200": 124.98
       },
       {
         "date": "2026-02-10",
@@ -51709,7 +51709,7 @@
         "spread": 4.14,
         "ma20": 159.22,
         "ma50": 149.35,
-        "ma200": 125.79
+        "ma200": 125.78
       },
       {
         "date": "2026-02-13",
@@ -51737,7 +51737,7 @@
         "spread": 4.12,
         "ma20": 160.23,
         "ma50": 150.21,
-        "ma200": 126.33
+        "ma200": 126.32
       },
       {
         "date": "2026-02-18",
@@ -51751,7 +51751,7 @@
         "spread": 4.16,
         "ma20": 160.55,
         "ma50": 150.65,
-        "ma200": 126.61
+        "ma200": 126.6
       },
       {
         "date": "2026-02-19",
@@ -51821,7 +51821,7 @@
         "spread": 4.29,
         "ma20": 161.58,
         "ma50": 153.33,
-        "ma200": 128.03
+        "ma200": 128.02
       },
       {
         "date": "2026-02-26",
