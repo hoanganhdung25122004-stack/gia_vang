@@ -378,6 +378,26 @@
         </div>
       </div>
 
+      <!-- Thanh chọn Khung Thời Gian đồng bộ trực tiếp với Đồ Thị (Mục 2) -->
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 p-3 rounded-xl bg-slate-900/90 border border-slate-800/90">
+        <div class="flex flex-wrap items-center gap-1.5">
+          <span class="text-xs text-slate-400 mr-1 font-semibold flex items-center gap-1">
+            <span>⏱️</span> Khung thời gian:
+          </span>
+          <button data-events-tf="7D" class="pill-btn" title="Ngắn hạn: 1 tuần (7 ngày gần nhất) — Đầy đủ tin tức & biến động">1 Tuần (7D)</button>
+          <button data-events-tf="1M" class="pill-btn" title="Ngắn hạn: 1 tháng — Tin tức & sự kiện quan trọng trong tháng">1 Tháng (1M)</button>
+          <button data-events-tf="3M" class="pill-btn" title="Ngắn - Trung hạn: 3 tháng — Tự động lọc chỉ các sự kiện ảnh hưởng lớn">3 Tháng (3M)</button>
+          <button data-events-tf="6M" class="pill-btn" title="Trung hạn: 6 tháng — Tự động lọc chỉ các sự kiện ảnh hưởng lớn">6 Tháng (6M)</button>
+          <button data-events-tf="1Y" class="pill-btn active" title="Trung - Dài hạn: 1 năm — Tự động lọc chỉ các sự kiện ảnh hưởng lớn">1 Năm (1Y)</button>
+          <button data-events-tf="5Y" class="pill-btn" title="Dài hạn: 5 năm — Các đại sự kiện & cột mốc lịch sử lớn">5 Năm (5Y)</button>
+          <button data-events-tf="ALL" class="pill-btn" title="Toàn bộ chuỗi dữ liệu lịch sử">Tất Cả (ALL)</button>
+        </div>
+        <div class="text-[11px] text-amber-300/90 bg-amber-500/10 border border-amber-500/25 px-2.5 py-1 rounded-lg flex items-center gap-1.5">
+          <span>💡</span>
+          <span id="events-tf-rule-hint">Khung dài hạn (&gt;= 3 Tháng): Tự động cô đọng, chỉ hiển thị các sự kiện ảnh hưởng lớn.</span>
+        </div>
+      </div>
+
       <!-- Bộ lọc Mức độ ảnh hưởng (Lớn / Trung bình / Nhỏ) & Chiều hướng (Lên: Xanh lá / Xuống: Đỏ) -->
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-3 rounded-xl bg-slate-900/75 border border-slate-800/90">
         <div class="flex flex-wrap items-center gap-1.5">

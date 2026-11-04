@@ -593,42 +593,38 @@
       return inRange.slice(0, 40);
     }
 
-    // Chế độ mặc định 'auto': Chỉ chọn lọc các sự kiện quan trọng tiêu biểu tùy theo khoảng thời gian đang xem
-    // - 7D (1 tuần): Lấy tất cả sự kiện Lớn, Trung bình, Nhỏ trong tuần đó (tối đa 8 sự kiện)
-    // - 1M (1 tháng): Ưu tiên sự kiện Lớn + Trung bình + tin tức mới nhất (tối đa 10 sự kiện)
-    // - 3M & 6M: Ưu tiên sự kiện Lớn & các phiên biến động mạnh nhất (tối đa 12 sự kiện)
-    // - 1Y, 5Y, ALL: Chỉ chọn các Đại sự kiện (Ảnh hưởng Lớn / Cột mốc lịch sử đã kiểm chứng) tiêu biểu nhất
+    // Chế độ mặc định 'auto':
+    // Quy chuẩn lọc phân tầng theo khung thời gian:
+    // - Khung dài hạn (>= 3 Tháng: 3M, 6M, 1Y, 5Y, ALL):
+    //   BẮT BUỘC CHỈ NÊU CÁC SỰ KIỆN ẢNH HƯỞNG LỚN (impact_level === 'high' hoặc is_verified_milestone === true).
+    //   Loại bỏ toàn bộ tin tức vụn vặt/ảnh hưởng trung bình/nhỏ để bức tranh xu hướng trung - dài hạn cô đọng và rõ nét.
+    // - Khung ngắn hạn (< 3 Tháng: 7D / 1 Tuần, 1M / 1 Tháng):
+    //   Hiển thị đầy đủ tin tức báo chí, diễn biến từng phiên và sự kiện thị trường (Lớn, Trung bình, tin RSS thời gian thực).
+    const isLongHorizon = ['3M', '6M', '1Y', '5Y', 'ALL'].includes(tf);
+
     const maxCountByTf = {
-      '7D': 8,
-      '1M': 10,
-      '3M': 12,
-      '6M': 14,
-      '1Y': 16,
-      '5Y': 20,
-      'ALL': 22,
+      '7D': 10,
+      '1M': 14,
+      '3M': 14,
+      '6M': 18,
+      '1Y': 22,
+      '5Y': 25,
+      'ALL': 30,
     };
-    const limit = maxCountByTf[tf] || 14;
+    const limit = maxCountByTf[tf] || 16;
 
     let candidates = [...inRange];
-    if (tf === '5Y' || tf === 'ALL') {
-      const highOnly = candidates.filter((e) => e.impact_level === 'high' || e.is_verified_milestone);
-      if (highOnly.length >= 6) {
-        candidates = highOnly;
-      }
-    } else if (tf === '1Y' || tf === '6M') {
-      const highAndVerified = candidates.filter(
-        (e) => e.impact_level === 'high' || e.is_verified_milestone || e.is_live_news
+    if (isLongHorizon) {
+      // Với các khoảng thời gian từ 3 tháng trở lên: CHỈ NÊU CÁC SỰ KIỆN ẢNH HƯỞNG LỚN
+      candidates = candidates.filter(
+        (e) => e.impact_level === 'high' || e.is_verified_milestone
       );
-      if (highAndVerified.length >= 6) {
-        candidates = highAndVerified;
-      }
-    } else if (tf === '3M' || tf === '1M') {
-      const medAndHigh = candidates.filter(
+    } else {
+      // Khung ngắn hạn: 1 Tuần (7D) hoặc 1 Tháng (1M)
+      // Lấy đầy đủ sự kiện và tin tức (Lớn + Trung bình + Tin RSS trực tiếp)
+      candidates = candidates.filter(
         (e) => e.impact_level !== 'low' || e.is_live_news
       );
-      if (medAndHigh.length >= 4) {
-        candidates = medAndHigh;
-      }
     }
 
     // Sắp xếp theo độ quan trọng (Cột mốc kiểm chứng -> Tin nóng -> Biên độ biến động %) để lấy top tiêu biểu,
@@ -637,17 +633,18 @@
       const scoreA =
         (a.is_verified_milestone ? 100 : 0) +
         (a.is_live_news ? 40 : 0) +
-        a.impact_rank * 15 +
+        (a.impact_rank || 1) * 15 +
         Math.abs(a.xau_change_pct || 0) * 5;
       const scoreB =
         (b.is_verified_milestone ? 100 : 0) +
         (b.is_live_news ? 40 : 0) +
-        b.impact_rank * 15 +
+        (b.impact_rank || 1) * 15 +
         Math.abs(b.xau_change_pct || 0) * 5;
       return scoreB - scoreA;
     });
 
     const selected = candidates.slice(0, limit);
+    // Sắp xếp thời gian giảm dần (Mới nhất ở trên cùng)
     selected.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
     return selected;
   }
@@ -714,13 +711,35 @@
     const startDate = slicedSeries[0].date;
     const endDate = slicedSeries[slicedSeries.length - 1].date;
     const tfLabel = TIMEFRAME_LABELS[tf] || `Khung ${tf}`;
+    const isLongHorizon = ['3M', '6M', '1Y', '5Y', 'ALL'].includes(tf);
 
     if (titleEl) {
       titleEl.textContent = `Sự Kiện & Tin Tức Tiêu Biểu Tác Động Giá Vàng — ${tfLabel}`;
     }
     if (rangeBadgeEl) {
-      rangeBadgeEl.textContent = `${formatDisplayDateShort(startDate)} → ${formatDisplayDateShort(endDate)} (${events.length} sự kiện tiêu biểu)`;
+      const tagDesc = isLongHorizon ? 'sự kiện ảnh hưởng lớn' : 'tin tức & sự kiện';
+      rangeBadgeEl.textContent = `${formatDisplayDateShort(startDate)} → ${formatDisplayDateShort(endDate)} (${events.length} ${tagDesc})`;
     }
+
+    // Cập nhật chỉ dẫn lọc theo khung thời gian
+    const hintEl = document.getElementById('events-tf-rule-hint');
+    if (hintEl) {
+      if (isLongHorizon) {
+        hintEl.innerHTML = `Khung dài hạn (>= 3 Tháng): Tự động cô đọng, <strong>chỉ hiển thị các sự kiện ảnh hưởng lớn</strong>.`;
+      } else {
+        hintEl.innerHTML = `Khung ngắn hạn (1 Tuần / 1 Tháng): Hiển thị <strong>đầy đủ tin tức báo chí & biến động phiên</strong>.`;
+      }
+    }
+
+    // Đồng bộ nút chọn khung thời gian ở cả Mục 3 và Mục 2
+    document.querySelectorAll('[data-events-tf]').forEach((b) => {
+      if (b.getAttribute('data-events-tf') === tf) b.classList.add('active');
+      else b.classList.remove('active');
+    });
+    document.querySelectorAll('[data-tf-btn]').forEach((b) => {
+      if (b.getAttribute('data-tf-btn') === tf) b.classList.add('active');
+      else b.classList.remove('active');
+    });
 
     const upCount = events.filter((e) => e.direction === 'up').length;
     const downCount = events.filter((e) => e.direction === 'down').length;
@@ -1772,12 +1791,32 @@
       });
     });
 
-    // Chuyển đổi Khung thời gian (7D -> ALL)
+    // Chuyển đổi Khung thời gian từ Đồ Thị (Mục 2)
     document.querySelectorAll('[data-tf-btn]').forEach((btn) => {
       btn.addEventListener('click', () => {
-        STATE.selectedTimeframe = btn.getAttribute('data-tf-btn');
+        const tf = btn.getAttribute('data-tf-btn');
+        STATE.selectedTimeframe = tf;
         document.querySelectorAll('[data-tf-btn]').forEach((b) => b.classList.remove('active'));
         btn.classList.add('active');
+        document.querySelectorAll('[data-events-tf]').forEach((b) => {
+          if (b.getAttribute('data-events-tf') === tf) b.classList.add('active');
+          else b.classList.remove('active');
+        });
+        renderMainStockChart();
+      });
+    });
+
+    // Chuyển đổi Khung thời gian từ Bảng Sự Kiện & Tin Tức (Mục 3)
+    document.querySelectorAll('[data-events-tf]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const tf = btn.getAttribute('data-events-tf');
+        STATE.selectedTimeframe = tf;
+        document.querySelectorAll('[data-events-tf]').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('[data-tf-btn]').forEach((b) => {
+          if (b.getAttribute('data-tf-btn') === tf) b.classList.add('active');
+          else b.classList.remove('active');
+        });
         renderMainStockChart();
       });
     });
