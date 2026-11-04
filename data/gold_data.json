@@ -591,7 +591,7 @@
           {
             "type": "bearish",
             "name": "Kịch bản Thận trọng (Tăng Trưởng Chậm)",
-            "probability": 8,
+            "probability": 9,
             "expected_change_pct": "-5.0% đến +10.0%",
             "targets": {
               "xau_usd": "$3,852 – 4,461 / oz",
@@ -3201,7 +3201,7 @@
       "xau_change_pct": -1.82,
       "sjc_price": 155.5,
       "sjc_change_pct": -1.77,
-      "ring_price": 152.98,
+      "ring_price": 153.02,
       "is_verified_milestone": false,
       "is_live_news": false
     },
