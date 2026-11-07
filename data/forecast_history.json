@@ -247,62 +247,62 @@
     },
     {
       "date": "2026-11-06",
-      "timestamp": "2026-11-06 09:07:08",
+      "timestamp": "2026-11-07 19:45:32",
       "prices": {
-        "xau_usd": 4075.4,
+        "xau_usd": 4074.9,
         "sjc": 141.0,
         "ring_9999": 140.5
       },
-      "macro_score": 81.5,
+      "macro_score": 17.8,
       "dominant_driver": "Chính sách Lãi suất FED & Lợi suất Trái phiếu Mỹ 10Y",
       "horizons_overview": {
         "1_week": {
           "title": "1 Tuần (7 Ngày)",
-          "bullish_prob": 53,
-          "base_prob": 35,
-          "bearish_prob": 12,
-          "bullish_target_xau": "$4,124 – 4,190 / oz",
-          "base_target_xau": "$4,043 – 4,124 / oz"
+          "bullish_prob": 44,
+          "base_prob": 38,
+          "bearish_prob": 18,
+          "bullish_target_xau": "$4,124 – 4,189 / oz",
+          "base_target_xau": "$4,042 – 4,124 / oz"
         },
         "1_month": {
           "title": "1 Tháng (30 Ngày)",
-          "bullish_prob": 56,
-          "base_prob": 32,
-          "bearish_prob": 12,
-          "bullish_target_xau": "$4,177 – 4,320 / oz",
+          "bullish_prob": 48,
+          "base_prob": 34,
+          "bearish_prob": 18,
+          "bullish_target_xau": "$4,177 – 4,319 / oz",
           "base_target_xau": "$4,014 – 4,177 / oz"
         },
         "3_months": {
           "title": "3 Tháng (1 Quý / 90 Ngày)",
-          "bullish_prob": 60,
-          "base_prob": 30,
-          "bearish_prob": 10,
-          "bullish_target_xau": "$4,259 – 4,503 / oz",
-          "base_target_xau": "$3,994 – 4,259 / oz"
+          "bullish_prob": 51,
+          "base_prob": 31,
+          "bearish_prob": 18,
+          "bullish_target_xau": "$4,258 – 4,503 / oz",
+          "base_target_xau": "$3,993 – 4,258 / oz"
         },
         "6_months": {
           "title": "6 Tháng (Nửa Năm / 180 Ngày)",
-          "bullish_prob": 62,
-          "base_prob": 28,
-          "bearish_prob": 10,
-          "bullish_target_xau": "$4,361 – 4,727 / oz",
+          "bullish_prob": 54,
+          "base_prob": 29,
+          "bearish_prob": 17,
+          "bullish_target_xau": "$4,360 – 4,727 / oz",
           "base_target_xau": "$4,014 – 4,340 / oz"
         },
         "1_year": {
           "title": "1 Năm (12 Tháng / 365 Ngày)",
-          "bullish_prob": 66,
-          "base_prob": 26,
-          "bearish_prob": 8,
+          "bullish_prob": 60,
+          "base_prob": 27,
+          "bearish_prob": 13,
           "bullish_target_xau": "$4,564 – 5,094 / oz",
           "base_target_xau": "$4,238 – 4,564 / oz"
         },
         "3_5_years": {
           "title": "3 – 5 Năm (Siêu Chu Kỳ Dài Hạn)",
-          "bullish_prob": 70,
-          "base_prob": 22,
-          "bearish_prob": 8,
-          "bullish_target_xau": "$4,972 – 6,032 / oz",
-          "base_target_xau": "$4,483 – 4,972 / oz"
+          "bullish_prob": 67,
+          "base_prob": 23,
+          "bearish_prob": 10,
+          "bullish_target_xau": "$4,971 – 6,031 / oz",
+          "base_target_xau": "$4,482 – 4,971 / oz"
         }
       }
     }
