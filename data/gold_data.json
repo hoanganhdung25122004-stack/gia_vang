@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "updated_at": "2026-11-07 19:45:32 GMT+7",
-    "updated_date_display": "07/11/2026 19:45",
-    "next_scheduled_update": "08/11/2026 01:30 GMT+7",
+    "updated_at": "2026-11-08 01:09:32 GMT+7",
+    "updated_date_display": "08/11/2026 01:09",
+    "next_scheduled_update": "08/11/2026 07:30 GMT+7",
     "update_frequency": "Tự động 4 lần/ngày (mỗi 6 giờ) hoặc cập nhật trực tiếp theo thời gian thực",
     "total_trading_days": 1258,
     "total_events_tracked": 152,
@@ -2068,7 +2068,7 @@
         },
         {
           "date": "2026-11-06",
-          "timestamp": "2026-11-07 19:45:32",
+          "timestamp": "2026-11-07 18:09:32",
           "prices": {
             "xau_usd": 4074.9,
             "sjc": 141.0,
@@ -2180,12 +2180,12 @@
     {
       "id": "evt_2026-11-04",
       "date": "2026-11-04",
-      "timestamp_display": "04/11/2026 (Đóng cửa phiên Mỹ COMEX)",
-      "title": "Lợi suất TPCP Mỹ 10Y giảm mạnh (-1.21% về 4.89%), kích hoạt lực mua đẩy giá vàng tăng +3.37% lên $4,073.0/oz",
-      "summary": "Sự sụt giảm của lợi suất trái phiếu kho bạc Mỹ kỳ hạn 10 năm xuống 4.89% làm giảm chi phí cơ hội nắm giữ kim loại quý, thu hút dòng vốn tổ chức mua vào hợp đồng tương lai vàng COMEX. Cùng phiên, giá dầu thô WTI biến động -8.29% ($88.12/thùng).",
-      "category": "Lãi suất & Trái phiếu Mỹ",
-      "source": "Yahoo Finance / COMEX Quantitative Attribution",
-      "url": "",
+      "timestamp_display": "04/11/2026 06:00 GMT+7",
+      "title": "Cập nhật giá vàng sáng 4.11: Sụt giảm sau đợt phục hồi chóng vánh — Giá vàng thế giới hồi phục +3.37% lên $4,073.0/oz (SJC: 140.63 tr/lượng)",
+      "summary": "Ghi nhận lúc 04/11/2026 06:00 GMT+7 từ Laodong.vn. Kết thúc phiên 2026-11-04, giá vàng thế giới (XAU/USD) đóng cửa tại $4,073.00/oz (+3.37%), vàng miếng SJC niêm yết 140.63 triệu/lượng (+3.13%) và Nhẫn 9999 ở mức 140.30 triệu/lượng (DXY 101.51 (-0.35%) | Lợi suất US10Y 4.89% (-1.21%)).",
+      "category": "Tin tức Vàng Việt Nam & Quốc tế",
+      "source": "Laodong.vn",
+      "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOWDhBbFhQWkNkWG0xZ3hVZHZESTRNT29wcElnY29sSzN5eHM3VVhEcTRyVXcweVl4dVdaM2RjRFJoVXQwbk5YUzJKMTlVZnVkVTVtbkdZUV9QTkllX3JtWGdvaUFMZFpvR0RaU05DN1liVGhVRE5KOU5oMnVfSTVxN1BDNTBoaVNrMFNFNzRTVHpEaFMxVVpIUlZabEJQb0VCUV81Tko4dUQ1MktoWnc?oc=5",
       "direction": "up",
       "direction_label": "Tác động Tăng giá",
       "color_code": "#10b981",
@@ -2198,7 +2198,7 @@
       "sjc_change_pct": 3.13,
       "ring_price": 140.3,
       "is_verified_milestone": false,
-      "is_live_news": false
+      "is_live_news": true
     },
     {
       "id": "evt_2026-11-03",
