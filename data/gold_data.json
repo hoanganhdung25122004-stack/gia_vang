@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "updated_at": "2026-11-09 01:25:21 GMT+7",
-    "updated_date_display": "09/11/2026 01:25",
-    "next_scheduled_update": "09/11/2026 07:30 GMT+7",
+    "updated_at": "2026-11-09 05:59:49 GMT+7",
+    "updated_date_display": "09/11/2026 05:59",
+    "next_scheduled_update": "09/11/2026 11:30 GMT+7",
     "update_frequency": "Tự động 4 lần/ngày (mỗi 6 giờ) hoặc cập nhật trực tiếp theo thời gian thực",
     "total_trading_days": 1258,
     "total_events_tracked": 152,
@@ -2068,7 +2068,7 @@
         },
         {
           "date": "2026-11-06",
-          "timestamp": "2026-11-08 18:25:21",
+          "timestamp": "2026-11-08 22:59:49",
           "prices": {
             "xau_usd": 4074.9,
             "sjc": 141.0,
@@ -2249,9 +2249,9 @@
     {
       "id": "evt_2026-10-30",
       "date": "2026-10-30",
-      "timestamp_display": "31/10/2026 06:10 GMT+7",
+      "timestamp_display": "31/10/2026 14:00 GMT+7",
       "title": "Cập nhật giá vàng sáng 31.10: Vàng đứng trước nguy cơ giảm mạnh — Áp lực điều chỉnh kéo giá vàng giảm -3.29% về $3,898.9/oz (SJC: 135.11 tr/lượng)",
-      "summary": "Ghi nhận lúc 31/10/2026 06:10 GMT+7 từ Laodong.vn. Kết thúc phiên 2026-10-30, giá vàng thế giới (XAU/USD) đóng cửa tại $3,898.90/oz (-3.29%), vàng miếng SJC niêm yết 135.11 triệu/lượng (-3.08%) và Nhẫn 9999 ở mức 135.01 triệu/lượng (DXY 101.88 (-0.16%) | Lợi suất US10Y 4.93% (-1.20%)).",
+      "summary": "Ghi nhận lúc 31/10/2026 14:00 GMT+7 từ Laodong.vn. Kết thúc phiên 2026-10-30, giá vàng thế giới (XAU/USD) đóng cửa tại $3,898.90/oz (-3.29%), vàng miếng SJC niêm yết 135.11 triệu/lượng (-3.08%) và Nhẫn 9999 ở mức 135.01 triệu/lượng (DXY 101.88 (-0.16%) | Lợi suất US10Y 4.93% (-1.20%)).",
       "category": "Tin tức Vàng Việt Nam & Quốc tế",
       "source": "Laodong.vn",
       "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQdDFmY0Z1aHQxNDJveWlxcjY5MDFPc05DcGpNWUwxU3dIOEJWZTNReFJjTDhrdU9sNUZma1lJVU5zcS00REZORjZwWkY2UGhPNnFpTTlaNmVnUGhPRnJRREFCczl2bHgxdjdpQ2MwemRLMEljeTlQOEVqMm5VYXp3U0VKU2VPQjUzVnFZenZVbk5HNE52QzR2WTM2NkxhV0NiMzZWb3huTV8yUWM?oc=5",
