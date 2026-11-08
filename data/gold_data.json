@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "updated_at": "2026-11-08 14:41:51 GMT+7",
-    "updated_date_display": "08/11/2026 14:41",
-    "next_scheduled_update": "08/11/2026 20:30 GMT+7",
+    "updated_at": "2026-11-09 01:25:21 GMT+7",
+    "updated_date_display": "09/11/2026 01:25",
+    "next_scheduled_update": "09/11/2026 07:30 GMT+7",
     "update_frequency": "Tự động 4 lần/ngày (mỗi 6 giờ) hoặc cập nhật trực tiếp theo thời gian thực",
     "total_trading_days": 1258,
     "total_events_tracked": 152,
@@ -19,7 +19,7 @@
       "price": 4074.9,
       "open": 4098.5,
       "high": 4116.2,
-      "low": 4035.6,
+      "low": 4035.1,
       "converted_vnd_tael": 126.16,
       "performance": {
         "current": 4074.9,
@@ -2068,7 +2068,7 @@
         },
         {
           "date": "2026-11-06",
-          "timestamp": "2026-11-08 07:41:51",
+          "timestamp": "2026-11-08 18:25:21",
           "prices": {
             "xau_usd": 4074.9,
             "sjc": 141.0,
@@ -2134,12 +2134,12 @@
     {
       "id": "evt_2026-11-06",
       "date": "2026-11-06",
-      "timestamp_display": "06/11/2026 14:29 GMT+7",
-      "title": "Giá vàng ngày 12/6: Vàng miếng, vàng nhẫn tăng 9 triệu đồng/lượng chiều mua vào — Áp lực điều chỉnh kéo giá vàng giảm -0.94% về $4,074.9/oz (SJC: 141.00 tr/lượng)",
-      "summary": "Ghi nhận lúc 06/11/2026 14:29 GMT+7 từ Báo Nhân Dân điện tử. Kết thúc phiên 2026-11-06, giá vàng thế giới (XAU/USD) đóng cửa tại $4,074.90/oz (-0.94%), vàng miếng SJC niêm yết 141.00 triệu/lượng (-0.48%) và Nhẫn 9999 ở mức 140.50 triệu/lượng (DXY 102.30 (+0.74%) | Lợi suất US10Y 4.86% (+0.41%)).",
+      "timestamp_display": "07/11/2026 19:56 GMT+7",
+      "title": "Giá vàng hôm nay (11-8): Vàng nhẫn DOJI giảm 1 triệu đồng/lượng, vàng thế giới vọt tăng — Áp lực điều chỉnh kéo giá vàng giảm -0.94% về $4,074.9/oz (SJC: 141.00 tr/lượng)",
+      "summary": "Ghi nhận lúc 07/11/2026 19:56 GMT+7 từ Báo Quân đội nhân dân. Kết thúc phiên 2026-11-06, giá vàng thế giới (XAU/USD) đóng cửa tại $4,074.90/oz (-0.94%), vàng miếng SJC niêm yết 141.00 triệu/lượng (-0.48%) và Nhẫn 9999 ở mức 140.50 triệu/lượng (DXY 102.30 (+0.74%) | Lợi suất US10Y 4.86% (+0.41%)).",
       "category": "Tin tức Vàng Việt Nam & Quốc tế",
-      "source": "Báo Nhân Dân điện tử",
-      "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOQWNTaDNxdXF6RG1fWWE3czktdlY2bDFjenhlVW8zTVY4SGdSSmFDb0ZBV0Nhc25qYzBORXBPV29jWVhDU0x1LWJ1MEpYVVFxRXowNUJoZFVFR0JySW9zTUNKOGdHMGxEaVNqX0x6QTY2R1UzN1hwVWVlSUNzaG1lMzRRT0E0RkxNeElfVHk2Z3dCdmphOTNsb3lmSVdfUkRNQXBDVFV4ZWRnQ3N5cFVR?oc=5",
+      "source": "Báo Quân đội nhân dân",
+      "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxPU0l6aWNtTHFENHV2dUtYM2ZSTk0tbEctRlJBNjlBM3FaOGkzWUtPRTlfM3NfVlF1U3diaDNySTRVdnc0bXVDaURYeXViOWlqX3RsNnRYQUw0dXZCUXNyeHYyQXZIS01BVkRBX1hXYWpYZGJEazJhVFprbGRxamloNEs5V3Nzdi1YSUc4Q3Y5YjdtNk1YRVU0bnhVeENFLTRibExqN0s5dUpoQkxZVEJ5WUYyamJ4QXRrT1ByVVBWdC1YM0o2Smc?oc=5",
       "direction": "down",
       "direction_label": "Tác động Giảm giá",
       "color_code": "#f43f5e",
@@ -2180,12 +2180,12 @@
     {
       "id": "evt_2026-11-04",
       "date": "2026-11-04",
-      "timestamp_display": "04/11/2026 (Đóng cửa phiên Mỹ COMEX)",
-      "title": "Lợi suất TPCP Mỹ 10Y giảm mạnh (-1.21% về 4.89%), kích hoạt lực mua đẩy giá vàng tăng +3.37% lên $4,073.0/oz",
-      "summary": "Sự sụt giảm của lợi suất trái phiếu kho bạc Mỹ kỳ hạn 10 năm xuống 4.89% làm giảm chi phí cơ hội nắm giữ kim loại quý, thu hút dòng vốn tổ chức mua vào hợp đồng tương lai vàng COMEX. Cùng phiên, giá dầu thô WTI biến động -8.29% ($88.12/thùng).",
-      "category": "Lãi suất & Trái phiếu Mỹ",
-      "source": "Yahoo Finance / COMEX Quantitative Attribution",
-      "url": "",
+      "timestamp_display": "04/11/2026 06:00 GMT+7",
+      "title": "Cập nhật giá vàng sáng 4.11: Sụt giảm sau đợt phục hồi chóng vánh — Giá vàng thế giới hồi phục +3.37% lên $4,073.0/oz (SJC: 140.63 tr/lượng)",
+      "summary": "Ghi nhận lúc 04/11/2026 06:00 GMT+7 từ Laodong.vn. Kết thúc phiên 2026-11-04, giá vàng thế giới (XAU/USD) đóng cửa tại $4,073.00/oz (+3.37%), vàng miếng SJC niêm yết 140.63 triệu/lượng (+3.13%) và Nhẫn 9999 ở mức 140.30 triệu/lượng (DXY 101.51 (-0.35%) | Lợi suất US10Y 4.89% (-1.21%)).",
+      "category": "Tin tức Vàng Việt Nam & Quốc tế",
+      "source": "Laodong.vn",
+      "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOWDhBbFhQWkNkWG0xZ3hVZHZESTRNT29wcElnY29sSzN5eHM3VVhEcTRyVXcweVl4dVdaM2RjRFJoVXQwbk5YUzJKMTlVZnVkVTVtbkdZUV9QTkllX3JtWGdvaUFMZFpvR0RaU05DN1liVGhVRE5KOU5oMnVfSTVxN1BDNTBoaVNrMFNFNzRTVHpEaFMxVVpIUlZabEJQb0VCUV81Tko4dUQ1MktoWnc?oc=5",
       "direction": "up",
       "direction_label": "Tác động Tăng giá",
       "color_code": "#10b981",
@@ -2198,7 +2198,7 @@
       "sjc_change_pct": 3.13,
       "ring_price": 140.3,
       "is_verified_milestone": false,
-      "is_live_news": false
+      "is_live_news": true
     },
     {
       "id": "evt_2026-11-03",
@@ -2341,12 +2341,12 @@
     {
       "id": "evt_2026-10-26",
       "date": "2026-10-26",
-      "timestamp_display": "25/10/2026 14:00 GMT+7",
-      "title": "Cập nhật giá vàng sáng 25.10: Tuần biến động mạnh, chạm đáy sau 4 tháng — Giá vàng thế giới hồi phục +0.76% lên $4,038.4/oz (SJC: 139.33 tr/lượng)",
-      "summary": "Ghi nhận lúc 25/10/2026 14:00 GMT+7 từ Laodong.vn. Kết thúc phiên 2026-10-26, giá vàng thế giới (XAU/USD) đóng cửa tại $4,038.40/oz (+0.76%), vàng miếng SJC niêm yết 139.33 triệu/lượng (+0.95%) và Nhẫn 9999 ở mức 139.42 triệu/lượng (DXY 101.96 (+0.15%) | Lợi suất US10Y 4.99% (+0.00%)).",
-      "category": "Tin tức Vàng Việt Nam & Quốc tế",
-      "source": "Laodong.vn",
-      "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxNNTI2VlJiV01TYXdseTN5dzdRdW1UM2ZtQmNfa3JkT0VaRjBwY1ZmaEI5aUZjVk5ESEhyN09KaUVJLWVHdURBd3VaYUpXb0ZIelhwbXFKUS1YQzRCMUZwZWI3UTFGOUZONF9STDkxbGZ1LVZNbEVjODZ6bG1lM1BRVWtrQnRsMmVxdUt1S1BaNm5sUktHZHdiS1Z4T1NBc2xrQ29rYWdlQkV0N3dTV08wSFFmMmw?oc=5",
+      "timestamp_display": "26/10/2026 (Đóng cửa phiên Mỹ COMEX)",
+      "title": "Lực mua kỹ thuật & nhu cầu tích trữ đẩy giá vàng thế giới tăng +0.76% lên mốc $4,038.4/oz (SJC: 139.33 tr/lượng)",
+      "summary": "Lực cầu bắt đáy và mua ròng từ các quỹ định lượng giúp giá vàng tăng từ vùng đáy $3,990.9 lên đóng cửa tại $4,038.40/oz; vàng nhẫn 9999 giao dịch ở mức 139.42 triệu/lượng.",
+      "category": "Dòng tiền & Động lượng Kỹ thuật",
+      "source": "Yahoo Finance / COMEX Quantitative Attribution",
+      "url": "",
       "direction": "up",
       "direction_label": "Tác động Tăng giá",
       "color_code": "#10b981",
@@ -2359,7 +2359,7 @@
       "sjc_change_pct": 0.95,
       "ring_price": 139.42,
       "is_verified_milestone": false,
-      "is_live_news": true
+      "is_live_news": false
     },
     {
       "id": "evt_2026-10-23",
@@ -19461,7 +19461,7 @@
         "date": "2026-11-06",
         "open": 4098.5,
         "high": 4116.2,
-        "low": 4035.6,
+        "low": 4035.1,
         "close": 4074.9,
         "volume": 166431,
         "ma20": 4080.71,
