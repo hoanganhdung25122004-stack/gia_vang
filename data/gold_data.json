@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "updated_at": "2026-11-22 15:27:46 GMT+7",
-    "updated_date_display": "22/11/2026 15:27",
-    "next_scheduled_update": "22/11/2026 21:30 GMT+7",
+    "updated_at": "2026-11-23 03:25:57 GMT+7",
+    "updated_date_display": "23/11/2026 03:25",
+    "next_scheduled_update": "23/11/2026 09:30 GMT+7",
     "update_frequency": "Tự động 4 lần/ngày (mỗi 6 giờ) hoặc cập nhật trực tiếp theo thời gian thực",
     "total_trading_days": 1258,
     "total_events_tracked": 154,
@@ -2068,7 +2068,7 @@
         },
         {
           "date": "2026-11-20",
-          "timestamp": "2026-11-22 08:27:46",
+          "timestamp": "2026-11-22 20:25:57",
           "prices": {
             "xau_usd": 3515.4,
             "sjc": 133.5,
@@ -2180,12 +2180,12 @@
     {
       "id": "evt_2026-11-18",
       "date": "2026-11-18",
-      "timestamp_display": "18/11/2026 09:18 GMT+7",
-      "title": "Giá vàng hôm nay 18.11: Đảo chiều sụt giảm, liên tục biến động — Áp lực điều chỉnh kéo giá vàng giảm -3.16% về $3,741.9/oz (SJC: 138.99 tr/lượng)",
-      "summary": "Ghi nhận lúc 18/11/2026 09:18 GMT+7 từ Laodong.vn. Kết thúc phiên 2026-11-18, giá vàng thế giới (XAU/USD) đóng cửa tại $3,741.90/oz (-3.16%), vàng miếng SJC niêm yết 138.99 triệu/lượng (-2.70%) và Nhẫn 9999 ở mức 138.96 triệu/lượng (DXY 103.86 (+0.36%) | Lợi suất US10Y 5.07% (-0.59%)).",
-      "category": "Tin tức Vàng Việt Nam & Quốc tế",
-      "source": "Laodong.vn",
-      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxQQ01iZHNveUVzRVNsTzc0Wk8zektIdlZxaUJVUlh6MWc3cm1BM2NVQjFkWWFUOUxWNUZkREtZUG5FVEtUd2hKeURucHd3azBNQTQtTF81NUNkb0xNREYtdVM1NVdicHRXRVo0ai1qMks2YWtaR0UtOFBGaXAtcE0zT3UtX1VPRlZ5V3NOOTQ2UUtVekl1bWNYVF9fblhjb0ptMGoyTmNGeFE?oc=5",
+      "timestamp_display": "18/11/2026 (Đóng cửa phiên Mỹ COMEX)",
+      "title": "Đồng USD mạnh lên (DXY +0.36% đạt 103.86 điểm) kết hợp áp lực chốt lời khiến vàng điều chỉnh -3.16%",
+      "summary": "Đà phục hồi của chỉ số US Dollar Index lên 103.86 điểm tạo sức ép định giá trực tiếp lên XAU/USD, đưa giá vàng lùi về $3,741.90/oz (SJC niêm yết 138.99 triệu/lượng). Cùng phiên, giá dầu thô WTI biến động -3.20% ($83.26/thùng).",
+      "category": "Tỷ giá Quốc tế (DXY)",
+      "source": "Yahoo Finance / COMEX Quantitative Attribution",
+      "url": "",
       "direction": "down",
       "direction_label": "Tác động Giảm giá",
       "color_code": "#f43f5e",
@@ -2198,7 +2198,7 @@
       "sjc_change_pct": -2.7,
       "ring_price": 138.96,
       "is_verified_milestone": false,
-      "is_live_news": true
+      "is_live_news": false
     },
     {
       "id": "evt_2026-11-17",
