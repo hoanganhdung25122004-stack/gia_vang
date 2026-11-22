@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "updated_at": "2026-11-22 03:11:45 GMT+7",
-    "updated_date_display": "22/11/2026 03:11",
-    "next_scheduled_update": "22/11/2026 09:30 GMT+7",
+    "updated_at": "2026-11-22 15:27:46 GMT+7",
+    "updated_date_display": "22/11/2026 15:27",
+    "next_scheduled_update": "22/11/2026 21:30 GMT+7",
     "update_frequency": "Tự động 4 lần/ngày (mỗi 6 giờ) hoặc cập nhật trực tiếp theo thời gian thực",
     "total_trading_days": 1258,
     "total_events_tracked": 154,
@@ -205,7 +205,7 @@
       "explanation": "Tỷ giá bán USD/VND tại ngân hàng ở mức 25,980 VNĐ/USD và chênh lệch vàng SJC so với thế giới quy đổi hiện là +24.38 triệu VNĐ/lượng. Giá vàng trong nước chịu tác động kép: vừa chạy theo XAU/USD, vừa được khuếch đại bởi tỷ giá USD/VND và nguồn cung vàng miếng của NHNN.",
       "investor_note": "Vàng nhẫn 9999 bám sát giá thế giới hơn, trong khi SJC phụ thuộc lớn vào nguồn cung bình ổn.",
       "rank": 4,
-      "weight_pct": 16.2,
+      "weight_pct": 16.3,
       "impact_tier": "Tác động Trung bình - Khá"
     },
     {
@@ -232,23 +232,23 @@
       "name": "Kỳ vọng Lạm phát Toàn cầu & Giá Dầu thô Năng lượng (WTI)",
       "category": "Hàng hóa & Lạm phát",
       "metric_label": "Dầu WTI (CL=F)",
-      "metric_value": "$83.98/thùng",
-      "change_1d": "+0.93%",
-      "change_30d": "-15.57%",
-      "raw_score": 16.972,
+      "metric_value": "$83.41/thùng",
+      "change_1d": "+0.24%",
+      "change_30d": "-16.15%",
+      "raw_score": 16.652,
       "direction": "bullish",
       "direction_label": "Chi phí năng lượng đẩy nhu cầu phòng vệ lạm phát",
       "signal": 0.5,
       "correlation": "+0.54 (Đồng pha chu kỳ hàng hóa)",
-      "explanation": "Giá dầu thô WTI giao dịch ở mức $83.98/thùng (+0.93% ngày, -15.57% tháng). Năng lượng là đầu vào cốt lõi của lạm phát chi phí đẩy; khi giá năng lượng tăng hoặc neo cao, nhà đầu tư tăng tỷ trọng vàng để bảo toàn sức mua thực tế.",
+      "explanation": "Giá dầu thô WTI giao dịch ở mức $83.41/thùng (+0.24% ngày, -16.15% tháng). Năng lượng là đầu vào cốt lõi của lạm phát chi phí đẩy; khi giá năng lượng tăng hoặc neo cao, nhà đầu tư tăng tỷ trọng vàng để bảo toàn sức mua thực tế.",
       "investor_note": "Yếu tố củng cố xu hướng nắm giữ vàng tích sản chống trượt giá tiền tệ trong dài hạn.",
       "rank": 6,
-      "weight_pct": 10.5,
+      "weight_pct": 10.4,
       "impact_tier": "Tác động Bổ trợ / Chu kỳ"
     }
   ],
   "forecast_scenarios": {
-    "CompositeMacroScore": 82.0,
+    "CompositeMacroScore": 82.1,
     "AnnualizedVolatilityPct": 23.35,
     "horizons": {
       "1_week": {
@@ -2068,13 +2068,13 @@
         },
         {
           "date": "2026-11-20",
-          "timestamp": "2026-11-21 20:11:45",
+          "timestamp": "2026-11-22 08:27:46",
           "prices": {
             "xau_usd": 3515.4,
             "sjc": 133.5,
             "ring_9999": 133.3
           },
-          "macro_score": 82.0,
+          "macro_score": 82.1,
           "dominant_driver": "Căng thẳng Địa chính trị & Lực mua Ròng từ Ngân hàng Trung ương",
           "horizons_overview": {
             "1_week": {
@@ -2180,12 +2180,12 @@
     {
       "id": "evt_2026-11-18",
       "date": "2026-11-18",
-      "timestamp_display": "18/11/2026 (Đóng cửa phiên Mỹ COMEX)",
-      "title": "Đồng USD mạnh lên (DXY +0.36% đạt 103.86 điểm) kết hợp áp lực chốt lời khiến vàng điều chỉnh -3.16%",
-      "summary": "Đà phục hồi của chỉ số US Dollar Index lên 103.86 điểm tạo sức ép định giá trực tiếp lên XAU/USD, đưa giá vàng lùi về $3,741.90/oz (SJC niêm yết 138.99 triệu/lượng). Cùng phiên, giá dầu thô WTI biến động -3.20% ($83.26/thùng).",
-      "category": "Tỷ giá Quốc tế (DXY)",
-      "source": "Yahoo Finance / COMEX Quantitative Attribution",
-      "url": "",
+      "timestamp_display": "18/11/2026 09:18 GMT+7",
+      "title": "Giá vàng hôm nay 18.11: Đảo chiều sụt giảm, liên tục biến động — Áp lực điều chỉnh kéo giá vàng giảm -3.16% về $3,741.9/oz (SJC: 138.99 tr/lượng)",
+      "summary": "Ghi nhận lúc 18/11/2026 09:18 GMT+7 từ Laodong.vn. Kết thúc phiên 2026-11-18, giá vàng thế giới (XAU/USD) đóng cửa tại $3,741.90/oz (-3.16%), vàng miếng SJC niêm yết 138.99 triệu/lượng (-2.70%) và Nhẫn 9999 ở mức 138.96 triệu/lượng (DXY 103.86 (+0.36%) | Lợi suất US10Y 5.07% (-0.59%)).",
+      "category": "Tin tức Vàng Việt Nam & Quốc tế",
+      "source": "Laodong.vn",
+      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxQQ01iZHNveUVzRVNsTzc0Wk8zektIdlZxaUJVUlh6MWc3cm1BM2NVQjFkWWFUOUxWNUZkREtZUG5FVEtUd2hKeURucHd3azBNQTQtTF81NUNkb0xNREYtdVM1NVdicHRXRVo0ai1qMks2YWtaR0UtOFBGaXAtcE0zT3UtX1VPRlZ5V3NOOTQ2UUtVekl1bWNYVF9fblhjb0ptMGoyTmNGeFE?oc=5",
       "direction": "down",
       "direction_label": "Tác động Giảm giá",
       "color_code": "#f43f5e",
@@ -2198,7 +2198,7 @@
       "sjc_change_pct": -2.7,
       "ring_price": 138.96,
       "is_verified_milestone": false,
-      "is_live_news": false
+      "is_live_news": true
     },
     {
       "id": "evt_2026-11-17",
@@ -2295,12 +2295,12 @@
     {
       "id": "evt_2026-11-11",
       "date": "2026-11-11",
-      "timestamp_display": "11/11/2026 (Đóng cửa phiên Mỹ COMEX)",
-      "title": "Đồng USD mạnh lên (DXY +0.67% đạt 102.91 điểm) kết hợp áp lực chốt lời khiến vàng điều chỉnh -0.74%",
-      "summary": "Đà phục hồi của chỉ số US Dollar Index lên 102.91 điểm tạo sức ép định giá trực tiếp lên XAU/USD, đưa giá vàng lùi về $4,000.50/oz (SJC niêm yết 145.76 triệu/lượng).",
-      "category": "Tỷ giá Quốc tế (DXY)",
-      "source": "Yahoo Finance / COMEX Quantitative Attribution",
-      "url": "",
+      "timestamp_display": "11/11/2026 15:00 GMT+7",
+      "title": "Giá vàng hôm nay 11.11: Giảm mạnh sau 1 tháng, người mua cắt lỗ 9,1 triệu đồng/lượng — Áp lực điều chỉnh kéo giá vàng giảm -0.74% về $4,000.5/oz (SJC: 145.76 tr/lượng)",
+      "summary": "Ghi nhận lúc 11/11/2026 15:00 GMT+7 từ Laodong.vn. Kết thúc phiên 2026-11-11, giá vàng thế giới (XAU/USD) đóng cửa tại $4,000.50/oz (-0.74%), vàng miếng SJC niêm yết 145.76 triệu/lượng (-0.25%) và Nhẫn 9999 ở mức 146.05 triệu/lượng (DXY 102.91 (+0.67%) | Lợi suất US10Y 5.00% (+0.40%)).",
+      "category": "Tin tức Vàng Việt Nam & Quốc tế",
+      "source": "Laodong.vn",
+      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxOd0lPdnZQS2NGMHJVQVFMSng5Y29EU3JlcTNscGlLSGFRRUM1QUlZSkk4NjdtRVJ6RDM3cUx2dTVRZzFUQW9mbkc0eTNoeDJtY3FjZmR5cUE5ZTJuX2hvUS1zZEV5S0xiTTJHU3ZiZzZvUWVaX2VnWHFvb041ZzM0bE1rRGRTeG1VZ2NwQndBLXhXSTdQdTU2MFg2QWx4Nmw2azl4STlVcGdXQnZiQ3h2MEl0N2docnVac05PVEQ3U2xyQnM?oc=5",
       "direction": "down",
       "direction_label": "Tác động Giảm giá",
       "color_code": "#f43f5e",
@@ -2313,7 +2313,7 @@
       "sjc_change_pct": -0.25,
       "ring_price": 146.05,
       "is_verified_milestone": false,
-      "is_live_news": false
+      "is_live_news": true
     },
     {
       "id": "evt_2026-11-10",
@@ -19509,7 +19509,7 @@
         "high": 3638.1,
         "low": 3502.9,
         "close": 3515.4,
-        "volume": 203702,
+        "volume": 323896,
         "ma20": 3942.15,
         "ma50": 4110.86,
         "ma200": 4444.68
